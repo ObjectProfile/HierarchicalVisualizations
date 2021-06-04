@@ -10,7 +10,7 @@ Class {
 { #category : #tests }
 HSpaceTest >> testBasic [
 	| s p counter |
-	s := HSpace new.
+	s := HNameSpace new.
 	p := HPackage new.
 	p name: 'Hierarchy'.
 	counter := 0.
