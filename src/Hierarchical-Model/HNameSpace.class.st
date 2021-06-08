@@ -4,7 +4,7 @@ TODO
 Class {
 	#name : #HNameSpace,
 	#superclass : #HModel,
-	#category : #HierarchicalModel
+	#category : #'Hierarchical-Model'
 }
 
 { #category : #'as yet unclassified' }

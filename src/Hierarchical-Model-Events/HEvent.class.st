@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'item'
 	],
-	#category : #'HierarchicalModel-Events'
+	#category : #'Hierarchical-Model-Events'
 }
 
 { #category : #accessing }

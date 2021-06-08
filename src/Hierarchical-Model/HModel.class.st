@@ -14,7 +14,7 @@ Class {
 		'parent',
 		'isExpanded'
 	],
-	#category : #HierarchicalModel
+	#category : #'Hierarchical-Model'
 }
 
 { #category : #adding }

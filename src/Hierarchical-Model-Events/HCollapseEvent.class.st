@@ -1,5 +1,5 @@
 Class {
 	#name : #HCollapseEvent,
 	#superclass : #HEvent,
-	#category : #'HierarchicalModel-Events'
+	#category : #'Hierarchical-Model-Events'
 }

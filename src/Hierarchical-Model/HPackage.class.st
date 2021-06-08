@@ -4,7 +4,7 @@ TODO
 Class {
 	#name : #HPackage,
 	#superclass : #HModel,
-	#category : #HierarchicalModel
+	#category : #'Hierarchical-Model'
 }
 
 { #category : #'instance creation' }

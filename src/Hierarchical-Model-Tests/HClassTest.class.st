@@ -4,7 +4,7 @@ A HClassTest is a test class for testing the behavior of HClass
 Class {
 	#name : #HClassTest,
 	#superclass : #TestCase,
-	#category : #'HierarchicalModel-Tests'
+	#category : #'Hierarchical-Model-Tests'
 }
 
 { #category : #tests }

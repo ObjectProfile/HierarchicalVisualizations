@@ -8,5 +8,5 @@ Class {
 		'selector',
 		'sourcecode'
 	],
-	#category : #HierarchicalModel
+	#category : #'Hierarchical-Model'
 }

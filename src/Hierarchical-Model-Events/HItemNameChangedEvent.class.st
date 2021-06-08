@@ -8,7 +8,7 @@ Class {
 		'oldName',
 		'newName'
 	],
-	#category : #'HierarchicalModel-Events'
+	#category : #'Hierarchical-Model-Events'
 }
 
 { #category : #accessing }
