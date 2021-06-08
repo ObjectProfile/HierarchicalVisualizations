@@ -27,22 +27,13 @@ HVisualizationBuilder >> classShapeFor: cls [
 
 { #category : #hooks }
 HVisualizationBuilder >> collapse: aRSComposite [
-	| c childrenLines box children title newP newLines |
+	| c childrenLines box children title newP |
 	c := aRSComposite.
 	title := c children first.
-	c propertyAt: #box put: (box := c children second).
-	c propertyAt: #hchildren put: (children := c children third).
+	box := c children second.
+	children := c children third.
 	childrenLines := children children flatCollect: #connectedLines as: RSGroup.
-	newLines := Set new.
-	children children do: [ :child |
-		child connectedLines 
-			select: [ :line | line from parent ~= children ]
-			thenDo: [ :line | newLines add: line from model -> c model ].
-		child connectedLines 
-			select: [ :line | line to parent ~= children ]
-			thenDo: [ :line | newLines add: c -> c to model ]
-		 ].
-	newLines inspect.
+	self newLines: childrenLines composite: c.
 	box remove.
 	childrenLines do: #remove.
 	children remove.
@@ -56,14 +47,42 @@ HVisualizationBuilder >> collapse: aRSComposite [
 { #category : #hooks }
 HVisualizationBuilder >> configureCanvas: aCanvas [
 	aCanvas 
+		color: self backgroundColor;
 		addInteraction: (RSCanvasControllerInteraction new 
-			in: [:i | i configuration useBasicZoom];
-			yourself)
+			in: [:i | i configuration
+				noZoomToFitOnExtendChanged;
+				useBasicZoom];
+			yourself);
+		addInteraction: RSHierarchyPackerInteraction new
 ]
 
 { #category : #hooks }
 HVisualizationBuilder >> expand: aRSComposite [
-	self inform: 'expand'
+	| oldPackage canvas newPackage oldTitle newTitle hpackage classes |
+	oldPackage := aRSComposite.
+	hpackage := oldPackage model.
+	hpackage removeInteractionIfPresent: self class.
+	canvas := oldPackage canvas.
+	newPackage := self packageShapeFor: hpackage.
+	canvas add: newPackage.
+	oldTitle := oldPackage children first.
+	newTitle := newPackage children first.
+	newPackage translateBy: oldTitle positionInCanvas - newTitle positionInCanvas.
+	oldPackage remove.
+	
+	newPackage children third children @ RSHighlightableInteraction red withLines.
+	classes := canvas nodes flatCollect: [ :p | 
+		p children size > 2 
+			ifTrue: [ p children third children ]
+			ifFalse: [ #() ]
+		] as: RSGroup.
+	self lineBuilder
+		canvas: canvas;
+		shapes: classes;
+		connectToAll: #dependentClasses.
+	
+	canvas signalUpdate.
+
 ]
 
 { #category : #accessing }
@@ -80,6 +99,44 @@ HVisualizationBuilder >> hspace: anHSpace [
 HVisualizationBuilder >> initialize [
 	super initialize.
 	colors := NSScale category20c.
+]
+
+{ #category : #accessing }
+HVisualizationBuilder >> lineBuilder [
+	^ RSLineBuilder bezier
+		controlPointsController: HVisualizationCPController new;
+		markerStartEnd: (RSEllipse new size: 3);
+		yourself
+]
+
+{ #category : #hooks }
+HVisualizationBuilder >> newLines: childrenLines composite: c [
+	| lines b parent |
+	b := self lineBuilder
+		canvas: c canvas;
+		yourself.
+	parent := c children third.
+	lines := Set new.
+	childrenLines 
+		reject: [ :line | line from parent = parent and: [ line to parent = parent ] ]
+		thenDo: [ :line | | assoc |
+			assoc := c -> line to.
+			(line from parent = parent 
+				and: [ (lines includes: assoc) not ])
+					ifTrue: [ 
+						b edgeFrom: c to: line to.
+						lines add: assoc ].
+					
+			assoc := line from -> c.
+			(line to parent = parent 
+				and: [ (lines includes: assoc) not ])
+					ifTrue: [ 
+						b edgeFrom: line from to: c.
+						lines add: assoc ]
+		 ].
+	
+		
+	
 ]
 
 { #category : #hooks }
@@ -138,13 +195,13 @@ HVisualizationBuilder >> packageShapeFor: hpackage [
 { #category : #hooks }
 HVisualizationBuilder >> renderIn: aCanvas [
 	| packages classes |
-	aCanvas color: self backgroundColor.
-	self configureCanvas: aCanvas.
+	
 	hspace ifNil: [ ^ self ].
 	colors := NSScale category20c.
 	packages := hspace packages 
-		collect: [ :p | self packageShapeFor: p ].
-	classes := packages flatCollect: [ :p | p children third children ] as: RSGroup.
+		collect: [ :p | self packageShapeFor: p ]
+		as: RSGroup.
+	
 	aCanvas addAll: packages.
 	aCanvas nodes 
 		when: RSMouseDragStart do: [ :evt | 
@@ -153,12 +210,18 @@ HVisualizationBuilder >> renderIn: aCanvas [
 				(evt shape children third children flatCollect: #connectedEdges as: RSGroup) pushFront
 			] ].
 	
-	RSLineBuilder horizontalBezier
+	classes := packages flatCollect: [ :p | p children third children ] as: RSGroup.
+	self lineBuilder
 		canvas: aCanvas;
 		shapes: classes;
 		connectToAll: #dependentClasses.
 	classes @ RSHighlightableInteraction red withLines.
-	aCanvas addInteraction: RSHierarchyPackerInteraction new.
+	
+	self configureCanvas: aCanvas.
+	"RSRectanglePackLayout new
+		doNotUseProgressBar;
+		on: packages.
+	aCanvas camera position: packages encompassingRectangle floatCenter."
 
 
 ]
