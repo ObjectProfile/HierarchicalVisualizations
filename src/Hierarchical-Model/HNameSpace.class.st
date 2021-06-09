@@ -3,7 +3,7 @@ TODO
 "
 Class {
 	#name : #HNameSpace,
-	#superclass : #HModel,
+	#superclass : #HNode,
 	#category : #'Hierarchical-Model'
 }
 
@@ -24,5 +24,5 @@ HNameSpace >> dependentClassesFor: anHClass [
 
 { #category : #accessing }
 HNameSpace >> packages [
-	^ items
+	^ children
 ]

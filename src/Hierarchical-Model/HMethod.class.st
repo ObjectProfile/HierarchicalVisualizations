@@ -3,7 +3,7 @@ TODO
 "
 Class {
 	#name : #HMethod,
-	#superclass : #HModel,
+	#superclass : #HNode,
 	#instVars : [
 		'selector',
 		'sourcecode'
