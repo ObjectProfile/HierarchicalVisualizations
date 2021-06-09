@@ -12,7 +12,6 @@ Class {
 
 { #category : #accessing }
 HEvent >> item [
-
 	^ item
 ]
 
