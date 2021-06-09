@@ -1,13 +1,13 @@
-Extension { #name : #HModel }
+Extension { #name : #HNode }
 
 { #category : #'*Hierarchical-Spec' }
-HModel >> icon [
+HNode >> icon [
 	^ RSBitmap new
 		form: (self iconNamed: self iconName);
 		yourself.
 ]
 
 { #category : #'*Hierarchical-Spec' }
-HModel >> iconName [
+HNode >> iconName [
 	^ self subclassResponsibility
 ]

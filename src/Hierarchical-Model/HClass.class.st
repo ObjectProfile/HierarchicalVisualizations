@@ -3,7 +3,7 @@ A basic class
 "
 Class {
 	#name : #HClass,
-	#superclass : #HModel,
+	#superclass : #HNode,
 	#instVars : [
 		'dependentClasses'
 	],

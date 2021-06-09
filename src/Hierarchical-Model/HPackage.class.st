@@ -3,7 +3,7 @@ TODO
 "
 Class {
 	#name : #HPackage,
-	#superclass : #HModel,
+	#superclass : #HNode,
 	#category : #'Hierarchical-Model'
 }
 
@@ -19,7 +19,7 @@ HPackage class >> from: aRPackage [
 
 { #category : #accessing }
 HPackage >> classes [
-	^ items
+	^ children
 ]
 
 { #category : #'as yet unclassified' }
