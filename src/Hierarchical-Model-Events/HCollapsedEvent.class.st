@@ -1,5 +1,8 @@
+"
+Called a node is collapsed
+"
 Class {
-	#name : #HExpandEvent,
+	#name : #HCollapsedEvent,
 	#superclass : #HEvent,
 	#category : #'Hierarchical-Model-Events'
 }

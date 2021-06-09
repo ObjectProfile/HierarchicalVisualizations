@@ -14,8 +14,8 @@ HSpaceTest >> testBasic [
 	p := HPackage new.
 	p name: 'Hierarchy'.
 	counter := 0.
-	s when: HItemAddedEvent do: [ :evt | 
-		self assert: evt addedItem equals: p.
+	s when: HNodedAddedEvent do: [ :evt | 
+		self assert: evt newChild equals: p.
 		counter := counter + 1 ].
 	s add: p.
 	self assert: counter equals: 1.

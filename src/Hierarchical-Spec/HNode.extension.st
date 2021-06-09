@@ -11,3 +11,11 @@ HNode >> icon [
 HNode >> iconName [
 	^ self subclassResponsibility
 ]
+
+{ #category : #'*Hierarchical-Spec' }
+HNode >> open [
+	^ HSimpleVisualizationBuilder new
+		rootNode: self;
+		build;
+		open 
+]

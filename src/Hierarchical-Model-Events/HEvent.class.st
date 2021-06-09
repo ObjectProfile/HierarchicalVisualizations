@@ -5,18 +5,19 @@ Class {
 	#name : #HEvent,
 	#superclass : #Announcement,
 	#instVars : [
-		'item'
+		'node'
 	],
 	#category : #'Hierarchical-Model-Events'
 }
 
 { #category : #accessing }
-HEvent >> item [
-	^ item
+HEvent >> node [
+
+	^ node
 ]
 
 { #category : #accessing }
-HEvent >> item: anObject [
+HEvent >> node: anObject [
 
-	item := anObject
+	node := anObject
 ]

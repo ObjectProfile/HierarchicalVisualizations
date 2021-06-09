@@ -12,7 +12,8 @@ Class {
 		'rawModel',
 		'parent',
 		'isExpanded',
-		'children'
+		'children',
+		'dependencies'
 	],
 	#category : #'Hierarchical-Model'
 }
@@ -30,12 +31,15 @@ HNode >> addAll: aCollection [
 
 { #category : #adding }
 HNode >> addChild: anHNode [
-	children add: anHNode
+	children add: anHNode.
+	self announce: (HNodedAddedEvent new
+		newChild: anHNode;
+		yourself)
 ]
 
 { #category : #adding }
 HNode >> addedIn: anHNode [
-	anHNode addItem: self.
+	anHNode addChild: self.
 	self parent: anHNode.
 ]
 
@@ -49,14 +53,41 @@ HNode >> announcer: anAnnouncer [
 	announcer := anAnnouncer
 ]
 
+{ #category : #accessing }
+HNode >> children [
+
+	^ children
+]
+
+{ #category : #accessing }
+HNode >> children: aCollection [
+
+	children := aCollection
+]
+
 { #category : #public }
 HNode >> collapse [
-	self announce: HCollapseEvent new
+	isExpanded := false.
+	self announce: HCollapsedEvent new
+	
+]
+
+{ #category : #accessing }
+HNode >> dependencies [
+
+	^ dependencies
+]
+
+{ #category : #accessing }
+HNode >> dependencies: anObject [
+
+	dependencies := anObject
 ]
 
 { #category : #public }
 HNode >> expand [
-	self announce: HExpandEvent new
+	isExpanded := true.
+	self announce: HExpandedEvent new
 ]
 
 { #category : #public }
@@ -64,7 +95,11 @@ HNode >> expandCollapse [
 	isExpanded 
 		ifTrue: [ self collapse ]
 		ifFalse: [ self expand ].
-	isExpanded := isExpanded not
+]
+
+{ #category : #testing }
+HNode >> hasChildren [
+	^ children notEmpty
 ]
 
 { #category : #initialization }
@@ -80,18 +115,6 @@ HNode >> isExpanded [
 ]
 
 { #category : #accessing }
-HNode >> items [
-
-	^ children
-]
-
-{ #category : #accessing }
-HNode >> items: anObject [
-
-	children := anObject
-]
-
-{ #category : #accessing }
 HNode >> name [
 	^ name
 ]
@@ -101,8 +124,8 @@ HNode >> name: aString [
 	| oldName |
 	oldName := name.
 	name := aString.
-	self announce: (HItemNameChangedEvent new
-		item: self;
+	self announce: (HNodeNameChangedEvent new
+		node: self;
 		oldName: oldName;
 		newName: name;
 		yourself)
@@ -116,9 +139,14 @@ HNode >> parent [
 ]
 
 { #category : #accessing }
-HNode >> parent: anObject [
+HNode >> parent: anHNode [
 
-	parent := anObject
+	parent := anHNode
+]
+
+{ #category : #printing }
+HNode >> printOn: stream [
+	stream << name.
 ]
 
 { #category : #announcer }

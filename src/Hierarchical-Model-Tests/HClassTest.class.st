@@ -17,7 +17,7 @@ HClassTest >> testBasic [
 		yourself.
 	
 	newName := nil.
-	c when: HItemNameChangedEvent do: [ :evt | newName := evt newName ].
+	c when: HNodeNameChangedEvent do: [ :evt | newName := evt newName ].
 	c name: 'Dummy2'.
 	self assert: newName equals: 'Dummy2'.
 ]

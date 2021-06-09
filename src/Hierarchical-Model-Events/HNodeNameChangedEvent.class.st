@@ -2,7 +2,7 @@
 TODO
 "
 Class {
-	#name : #HItemNameChangedEvent,
+	#name : #HNodeNameChangedEvent,
 	#superclass : #HEvent,
 	#instVars : [
 		'oldName',
@@ -12,23 +12,23 @@ Class {
 }
 
 { #category : #accessing }
-HItemNameChangedEvent >> newName [
+HNodeNameChangedEvent >> newName [
 
 	^ newName
 ]
 
 { #category : #accessing }
-HItemNameChangedEvent >> newName: aString [
+HNodeNameChangedEvent >> newName: aString [
 	newName := aString
 ]
 
 { #category : #accessing }
-HItemNameChangedEvent >> oldName [
+HNodeNameChangedEvent >> oldName [
 
 	^ oldName
 ]
 
 { #category : #accessing }
-HItemNameChangedEvent >> oldName: aString [
+HNodeNameChangedEvent >> oldName: aString [
 	oldName := aString
 ]

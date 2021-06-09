@@ -62,3 +62,22 @@ HVisualizationExamples >> example05AllPackages [
 	space addAll: packages.
 	space open.
 ]
+
+{ #category : #examples }
+HVisualizationExamples >> example06Simple [
+	<script: 'self new example06Simple'>
+	| node1 node2 subnode1 subnode2 rootNode |
+	node1 := HNode new name: 'Node1'.
+	node2 := HNode new name: 'Node2'.
+	subnode1 := HNode new name: 'Sub2-1'.
+	subnode2 := HNode new name: 'Sub2-2'.
+	node2 addAll: {subnode1. subnode2}.
+	rootNode := HNode new name: 'Root'.
+	rootNode addAll: {node1. node2}.
+	node1 dependencies: { subnode1. subnode2 }.
+	subnode1 dependencies: { node1 }.
+	subnode2 dependencies: { node1 }.
+	
+	rootNode open.
+
+]
