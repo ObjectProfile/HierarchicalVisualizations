@@ -18,6 +18,50 @@ Class {
 	#category : #'Hierarchical-Model'
 }
 
+{ #category : #'instance creation' }
+HNode class >> fromClass: clazz [
+	^ self new
+		name: clazz name;
+		rawModel: clazz;
+		addAll: (clazz methods collect: [:met | self fromMethod: met ]);
+		yourself
+]
+
+{ #category : #'instance creation' }
+HNode class >> fromMethod: method [
+	^ self new
+		name: method selector;
+		rawModel: method;
+		yourself
+	
+]
+
+{ #category : #'instance creation' }
+HNode class >> fromPackage: package [ 
+	^ self new
+		name: package name;
+		rawModel: package;
+		addAll: (package definedClasses collect: [:cls | self fromClass: cls ]);
+		yourself
+]
+
+{ #category : #'instance creation' }
+HNode class >> fromPackages: collection [
+	| root methods |
+	root := self new.
+	root addAll: (collection collect: [ :pkg | self fromPackage: pkg ]).
+	methods := root children flatCollect: [ :pkg | 
+		pkg children flatCollect: [ :cls | cls children ] ].
+	methods copy do: [ :met | | nodes |
+		nodes := met rawModel messages flatCollect: [:str | 
+			methods select: [ :met1 | met1 name = str ]
+			].
+		
+		met dependenciesFromNodes: nodes.
+		 ].
+	^ root
+]
+
 { #category : #adding }
 HNode >> add: anHNode [
 	anHNode addedIn: self.
@@ -32,9 +76,16 @@ HNode >> addAll: aCollection [
 { #category : #adding }
 HNode >> addChild: anHNode [
 	children add: anHNode.
-	self announce: (HNodedAddedEvent new
+	self announce: (HNodeAddedEvent new
 		newChild: anHNode;
 		yourself)
+]
+
+{ #category : #dependencies }
+HNode >> addLink: link [
+	self dependencies isArray 
+		ifTrue: [ dependencies := dependencies asOrderedCollection ].
+	dependencies add: link
 ]
 
 { #category : #adding }
@@ -68,26 +119,59 @@ HNode >> children: aCollection [
 { #category : #public }
 HNode >> collapse [
 	isExpanded := false.
-	self announce: HCollapsedEvent new
+	self announce: (HCollapseEvent new node: self)
 	
 ]
 
-{ #category : #accessing }
+{ #category : #dependencies }
 HNode >> dependencies [
 
-	^ dependencies
+	^ dependencies ifNil: [ dependencies := #() ]
 ]
 
-{ #category : #accessing }
-HNode >> dependencies: anObject [
+{ #category : #dependencies }
+HNode >> dependencies: aCollectionOfLinks [
+	dependencies := aCollectionOfLinks asOrderedCollection
+]
 
-	dependencies := anObject
+{ #category : #dependencies }
+HNode >> dependenciesFromNodes: aCollection [
+	aCollection do: [ :node | | link |
+		link := HLink new 
+			from: self; 
+			to: node;
+			yourself.
+		self addLink: link.
+		node addLink: link.
+		 ].
+]
+
+{ #category : #dependencies }
+HNode >> dependentsFromLinks [
+	| list |
+	list := (self dependencies
+		select: [ :link | link to = self ]
+		thenCollect: [:link | 
+			link from visibleNodeOrParent ]) asOrderedCollection.
+	self isExpanded ifTrue: [ ^ list asSet ].
+	
+	self children do: [ :child | list addAll: child dependentsFromLinks ].
+	
+	^ list asSet.
+]
+
+{ #category : #dependencies }
+HNode >> dependentsToLinks [
+	^ (self dependencies 
+		select: [ :link | link from = self]
+		thenCollect: [:link | 
+			link to visibleNodeOrParent ]) asSet.
 ]
 
 { #category : #public }
 HNode >> expand [
 	isExpanded := true.
-	self announce: HExpandedEvent new
+	self announce: (HExpandEvent new node: self)
 ]
 
 { #category : #public }
@@ -112,6 +196,12 @@ HNode >> initialize [
 { #category : #testing }
 HNode >> isExpanded [
 	^ isExpanded
+]
+
+{ #category : #testing }
+HNode >> isVisible [
+	parent ifNil: [ ^ true ].
+	^ parent isExpanded and: [ parent isVisible ]
 ]
 
 { #category : #accessing }
@@ -163,4 +253,12 @@ HNode >> rawModel [
 { #category : #accessing }
 HNode >> rawModel: anObject [
 	rawModel := anObject
+]
+
+{ #category : #dependencies }
+HNode >> visibleNodeOrParent [
+	parent ifNil: [ ^ self ].
+	^ self isVisible
+		ifTrue: [ self ]
+		ifFalse: [ parent visibleNodeOrParent ]
 ]

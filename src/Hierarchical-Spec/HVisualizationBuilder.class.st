@@ -182,8 +182,8 @@ HVisualizationBuilder >> packageShapeFor: hpackage [
 	comp := { title. box. children }  asShapeFor: hpackage.
 	
 	hpackage 
-		when: HCollapsedEvent do: [ self collapse: comp ];
-		when: HExpandedEvent do: [ self expand: comp ].
+		when: HCollapseEvent do: [ self collapse: comp ];
+		when: HExpandEvent do: [ self expand: comp ].
 	comp 
 		adjustToChildren;
 		draggable;
@@ -215,7 +215,6 @@ HVisualizationBuilder >> renderIn: aCanvas [
 		canvas: aCanvas;
 		shapes: classes;
 		connectToAll: #dependentClasses.
-	classes @ RSHighlightableInteraction red withLines.
 	
 	self configureCanvas: aCanvas.
 	"RSRectanglePackLayout new

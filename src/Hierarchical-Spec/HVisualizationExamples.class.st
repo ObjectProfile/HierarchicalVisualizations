@@ -74,10 +74,32 @@ HVisualizationExamples >> example06Simple [
 	node2 addAll: {subnode1. subnode2}.
 	rootNode := HNode new name: 'Root'.
 	rootNode addAll: {node1. node2}.
-	node1 dependencies: { subnode1. subnode2 }.
-	subnode1 dependencies: { node1 }.
-	subnode2 dependencies: { node1 }.
-	
+	node1 dependenciesFromNodes: { subnode1. subnode2 }.
+
 	rootNode open.
 
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example07RSChart [
+	<script: 'self new example07RSChart'>
+	| node org packages |
+	org := RPackage organizer. 
+	packages := org packageNames 
+		select: [:s | 'Roassal3-Chart*' match: s]
+		thenCollect: [:s | org packageNamed: s ].
+	node := HNode fromPackages: packages.
+	node open.
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example08HierarchicalSpec [
+	<script: 'self new example08HierarchicalSpec'>
+	| node org packages |
+	org := RPackage organizer. 
+	packages := org packageNames 
+		select: [:s | 'Hierarchical*' match: s]
+		thenCollect: [:s | org packageNamed: s ].
+	node := HNode fromPackages: packages.
+	node open.
 ]

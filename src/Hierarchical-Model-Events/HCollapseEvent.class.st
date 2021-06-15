@@ -1,8 +1,8 @@
 "
-called when a node is expanded
+Called a node is collapsed
 "
 Class {
-	#name : #HExpandedEvent,
+	#name : #HCollapseEvent,
 	#superclass : #HEvent,
 	#category : #'Hierarchical-Model-Events'
 }

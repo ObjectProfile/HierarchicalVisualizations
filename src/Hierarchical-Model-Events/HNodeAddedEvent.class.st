@@ -2,7 +2,7 @@
 todo
 "
 Class {
-	#name : #HNodedAddedEvent,
+	#name : #HNodeAddedEvent,
 	#superclass : #HEvent,
 	#instVars : [
 		'newChild'
@@ -11,13 +11,13 @@ Class {
 }
 
 { #category : #accessing }
-HNodedAddedEvent >> newChild [
+HNodeAddedEvent >> newChild [
 
 	^ newChild
 ]
 
 { #category : #accessing }
-HNodedAddedEvent >> newChild: anObject [
+HNodeAddedEvent >> newChild: anObject [
 
 	newChild := anObject
 ]
