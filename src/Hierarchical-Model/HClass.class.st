@@ -27,23 +27,23 @@ HClass >> dependentClasses [
 { #category : #accessing }
 HClass >> instVars [
 
-	^ instVars
+	^ nil
 ]
 
 { #category : #accessing }
 HClass >> instVars: aCollection [
-	instVars := aCollection
+	
 ]
 
 { #category : #accessing }
 HClass >> methods [
 
-	^ methods
+	^ nil
 ]
 
 { #category : #accessing }
 HClass >> methods: aCollection [
-	methods := aCollection
+	
 ]
 
 { #category : #accessing }

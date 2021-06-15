@@ -61,6 +61,32 @@ HNodeTest >> testCollapseNodes [
 ]
 
 { #category : #tests }
+HNodeTest >> testCollapseNodes3Levels [
+	| node1 node2 subnode1 subnode2 subnode3 subnode4 gnode1 gnode2 gnode3 gnode4 rootNode |
+	node1 := HNode new name: 'Node1'.
+	node2 := HNode new name: 'Node2'.
+	subnode1 := HNode new name: 'Sub2-1'.
+	subnode2 := HNode new name: 'Sub2-2'.
+	subnode3 := HNode new name: 'Sub2-3'.
+	subnode4 := HNode new name: 'Sub2-4'.
+	gnode1 := HNode new name: 'Sub3-1'.
+	gnode2 := HNode new name: 'Sub3-2'.
+	gnode3 := HNode new name: 'Sub3-3'.
+	gnode4 := HNode new name: 'Sub3-4'.
+	
+	subnode1 addAll: { gnode1. gnode2 }.
+	subnode4 addAll: { gnode3. gnode4 }.
+	
+	node1 addAll: { subnode1. subnode2 }.
+	node2 addAll: { subnode3. subnode4 }.
+	rootNode := HNode new name: 'Root'.
+	rootNode addAll: {node1. node2}.
+	
+	gnode1 dependenciesFromNodes: { gnode3. gnode4 }.
+	gnode4 dependenciesFromNodes: { gnode3. gnode4 }.
+]
+
+{ #category : #tests }
 HNodeTest >> testDependencies [
 	| node1 node2 subnode1 subnode2 rootNode |
 	node1 := HNode new name: 'Node1'.

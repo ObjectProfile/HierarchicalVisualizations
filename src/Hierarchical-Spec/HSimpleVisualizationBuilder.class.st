@@ -42,7 +42,7 @@ HSimpleVisualizationBuilder >> initialize [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> menuInteraction [
-	^ RSMenuActivableInteraction new
+	^ RSMenuActivable new
 		menuDo: [ :menu :box | 
 			menu 
 				add: 'Expand/Collapse'
@@ -80,12 +80,12 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 	shapes := RSGroup new.
 	rootShapes := rootNode children collect: [:child | self shapeFor: child ].
 	aCanvas addAll: rootShapes.
-	aCanvas nodes @ RSDraggableInteraction.
+
 	self renderLinesIn: aCanvas.
 	RSGridLayout new
 		gapSize: 50;
 		on: rootShapes.
-	aCanvas @ (RSCanvasControllerInteraction new 
+	aCanvas @ (RSCanvasController new 
 		in: [:i | i configuration useBasicZoom ];
 		yourself).
 ]
@@ -122,13 +122,15 @@ HSimpleVisualizationBuilder >> shapeFor: node [
 		popup;
 		draggable;
 		addInteraction: self menuInteraction;
-		addInteraction: RSLabeledInteraction;
-		addInteraction: RSHighlightableInteraction red withLines;
+		addInteraction: RSLabeled;
+		addInteraction: RSHighlightable red withLines;
+		size: 50;
 		in: [ :shape | 
 			node isExpanded ifTrue: [ | childrenShapes |
 				shape addAll: (childrenShapes := self childrenFor: node).
 				RSGridLayout new gapSize: 30; on: childrenShapes.
 				shape
+					withBorder;
 					adjustToChildren;
 					padding: 10.
 			] ifFalse: [ shape border: (self borderFor: node) ].

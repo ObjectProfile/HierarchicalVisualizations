@@ -48,7 +48,7 @@ HVisualizationBuilder >> collapse: aRSComposite [
 HVisualizationBuilder >> configureCanvas: aCanvas [
 	aCanvas 
 		color: self backgroundColor;
-		addInteraction: (RSCanvasControllerInteraction new 
+		addInteraction: (RSCanvasController new 
 			in: [:i | i configuration
 				noZoomToFitOnExtendChanged;
 				useBasicZoom];
@@ -70,7 +70,7 @@ HVisualizationBuilder >> expand: aRSComposite [
 	newPackage translateBy: oldTitle positionInCanvas - newTitle positionInCanvas.
 	oldPackage remove.
 	
-	newPackage children third children @ RSHighlightableInteraction red withLines.
+	newPackage children third children @ RSHighlightable red withLines.
 	classes := canvas nodes flatCollect: [ :p | 
 		p children size > 2 
 			ifTrue: [ p children third children ]
