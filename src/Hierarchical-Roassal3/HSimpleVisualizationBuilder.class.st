@@ -86,7 +86,12 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 		gapSize: 50;
 		on: rootShapes.
 	aCanvas @ (RSCanvasController new 
-		in: [:i | i configuration useBasicZoom ];
+		in: [:i | 
+			aCanvas newAnimation
+				duration: 500 milliSeconds;
+				onStepDo: [ aCanvas signalUpdate ];
+				when: RSAnimationEndEvent do: [ i configuration noZoomToFitOnExtendChanged  ].
+			i configuration useBasicZoom ];
 		yourself).
 ]
 
