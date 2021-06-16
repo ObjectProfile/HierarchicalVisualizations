@@ -8,7 +8,7 @@ Class {
 		'rootNode',
 		'colors'
 	],
-	#category : #'Hierarchical-Spec'
+	#category : #'Hierarchical-Roassal3'
 }
 
 { #category : #hooks }

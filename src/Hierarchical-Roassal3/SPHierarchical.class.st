@@ -9,7 +9,7 @@ Class {
 		'spaceView',
 		'menuBar'
 	],
-	#category : #'Hierarchical-Spec'
+	#category : #'Hierarchical-Roassal3'
 }
 
 { #category : #accessing }

@@ -4,7 +4,7 @@ New Control points controller for bezier lines in this visualization
 Class {
 	#name : #HVisualizationCPController,
 	#superclass : #RSAbstractCPController,
-	#category : #'Hierarchical-Spec'
+	#category : #'Hierarchical-Roassal3'
 }
 
 { #category : #hooks }

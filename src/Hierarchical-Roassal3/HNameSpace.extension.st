@@ -1,11 +1,11 @@
 Extension { #name : #HNameSpace }
 
-{ #category : #'*Hierarchical-Spec' }
+{ #category : #'*Hierarchical-Roassal3' }
 HNameSpace >> iconName [
 	^ 'pharo'
 ]
 
-{ #category : #'*Hierarchical-Spec' }
+{ #category : #'*Hierarchical-Roassal3' }
 HNameSpace >> open [
 	^ SPHierarchical new
 		hspace: self;

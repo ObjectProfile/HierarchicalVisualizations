@@ -1,18 +1,18 @@
 Extension { #name : #HNode }
 
-{ #category : #'*Hierarchical-Spec' }
+{ #category : #'*Hierarchical-Roassal3' }
 HNode >> icon [
 	^ RSBitmap new
 		form: (self iconNamed: self iconName);
 		yourself.
 ]
 
-{ #category : #'*Hierarchical-Spec' }
+{ #category : #'*Hierarchical-Roassal3' }
 HNode >> iconName [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'*Hierarchical-Spec' }
+{ #category : #'*Hierarchical-Roassal3' }
 HNode >> open [
 	^ HSimpleVisualizationBuilder new
 		rootNode: self;

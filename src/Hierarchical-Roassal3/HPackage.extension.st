@@ -1,6 +1,6 @@
 Extension { #name : #HPackage }
 
-{ #category : #'*Hierarchical-Spec' }
+{ #category : #'*Hierarchical-Roassal3' }
 HPackage >> iconName [
 	^ 'monticelloPackage'
 ]

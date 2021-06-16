@@ -17,7 +17,8 @@ BaselineOfHierarchicalVisualizations >> baseline: spec [
 			package: 'Hierarchical-Model-Events';
 			package: 'Hierarchical-Model' with: [ spec requires: 'Roassal3' ];
 			package: 'Hierarchical-Model-Tests';
-			package: 'Hierarchical-Spec'.
+			package: 'Hierarchical-Roassal3';
+			package: 'Hierarchical-Examples'.
 
 		"Groups"
 		spec
@@ -27,5 +28,6 @@ BaselineOfHierarchicalVisualizations >> baseline: spec [
 				'Hierarchical-Model-Tests');
 			group: 'default' with: #(
 				'Core'
-				'Hierarchical-Spec' ) ]
+				'Hierarchical-Roassal3'
+				'Hierarchical-Examples' ) ]
 ]
