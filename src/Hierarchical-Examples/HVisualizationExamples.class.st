@@ -21,7 +21,7 @@ HVisualizationExamples >> example02WithPackage [
 	| space |
 	space := HNameSpace new. 
 	
-	space add: (HPackage from: (RPackage organizer packageNamed: 'HierarchicalModel')).
+	space add: (HPackage from: (RPackage organizer packageNamed: 'Hierarchical-Model')).
 	space open.
 ]
 
@@ -81,32 +81,8 @@ HVisualizationExamples >> example06Simple [
 ]
 
 { #category : #examples }
-HVisualizationExamples >> example07RSChart [
-	<script: 'self new example07RSChart'>
-	| node org packages |
-	org := RPackage organizer. 
-	packages := org packageNames 
-		select: [:s | 'Roassal3-Chart*' match: s]
-		thenCollect: [:s | org packageNamed: s ].
-	node := HNode fromPackages: packages.
-	node open.
-]
-
-{ #category : #examples }
-HVisualizationExamples >> example08HierarchicalSpec [
-	<script: 'self new example08HierarchicalSpec'>
-	| node org packages |
-	org := RPackage organizer. 
-	packages := org packageNames 
-		select: [:s | 'Hierarchical*' match: s]
-		thenCollect: [:s | org packageNamed: s ].
-	node := HNode fromPackages: packages.
-	node open.
-]
-
-{ #category : #examples }
-HVisualizationExamples >> example09Simple2 [
-	<script: 'self new example09Simple2'>
+HVisualizationExamples >> example07Simple2 [
+	<script: 'self new example07Simple2'>
 	| node1 node2 subnode1 subnode2 rootNode subnode3 subnode4 |
 	node1 := HNode new name: 'Node1'.
 	subnode3 := HNode new name: 'Sub1-1'.
@@ -124,4 +100,28 @@ HVisualizationExamples >> example09Simple2 [
 
 	rootNode open.
 
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example08Hierarchical [
+	<script: 'self new example08Hierarchical'>
+	| node org packages |
+	org := RPackage organizer. 
+	packages := org packageNames 
+		select: [:s | 'Hierarchical*' match: s]
+		thenCollect: [:s | org packageNamed: s ].
+	node := HNode fromPackages: packages.
+	node open.
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example09RSChart [
+	<script: 'self new example09RSChart'>
+	| node org packages |
+	org := RPackage organizer. 
+	packages := org packageNames 
+		select: [:s | 'Roassal3-Chart*' match: s]
+		thenCollect: [:s | org packageNamed: s ].
+	node := HNode fromPackages: packages.
+	node open.
 ]

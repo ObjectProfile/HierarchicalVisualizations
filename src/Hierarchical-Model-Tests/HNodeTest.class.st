@@ -83,7 +83,14 @@ HNodeTest >> testCollapseNodes3Levels [
 	rootNode addAll: {node1. node2}.
 	
 	gnode1 dependenciesFromNodes: { gnode3. gnode4 }.
-	gnode4 dependenciesFromNodes: { gnode3. gnode4 }.
+	gnode4 dependenciesFromNodes: { gnode2. gnode4 }.
+	self assert: node1 dependentsFromLinks isEmpty.
+	self assert: node2 dependentsFromLinks isEmpty.
+	node1 collapse.
+	node2 collapse.
+	
+	self deny: node1 dependentsFromLinks isEmpty.
+	self deny: node2 dependentsFromLinks isEmpty.
 ]
 
 { #category : #tests }

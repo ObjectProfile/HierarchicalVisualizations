@@ -153,7 +153,7 @@ HNode >> dependentsFromLinks [
 		select: [ :link | link to = self ]
 		thenCollect: [:link | 
 			link from visibleNodeOrParent ]) asOrderedCollection.
-	self isExpanded ifTrue: [ ^ list asSet ].
+	(self isExpanded and: [ self isVisible ]) ifTrue: [ ^ list asSet ].
 	
 	self children do: [ :child | list addAll: child dependentsFromLinks ].
 	
