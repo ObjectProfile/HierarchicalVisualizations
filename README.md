@@ -35,5 +35,5 @@ rootNode open.
 ```
 
 The code above defines four nodes in total, structured as a hierarchy. Executing the code should shows:
-<img width="300" alt="portfolio_view" src="https://user-images.githubusercontent.com/10532890/84400888-9afc6180-abd0-11ea-8258-4bbcbee7bd15.png">
+<img width="300" alt="portfolio_view" src="https://raw.githubusercontent.com/ObjectProfile/HierarchicalVisualizations/main/scripts/simpleExample.png">
 
