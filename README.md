@@ -37,3 +37,6 @@ rootNode open.
 The code above defines four nodes in total, structured as a hierarchy. Executing the code should shows:
 <img width="500" alt="portfolio_view" src="https://raw.githubusercontent.com/ObjectProfile/HierarchicalVisualizations/main/scripts/simpleExample.png">
 
+Node can be collapsed or expanded:
+<img width="500" alt="portfolio_view" src="https://raw.githubusercontent.com/ObjectProfile/HierarchicalVisualizations/main/scripts/simpleExample02.png">
+
