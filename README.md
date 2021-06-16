@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runTests.yml/badge.svg)](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runTests.yml)
 
-This project provide a small API to build 
+This project provide a small API to build hierarchical visualization using the [Pharo](http://pharo.org) programming language. HierarchicalVisualizations uses [Roassal](https://github.com/ObjectProfile/Roassal3).
 
 ### Install
 Execute the following code snippet in a Playground:
@@ -15,7 +15,7 @@ Execute the following code snippet in a Playground:
 ```
 
 ### Example
-
+Consider the following code snippet:
 ```Smalltalk
 node1 := HNode new name: 'Node1'.
 subnode3 := HNode new name: 'Sub1-1'.
@@ -33,3 +33,7 @@ subnode3 dependenciesFromNodes: { subnode1. subnode2 }.
 
 rootNode open.
 ```
+
+The code above defines four nodes in total, structured as a hierarchy. Executing the code should shows:
+<img width="450" height="250" alt="portfolio_view" src="https://user-images.githubusercontent.com/10532890/84400888-9afc6180-abd0-11ea-8258-4bbcbee7bd15.png">
+
