@@ -105,23 +105,19 @@ HVisualizationExamples >> example07Simple2 [
 { #category : #examples }
 HVisualizationExamples >> example08Hierarchical [
 	<script: 'self new example08Hierarchical'>
-	| node org packages |
-	org := RPackage organizer. 
-	packages := org packageNames 
-		select: [:s | 'Hierarchical*' match: s]
-		thenCollect: [:s | org packageNamed: s ].
-	node := HNode fromPackages: packages.
-	node open.
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Hierarchical*'.
+	b build.
+	b rootNode open
 ]
 
 { #category : #examples }
 HVisualizationExamples >> example09RSChart [
 	<script: 'self new example09RSChart'>
-	| node org packages |
-	org := RPackage organizer. 
-	packages := org packageNames 
-		select: [:s | 'Roassal3-Chart*' match: s]
-		thenCollect: [:s | org packageNamed: s ].
-	node := HNode fromPackages: packages.
-	node open.
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Roassal3-Chart*'.
+	b build.
+	b rootNode open
 ]
