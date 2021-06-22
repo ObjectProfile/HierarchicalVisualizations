@@ -1,8 +1,8 @@
-curl -L https://get.pharo.org/64/vm80 | bash
-wget https://github.com/moosetechnology/Moose/releases/download/v8.0.2/Moose8-stable.zip
-unzip Moose8-stable.zip
+curl -L https://get.pharo.org/64/vm90 | bash
+wget https://github.com/moosetechnology/Moose/releases/download/continuous/Moose9-development.zip
+unzip Moose9-development.zip
 
-./pharo --headless Moose8-stable.image ./scripts/runTests.st
+./pharo --headless Moose9-development.image ./scripts/runTests.st
 
 FILE=/tmp/result.txt
 if [ ! -f "$FILE" ]; then
