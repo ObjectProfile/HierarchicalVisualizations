@@ -1,8 +1,6 @@
 # HierarchicalVisualizations
 
-[![Tests](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runTests.yml/badge.svg)](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runTests.yml)
-
-[![CI/Moose](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runOnMoose.yml/badge.svg)](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runOnMoose.yml)
+[![Tests](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runTests.yml/badge.svg)](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runTests.yml)[![CI/Moose](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runOnMoose.yml/badge.svg)](https://github.com/ObjectProfile/HierarchicalVisualizations/actions/workflows/runOnMoose.yml)
 
 This project provide a small API to build hierarchical visualization using the [Pharo](http://pharo.org) programming language. HierarchicalVisualizations uses [Roassal](https://github.com/ObjectProfile/Roassal3).
 
