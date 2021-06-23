@@ -8,8 +8,8 @@ Class {
 	#classTraits : 'RSTAnnounceable classTrait',
 	#instVars : [
 		'announcer',
-		'name',
 		'rawModel',
+		'name',
 		'parent',
 		'isExpanded',
 		'children',
@@ -158,6 +158,13 @@ HNode >> isExpanded [
 HNode >> isVisible [
 	parent ifNil: [ ^ true ].
 	^ parent isExpanded and: [ parent isVisible ]
+]
+
+{ #category : #accessing }
+HNode >> level [
+	^ parent 
+		ifNil: [ 0 ]
+		ifNotNil: [ 1 + parent level ]
 ]
 
 { #category : #accessing }

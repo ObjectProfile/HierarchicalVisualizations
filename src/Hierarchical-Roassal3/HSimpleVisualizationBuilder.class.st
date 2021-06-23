@@ -6,7 +6,9 @@ Class {
 	#superclass : #RSAbstractContainerBuilder,
 	#instVars : [
 		'rootNode',
-		'colors'
+		'colors',
+		'menuInteraction',
+		'highlightable'
 	],
 	#category : #'Hierarchical-Roassal3'
 }
@@ -31,30 +33,67 @@ HSimpleVisualizationBuilder >> childrenFor: node [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> colorFor: node [
-	^ colors scale: node
+	^ colors scale: node level
+]
+
+{ #category : #'accessing - defaults' }
+HSimpleVisualizationBuilder >> defaultContainer [
+	| canvas |
+	canvas := RSCanvas new.
+	canvas  @ (RSCanvasController new 
+		noLegend;
+		in: [:i | 
+			canvas newAnimation
+				duration: 500 milliSeconds;
+				onStepDo: [ canvas signalUpdate ];
+				when: RSAnimationEndEvent do: [ i configuration noZoomToFitOnExtendChanged  ].
+			i configuration
+				useBasicZoom ];
+		yourself).
+		
+	^ canvas
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> highlightable [
+	^ highlightable ifNil: [ 
+		highlightable := RSHighlightable new
+			withLines;
+			when: RSHighlightEvent do: [ :evt |
+				| color |
+				color := evt shape isNode
+					 ifTrue: [ evt shape color muchDarker ]
+					 ifFalse: [ Color red ].
+				highlightable record: evt shape selector: #color value: color ];
+			when: RSUnHighlightEvent do: [ :evt | 
+				highlightable restore: evt shape selector: #color ];
+			yourself.
+		 ].
 ]
 
 { #category : #initialization }
 HSimpleVisualizationBuilder >> initialize [
 	super initialize.
-	colors := NSScale category20c.
+	colors := NSScale category10.
 ]
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> menuInteraction [
-	^ RSMenuActivable new
-		menuDo: [ :menu :box | 
-			menu 
-				add: 'Expand/Collapse'
-				target: box model
-				selector: #expandCollapse
-				argument: #();
-				
-				add: 'Inspect'
-				target: box model
-				selector: #inspect
-				argument: #() ];
-		yourself.
+	^ menuInteraction ifNil: [ 
+		menuInteraction := RSMenuActivable new
+			menuDo: [ :menu :box | 
+				menu 
+					add: 'Expand/Collapse'
+					target: box model
+					selector: #expandCollapse
+					argument: #();
+					
+					add: 'Inspect'
+					target: box model
+					selector: #inspect
+					argument: #() ];
+			yourself 
+	]
 ]
 
 { #category : #hooks }
@@ -80,19 +119,10 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 	shapes := RSGroup new.
 	rootShapes := rootNode children collect: [:child | self shapeFor: child ].
 	aCanvas addAll: rootShapes.
-
 	self renderLinesIn: aCanvas.
-	RSGridLayout new
+	RSFlowLayout new
 		gapSize: 50;
 		on: rootShapes.
-	aCanvas @ (RSCanvasController new 
-		in: [:i | 
-			aCanvas newAnimation
-				duration: 500 milliSeconds;
-				onStepDo: [ aCanvas signalUpdate ];
-				when: RSAnimationEndEvent do: [ i configuration noZoomToFitOnExtendChanged  ].
-			i configuration useBasicZoom ];
-		yourself).
 ]
 
 { #category : #hooks }
@@ -128,12 +158,12 @@ HSimpleVisualizationBuilder >> shapeFor: node [
 		draggable;
 		addInteraction: self menuInteraction;
 		addInteraction: RSLabeled;
-		addInteraction: RSHighlightable red withLines;
+		addInteraction: self highlightable;
 		size: 50;
 		in: [ :shape | 
 			node isExpanded ifTrue: [ | childrenShapes |
 				shape addAll: (childrenShapes := self childrenFor: node).
-				RSGridLayout new gapSize: 30; on: childrenShapes.
+				RSFlowLayout new gapSize: 30; on: childrenShapes.
 				shape
 					withBorder;
 					adjustToChildren;

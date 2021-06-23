@@ -122,3 +122,19 @@ HNodeTest >> testDependencies [
 	
 	
 ]
+
+{ #category : #tests }
+HNodeTest >> testLevel [
+	| node1 node2 subnode1 subnode2 rootNode |
+	node1 := HNode new name: 'Node1'.
+	node2 := HNode new name: 'Node2'.
+	subnode1 := HNode new name: 'Sub2-1'.
+	subnode2 := HNode new name: 'Sub2-2'.
+	node2 addAll: {subnode1. subnode2}.
+	rootNode := HNode new name: 'Root'.
+	rootNode addAll: {node1. node2}.
+
+	self assert: rootNode level equals: 0.
+	self assert: node1 level equals: 1.
+	self assert: subnode1 level equals: 2.
+]
