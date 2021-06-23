@@ -8,7 +8,8 @@ Class {
 		'rootNode',
 		'colors',
 		'menuInteraction',
-		'highlightable'
+		'highlightable',
+		'labeled'
 	],
 	#category : #'Hierarchical-Roassal3'
 }
@@ -75,6 +76,15 @@ HSimpleVisualizationBuilder >> highlightable [
 HSimpleVisualizationBuilder >> initialize [
 	super initialize.
 	colors := NSScale category10.
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> labeled [
+	^ labeled ifNil: [ 
+		labeled := RSLabeled new.
+		labeled shapeBuilder labelShape color: Smalltalk ui theme textColor. 
+		labeled 
+			 ]
 ]
 
 { #category : #hooks }
@@ -151,29 +161,42 @@ HSimpleVisualizationBuilder >> rootNode: aHNode [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> shapeFor: node [
-	^ RSComposite new
+	| shape |
+	shape := RSComposite new
 		model: node;
 		color: (self colorFor: node);
 		popup;
 		draggable;
-		addInteraction: self menuInteraction;
-		addInteraction: RSLabeled;
-		addInteraction: self highlightable;
-		size: 50;
-		in: [ :shape | 
-			node isExpanded ifTrue: [ | childrenShapes |
-				shape addAll: (childrenShapes := self childrenFor: node).
-				RSFlowLayout new gapSize: 30; on: childrenShapes.
-				shape
-					withBorder;
-					adjustToChildren;
-					padding: 10.
-			] ifFalse: [ shape border: (self borderFor: node) ].
-			node 
-				removeInteractionIfPresent: self class;
-				when: HCollapseEvent do: [ :evt | self rebuild: evt node shape: shape ];
-				when: HExpandEvent do: [ :evt | self rebuild: evt node shape: shape ].
-			shapes add: shape ];
+		@ self menuInteraction;
+		@ self highlightable;
 		yourself.
+		
+	(node isExpanded and: [node hasChildren]) ifTrue: [ 
+		| childrenShapes |
+		shape addAll: (childrenShapes := self childrenFor: node).
+		RSFlowLayout new gapSize: 10; on: childrenShapes.
+		shape @ self labeled.
+		shape
+			withBorder;
+			adjustToChildren;
+			padding: 10.
+	] ifFalse: [ 
+		shape add: (RSLabel new
+			color: Smalltalk ui theme textColor;
+			text: node asString;
+			yourself).
+		shape 
+			adjustToChildren;
+			padding: 5;
+			border: (self borderFor: node) ].
+
+	node 
+		removeInteractionIfPresent: self class;
+		when: HCollapseEvent do: [ :evt |
+			self rebuild: evt node shape: shape ];
+		when: HExpandEvent do: [ :evt |
+			self rebuild: evt node shape: shape ].
+	shapes add: shape.
+	^ shape 
 	
 ]
