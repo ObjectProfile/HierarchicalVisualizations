@@ -6,10 +6,10 @@ Class {
 	#superclass : #RSAbstractContainerBuilder,
 	#instVars : [
 		'rootNode',
-		'colors',
 		'menuInteraction',
 		'highlightable',
-		'labeled'
+		'labeled',
+		'colorPalette'
 	],
 	#category : #'Hierarchical-Roassal3'
 }
@@ -34,7 +34,17 @@ HSimpleVisualizationBuilder >> childrenFor: node [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> colorFor: node [
-	^ colors scale: node level
+	^ colorPalette scale: node level
+]
+
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> colorPalette [
+	^ colorPalette
+]
+
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> colorPalette: aNSOrdinalScale [
+	colorPalette := aNSOrdinalScale
 ]
 
 { #category : #'accessing - defaults' }
@@ -75,7 +85,7 @@ HSimpleVisualizationBuilder >> highlightable [
 { #category : #initialization }
 HSimpleVisualizationBuilder >> initialize [
 	super initialize.
-	colors := NSScale category10.
+	self colorPalette: NSScale category10.
 ]
 
 { #category : #hooks }
