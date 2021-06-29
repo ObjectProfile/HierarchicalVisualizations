@@ -59,7 +59,9 @@ HSimpleVisualizationBuilder >> defaultContainer [
 				onStepDo: [ canvas signalUpdate ];
 				when: RSAnimationEndEvent do: [ i configuration noZoomToFitOnExtendChanged  ].
 			i configuration
-				useBasicZoom ];
+				"useBasicZoom;"
+				maxScale: 3;
+				minScale: 0.5];
 		yourself).
 		
 	^ canvas
@@ -154,9 +156,9 @@ HSimpleVisualizationBuilder >> renderLinesIn: aCanvas [
 	RSLineBuilder line "bezier"
 		"controlPointsController: HVisualizationCPController new;"
 		"markerStartEnd: (RSEllipse new size: 3);"
-		attachPoint: (RSBorderAttachPoint new endOffset: 5);
+		"attachPoint: (RSBorderAttachPoint new endOffset: 5);"
 		markerEnd: (RSShapeFactory arrow size: 10);
-		color: Smalltalk ui theme textColor;
+		color: Smalltalk ui theme textColor translucent;
 		canvas: aCanvas;
 		shapes: shapes;
 		connectFromAll: #dependentsFromLinks.
@@ -179,7 +181,7 @@ HSimpleVisualizationBuilder >> shapeFor: node [
 		model: node;
 		color: (self colorFor: node);
 		popup;
-		draggable;
+		@ RSGhostDraggable new;
 		@ self menuInteraction;
 		@ self highlightable;
 		yourself.

@@ -116,3 +116,13 @@ HVisualizationExamples >> example08RSChart [
 	b build.
 	^ b rootNode
 ]
+
+{ #category : #examples }
+HVisualizationExamples >> example09Collection [
+	<script: 'self new example09Collection open'>
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Collections-Abstract*'.
+	b build.
+	^ b rootNode
+]
