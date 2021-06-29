@@ -102,12 +102,15 @@ HSimpleVisualizationBuilder >> menuInteraction [
 	^ menuInteraction ifNil: [ 
 		menuInteraction := RSMenuActivable new
 			menuDo: [ :menu :box | 
-				menu 
-					add: 'Expand/Collapse'
-					target: box model
-					selector: #expandCollapse
-					argument: #();
-					
+				box model hasChildren ifTrue: [ 
+					menu 
+						add: 'Expand/Collapse'
+						target: box model
+						selector: #expandCollapse
+						argument: #()
+				].
+				
+				menu
 					add: 'Inspect'
 					target: box model
 					selector: #inspect
