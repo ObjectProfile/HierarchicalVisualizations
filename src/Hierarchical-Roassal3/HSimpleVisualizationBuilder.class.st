@@ -153,10 +153,10 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 { #category : #hooks }
 HSimpleVisualizationBuilder >> renderLinesIn: aCanvas [
 
-	RSLineBuilder line "bezier"
+	RSLineBuilder line
 		"controlPointsController: HVisualizationCPController new;"
 		"markerStartEnd: (RSEllipse new size: 3);"
-		"attachPoint: (RSBorderAttachPoint new endOffset: 5);"
+		attachPoint: (RSBorderAttachPoint new endOffset: 5);
 		markerEnd: (RSShapeFactory arrow size: 10);
 		color: Smalltalk ui theme textColor translucent;
 		canvas: aCanvas;

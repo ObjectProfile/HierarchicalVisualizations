@@ -44,6 +44,11 @@ HNode >> addLink: link [
 	dependencies add: link
 ]
 
+{ #category : #dependencies }
+HNode >> addTo: anHNode [
+	
+]
+
 { #category : #adding }
 HNode >> addedIn: anHNode [
 	anHNode addChild: self.
@@ -92,14 +97,18 @@ HNode >> dependencies: aCollectionOfLinks [
 
 { #category : #dependencies }
 HNode >> dependenciesFromNodes: aCollection [
-	aCollection do: [ :node | | link |
-		link := HLink new 
-			from: self; 
-			to: node;
-			yourself.
-		self addLink: link.
-		node addLink: link.
-		 ].
+	aCollection do: [ :node | self dependencyTo: node ].
+]
+
+{ #category : #dependencies }
+HNode >> dependencyTo: anHNode [
+	| link |
+	link := HLink new
+		from: self;
+		to: anHNode;
+		yourself.
+	anHNode addLink: link.
+	self addLink: link.
 ]
 
 { #category : #dependencies }
