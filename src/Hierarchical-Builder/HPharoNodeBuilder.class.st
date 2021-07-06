@@ -23,7 +23,9 @@ HPharoNodeBuilder >> buildNodeFromClass: clazz [
 	^ HNode new
 		name: clazz name;
 		rawModel: clazz;
+		iconName: #class;
 		addAll: (clazz methods collect: [:met | self buildNodefromMethod: met ]);
+		collapse;
 		yourself
 ]
 
@@ -32,6 +34,7 @@ HPharoNodeBuilder >> buildNodeFromPackage: package [
 	^ HNode new
 		name: package name;
 		rawModel: package;
+		iconName: #monticelloPackage;
 		addAll: (package definedClasses collect: [:cls | self buildNodeFromClass: cls ]);
 		yourself
 ]
@@ -41,6 +44,7 @@ HPharoNodeBuilder >> buildNodefromMethod: method [
 	^ HNode new
 		name: method selector;
 		rawModel: method;
+		iconName: #glamorousBrowse;
 		yourself
 	
 ]
@@ -54,7 +58,7 @@ HPharoNodeBuilder >> createDependenciesBetweenMethods [
 		nodes := met rawModel messages flatCollect: [:str | 
 			methods select: [ :met1 | met1 name = str ]
 			].
-		met dependenciesFromNodes: nodes.
+		met dependenciesToNodes: nodes.
 	].
 	
 ]

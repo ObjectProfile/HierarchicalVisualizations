@@ -13,7 +13,8 @@ Class {
 		'parent',
 		'isExpanded',
 		'children',
-		'dependencies'
+		'dependencies',
+		'iconName'
 	],
 	#category : #'Hierarchical-Model'
 }
@@ -84,6 +85,11 @@ HNode >> collapse [
 	
 ]
 
+{ #category : #public }
+HNode >> collapseChildren [
+	children do: [ :child | child collapse ].
+]
+
 { #category : #dependencies }
 HNode >> dependencies [
 
@@ -96,7 +102,7 @@ HNode >> dependencies: aCollectionOfLinks [
 ]
 
 { #category : #dependencies }
-HNode >> dependenciesFromNodes: aCollection [
+HNode >> dependenciesToNodes: aCollection [
 	aCollection do: [ :node | self dependencyTo: node ].
 ]
 
@@ -140,6 +146,11 @@ HNode >> expand [
 ]
 
 { #category : #public }
+HNode >> expandChildren [
+	children do: [ :child | child expand ].
+]
+
+{ #category : #public }
 HNode >> expandCollapse [
 	isExpanded 
 		ifTrue: [ self collapse ]
@@ -149,6 +160,11 @@ HNode >> expandCollapse [
 { #category : #testing }
 HNode >> hasChildren [
 	^ children notEmpty
+]
+
+{ #category : #accessing }
+HNode >> iconName: aString [
+	iconName := aString
 ]
 
 { #category : #initialization }

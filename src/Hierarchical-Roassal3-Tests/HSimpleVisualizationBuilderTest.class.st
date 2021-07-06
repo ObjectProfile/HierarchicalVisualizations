@@ -31,8 +31,8 @@ HSimpleVisualizationBuilderTest >> testColorPalette [
 	subnode1 addAll: { gnode1. gnode2 }.
 	subnode3 addAll: { gnode3. gnode4 }.
 
-	gnode1 dependenciesFromNodes: { gnode3. gnode4 }.
-	gnode4 dependenciesFromNodes: { gnode1. gnode2 }.
+	gnode1 dependenciesToNodes: { gnode3. gnode4 }.
+	gnode4 dependenciesToNodes: { gnode1. gnode2 }.
 
 	HSimpleVisualizationBuilder new
 		rootNode: root;

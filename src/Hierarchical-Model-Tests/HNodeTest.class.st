@@ -17,7 +17,7 @@ HNodeTest >> testBasic [
 	node2 addAll: {subnode1. subnode2}.
 	rootNode := HNode new name: 'Root'.
 	rootNode addAll: {node1. node2}.
-	node1 dependenciesFromNodes: { subnode1. subnode2 }.
+	node1 dependenciesToNodes: { subnode1. subnode2 }.
 	
 	w := rootNode open.
 	w delete.
@@ -38,8 +38,8 @@ HNodeTest >> testCollapseNodes [
 	rootNode := HNode new name: 'Root'.
 	rootNode addAll: {node1. node2}.
 	
-	subnode1 dependenciesFromNodes: { subnode3 }.
-	subnode4 dependenciesFromNodes: { subnode2 }.
+	subnode1 dependenciesToNodes: { subnode3 }.
+	subnode4 dependenciesToNodes: { subnode2 }.
 	
 	self assert: subnode3 dependentsFromLinks asArray first equals: subnode1.
 	self assert: subnode2 dependentsFromLinks asArray first equals: subnode4.
@@ -82,8 +82,8 @@ HNodeTest >> testCollapseNodes3Levels [
 	rootNode := HNode new name: 'Root'.
 	rootNode addAll: {node1. node2}.
 	
-	gnode1 dependenciesFromNodes: { gnode3. gnode4 }.
-	gnode4 dependenciesFromNodes: { gnode2. gnode4 }.
+	gnode1 dependenciesToNodes: { gnode3. gnode4 }.
+	gnode4 dependenciesToNodes: { gnode2. gnode4 }.
 	self assert: node1 dependentsFromLinks isEmpty.
 	self assert: node2 dependentsFromLinks isEmpty.
 	node1 collapse.
@@ -104,7 +104,7 @@ HNodeTest >> testDependencies [
 	rootNode := HNode new name: 'Root'.
 	rootNode addAll: {node1. node2}.
 	
-	node1 dependenciesFromNodes: { subnode1. subnode2 }.
+	node1 dependenciesToNodes: { subnode1. subnode2 }.
 	
 	self assert: node1 dependencies size equals: 2.
 	self assert: node1 dependencies first class equals: HLink.
@@ -139,6 +139,24 @@ HNodeTest >> testDependencyTo [
 	node2 collapse.
 	self assert: (node1 dependentsFromLinks includes: node2).
 	
+]
+
+{ #category : #tests }
+HNodeTest >> testExpandChildren [
+	| node1 node2 subnode1 subnode2 rootNode |
+	node1 := HNode new name: 'Node1'.
+	node2 := HNode new name: 'Node2'.
+	subnode1 := HNode new name: 'Sub2-1'.
+	subnode2 := HNode new name: 'Sub2-2'.
+	node2 addAll: {subnode1. subnode2}.
+	rootNode := HNode new name: 'Root'.
+	rootNode addAll: {node1. node2}.
+	rootNode collapseChildren.
+	self deny: subnode1 isVisible.
+	self deny: subnode1 isVisible.
+	rootNode expandChildren.
+	self assert: subnode1 isVisible.
+	self assert: subnode1 isVisible.
 ]
 
 { #category : #tests }

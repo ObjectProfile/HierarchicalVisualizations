@@ -9,7 +9,10 @@ Class {
 		'menuInteraction',
 		'highlightable',
 		'labeled',
-		'colorPalette'
+		'colorPalette',
+		'topCornerRadius',
+		'bottomCornerRadius',
+		'boxChildrenColor'
 	],
 	#category : #'Hierarchical-Roassal3'
 }
@@ -28,13 +31,94 @@ HSimpleVisualizationBuilder >> borderFor: node [
 ]
 
 { #category : #hooks }
+HSimpleVisualizationBuilder >> bottomCornerRadius [
+	^ bottomCornerRadius ifNil: [ bottomCornerRadius := RSCornerRadius new bottom: 7]
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> boxChildrenColorFor: anHNode [
+	^ boxChildrenColor scale: anHNode level
+]
+
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> boxChildrenColorPalette: aNSOrdinalScale [
+	boxChildrenColor := aNSOrdinalScale
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> boxChildrenFor: anHNode [
+	^ RSBox new
+		color: (self boxChildrenColorFor: anHNode);
+		cornerRadius: self bottomCornerRadius;
+		yourself.
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> buildInCompositeEmptyNode: shape [
+	| node |
+	node := shape model.
+	shape add: (self iconFor: node).
+	shape add: (self labelFor: node).
+	RSHorizontalLineLayout on: shape children.
+	shape schildren: #().
+	shape 
+		propertyAt: #background put: shape;
+		color: (self colorFor: node);
+		adjustToChildren;
+		padding: 5;
+		border: (self borderFor: node) 
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> buildInCompositeFullNode: shape [
+	| childrenShapes node icon label title titleBox children boxChildren |
+	node := shape model.
+	icon := self iconFor: node.
+	label := self labelFor: node.
+	title := { icon. label } asGroup.
+	RSHorizontalLineLayout on: title.
+	titleBox := RSBox new
+		extent: title extent + 10;
+		color: ((self colorFor: node) alpha: 0.7);
+		position: title position;
+		cornerRadius: self topCornerRadius;
+		yourself.
+	title := { titleBox. icon. label } asShape.
+	shape propertyAt: #background put: titleBox.
+	childrenShapes := self childrenFor: node.
+	RSFlowLayout new gapSize: 10; on: childrenShapes.
+	shape schildren: childrenShapes.
+	childrenShapes do: [ :child | child sparent: shape ].
+	children := childrenShapes asShape
+		padding: 10.
+	title width < children width
+		ifTrue: [ titleBox width: children width. title adjustToChildren ]
+		ifFalse: [ children width: title width ].
+	RSVerticalLineLayout new
+		gapSize: 0;
+		on: { title. children }.
+	
+	boxChildren := self boxChildrenFor: node.
+	boxChildren fromRectangle: children encompassingRectangle.
+	shape add: title; add: boxChildren; add: children.
+	shape adjustToChildren.
+]
+
+{ #category : #hooks }
 HSimpleVisualizationBuilder >> childrenFor: node [
-	^ node children collect: [ :child | self shapeFor: child ]
+	^ node children collect: [ :child | self shapeFor: child ] as: RSGroup
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> collapseChildren: shape [
+	shape schildren do: [ :child | child model removeInteractionIfPresent: self ].
+	shape model collapseChildren.
+	self rebuildShape: shape.
 ]
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> colorFor: node [
-	^ colorPalette scale: node level
+	^ Color colorFrom: (colorPalette scale: node level)
 ]
 
 { #category : #accessing }
@@ -68,10 +152,22 @@ HSimpleVisualizationBuilder >> defaultContainer [
 ]
 
 { #category : #hooks }
+HSimpleVisualizationBuilder >> expandChildren: shape [
+	shape schildren do: [ :child | child model removeInteractionIfPresent: self ].
+	shape model expandChildren.
+	self rebuildShape: shape.
+]
+
+{ #category : #hooks }
 HSimpleVisualizationBuilder >> highlightable [
 	^ highlightable ifNil: [ 
 		highlightable := RSHighlightable new
-			withLines;
+			highlightShapes: [ :shape | 
+				| list |
+				list := shape connectedLines copy.
+				list add: (shape propertyAt: #background).
+				list 
+				 ];
 			when: RSHighlightEvent do: [ :evt |
 				| color |
 				color := evt shape isNode
@@ -84,19 +180,29 @@ HSimpleVisualizationBuilder >> highlightable [
 		 ].
 ]
 
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> iconFor: node [
+	^ RSBitmap new
+		form: (self iconNamed: (node iconName ifNil: [#objects]));
+		yourself.
+		
+]
+
 { #category : #initialization }
 HSimpleVisualizationBuilder >> initialize [
 	super initialize.
 	self colorPalette: NSScale category10.
+	self boxChildrenColorPalette: (NSScale ordinal 
+		range: Smalltalk ui theme roassalHNodeBackgroundColors).
+		
 ]
 
 { #category : #hooks }
-HSimpleVisualizationBuilder >> labeled [
-	^ labeled ifNil: [ 
-		labeled := RSLabeled new.
-		labeled shapeBuilder labelShape color: Smalltalk ui theme textColor. 
-		labeled 
-			 ]
+HSimpleVisualizationBuilder >> labelFor: node [
+	^ RSLabel new
+		color: Smalltalk ui theme textColor;
+		text: node asString;
+		yourself
 ]
 
 { #category : #hooks }
@@ -109,32 +215,65 @@ HSimpleVisualizationBuilder >> menuInteraction [
 						add: 'Expand/Collapse'
 						target: box model
 						selector: #expandCollapse
-						argument: #()
+						argument: nil.
+					menu
+						add: 'Expand children'
+						target: self
+						selector: #expandChildren:
+						argument: box.
+					menu
+						add: 'Collapse children'
+						target: self
+						selector: #collapseChildren:
+						argument: box.
 				].
 				
 				menu
 					add: 'Inspect'
 					target: box model
 					selector: #inspect
-					argument: #() ];
+					argument: nil ];
 			yourself 
 	]
 ]
 
 { #category : #hooks }
-HSimpleVisualizationBuilder >> rebuild: node shape: shape [
-	| canvas newShape |
+HSimpleVisualizationBuilder >> rebuildRootShape: shape [
+	| rootShape |
+	rootShape := self rootShapeFrom: shape.
+	self rebuildShape: rootShape.
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> rebuildShape: shape [
+	| canvas newShape node |
+	node := shape model.
 	canvas := shape canvas.
 	canvas lines copy do: #remove.
-	shapes removeAll: (shape withAllChildren select: [:s | s class = RSComposite]).
+	self removeShapeWithAllChildren: shape.
 	newShape := self shapeFor: node.
 	newShape position: shape position.
+	
 	shape parent add: newShape.
+	
+	"shape sparent schildren add: newShape."
+	shape sparent schildren 
+		remove: shape;
+		add: newShape.
+	newShape sparent: shape sparent.
 	shape remove.
 
 	self renderLinesIn: canvas.
 	canvas signalUpdate.
-		
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> removeShapeWithAllChildren: shape [
+	
+	shape schildren do: [ :child | self removeShapeWithAllChildren: child. ].
+	shape model removeInteractionIfPresent: self class.
+	shapes remove: shape.
+	
 ]
 
 { #category : #hooks }
@@ -142,7 +281,8 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 	| rootShapes |
 	aCanvas color: Smalltalk ui theme backgroundColor.
 	shapes := RSGroup new.
-	rootShapes := rootNode children collect: [:child | self shapeFor: child ].
+	rootShapes := rootNode children collect: [:child | (self shapeFor: child) sparent: aCanvas ].
+	aCanvas schildren: rootShapes.
 	aCanvas addAll: rootShapes.
 	self renderLinesIn: aCanvas.
 	RSFlowLayout new
@@ -175,43 +315,41 @@ HSimpleVisualizationBuilder >> rootNode: aHNode [
 ]
 
 { #category : #hooks }
+HSimpleVisualizationBuilder >> rootShapeFrom: shape [
+	| parent |
+	parent := shape sparent.
+	^ parent class = RSCanvas
+		ifTrue: [ shape ]
+		ifFalse: [ self rootShapeFrom: parent ].
+		
+]
+
+{ #category : #hooks }
 HSimpleVisualizationBuilder >> shapeFor: node [
 	| shape |
 	shape := RSComposite new
 		model: node;
-		color: (self colorFor: node);
 		popup;
 		@ RSGhostDraggable new;
 		@ self menuInteraction;
 		@ self highlightable;
 		yourself.
 		
-	(node isExpanded and: [node hasChildren]) ifTrue: [ 
-		| childrenShapes |
-		shape addAll: (childrenShapes := self childrenFor: node).
-		RSFlowLayout new gapSize: 10; on: childrenShapes.
-		shape @ self labeled.
-		shape
-			withBorder;
-			adjustToChildren;
-			padding: 10.
-	] ifFalse: [ 
-		shape add: (RSLabel new
-			color: Smalltalk ui theme textColor;
-			text: node asString;
-			yourself).
-		shape 
-			adjustToChildren;
-			padding: 5;
-			border: (self borderFor: node) ].
+	(node isExpanded and: [node hasChildren]) 
+		ifTrue: [ self buildInCompositeFullNode: shape ]
+		ifFalse: [ self buildInCompositeEmptyNode: shape ].
 
 	node 
 		removeInteractionIfPresent: self class;
-		when: HCollapseEvent do: [ :evt |
-			self rebuild: evt node shape: shape ];
-		when: HExpandEvent do: [ :evt |
-			self rebuild: evt node shape: shape ].
+		when: HNodeAddedEvent do: [ :evt | self rebuildRootShape: shape ];
+		when: HCollapseEvent do: [ :evt |	self rebuildShape: shape ];
+		when: HExpandEvent do: [ :evt | self rebuildRootShape: shape ].
 	shapes add: shape.
 	^ shape 
 	
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> topCornerRadius [
+	^ topCornerRadius ifNil: [ topCornerRadius := RSCornerRadius new top: 7 ]
 ]

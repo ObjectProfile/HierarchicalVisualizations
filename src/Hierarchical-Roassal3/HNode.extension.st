@@ -1,15 +1,8 @@
 Extension { #name : #HNode }
 
 { #category : #'*Hierarchical-Roassal3' }
-HNode >> icon [
-	^ RSBitmap new
-		form: (self iconNamed: self iconName);
-		yourself.
-]
-
-{ #category : #'*Hierarchical-Roassal3' }
 HNode >> iconName [
-	^ self subclassResponsibility
+	^ iconName
 ]
 
 { #category : #'*Hierarchical-Roassal3' }
