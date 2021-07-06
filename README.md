@@ -29,7 +29,7 @@ node2 addAll: {subnode1. subnode2}.
 	
 rootNode := HNode new name: 'Root'.
 rootNode addAll: { node1. node2 }.
-subnode3 dependenciesFromNodes: { subnode1. subnode2 }.
+subnode3 dependenciesToNodes: { subnode1. subnode2 }.
 
 rootNode open.
 ```
