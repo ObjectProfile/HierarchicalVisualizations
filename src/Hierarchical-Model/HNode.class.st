@@ -8,8 +8,8 @@ Class {
 	#classTraits : 'RSTAnnounceable classTrait',
 	#instVars : [
 		'announcer',
-		'name',
 		'rawModel',
+		'name',
 		'parent',
 		'isExpanded',
 		'children',
@@ -17,50 +17,6 @@ Class {
 	],
 	#category : #'Hierarchical-Model'
 }
-
-{ #category : #'instance creation' }
-HNode class >> fromClass: clazz [
-	^ self new
-		name: clazz name;
-		rawModel: clazz;
-		addAll: (clazz methods collect: [:met | self fromMethod: met ]);
-		yourself
-]
-
-{ #category : #'instance creation' }
-HNode class >> fromMethod: method [
-	^ self new
-		name: method selector;
-		rawModel: method;
-		yourself
-	
-]
-
-{ #category : #'instance creation' }
-HNode class >> fromPackage: package [ 
-	^ self new
-		name: package name;
-		rawModel: package;
-		addAll: (package definedClasses collect: [:cls | self fromClass: cls ]);
-		yourself
-]
-
-{ #category : #'instance creation' }
-HNode class >> fromPackages: collection [
-	| root methods |
-	root := self new.
-	root addAll: (collection collect: [ :pkg | self fromPackage: pkg ]).
-	methods := root children flatCollect: [ :pkg | 
-		pkg children flatCollect: [ :cls | cls children ] ].
-	methods copy do: [ :met | | nodes |
-		nodes := met rawModel messages flatCollect: [:str | 
-			methods select: [ :met1 | met1 name = str ]
-			].
-		
-		met dependenciesFromNodes: nodes.
-		 ].
-	^ root
-]
 
 { #category : #adding }
 HNode >> add: anHNode [
@@ -86,6 +42,11 @@ HNode >> addLink: link [
 	self dependencies isArray 
 		ifTrue: [ dependencies := dependencies asOrderedCollection ].
 	dependencies add: link
+]
+
+{ #category : #dependencies }
+HNode >> addTo: anHNode [
+	
 ]
 
 { #category : #adding }
@@ -136,14 +97,18 @@ HNode >> dependencies: aCollectionOfLinks [
 
 { #category : #dependencies }
 HNode >> dependenciesFromNodes: aCollection [
-	aCollection do: [ :node | | link |
-		link := HLink new 
-			from: self; 
-			to: node;
-			yourself.
-		self addLink: link.
-		node addLink: link.
-		 ].
+	aCollection do: [ :node | self dependencyTo: node ].
+]
+
+{ #category : #dependencies }
+HNode >> dependencyTo: anHNode [
+	| link |
+	link := HLink new
+		from: self;
+		to: anHNode;
+		yourself.
+	anHNode addLink: link.
+	self addLink: link.
 ]
 
 { #category : #dependencies }
@@ -202,6 +167,13 @@ HNode >> isExpanded [
 HNode >> isVisible [
 	parent ifNil: [ ^ true ].
 	^ parent isExpanded and: [ parent isVisible ]
+]
+
+{ #category : #accessing }
+HNode >> level [
+	^ parent 
+		ifNil: [ 0 ]
+		ifNotNil: [ 1 + parent level ]
 ]
 
 { #category : #accessing }

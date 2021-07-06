@@ -9,63 +9,15 @@ Class {
 
 { #category : #examples }
 HVisualizationExamples >> example01Empty [
-	<script: 'self new example01Empty'>
+	<script: 'self new example01Empty open'>
 	| space |
-	space := HNameSpace new.
-	space open.
+	space := HNode new.
+	^ space
 ]
 
 { #category : #examples }
-HVisualizationExamples >> example02WithPackage [
-	<script: 'self new example02WithPackage'>
-	| space |
-	space := HNameSpace new. 
-	
-	space add: (HPackage from: (RPackage organizer packageNamed: 'Hierarchical-Model')).
-	space open.
-]
-
-{ #category : #examples }
-HVisualizationExamples >> example03WithPackages [
-	<script: 'self new example03WithPackages'>
-	| space org packages |
-	space := HNameSpace new. 
-	org := RPackage organizer.
-	packages := org packageNames 
-		select: [ :s | 'Roassal3-Chart*' match: s  ]
-		thenCollect: [ :s | HPackage from: (org packageNamed: s) ].
-	space addAll: packages.
-	space open.
-]
-
-{ #category : #examples }
-HVisualizationExamples >> example04WithManyPackages [
-	<script: 'self new example04WithManyPackages'>
-	| space org packages |
-	space := HNameSpace new. 
-	org := RPackage organizer.
-	packages := org packageNames 
-		select: [ :s | 'Roassal3*' match: s  ]
-		thenCollect: [ :s | HPackage from: (org packageNamed: s) ].
-	space addAll: packages.
-	space open.
-]
-
-{ #category : #examples }
-HVisualizationExamples >> example05AllPackages [
-	"<script: 'self new example05AllPackages'>"
-	| space org packages |
-	space := HNameSpace new. 
-	org := RPackage organizer.
-	packages := org packageNames
-		collect: [ :s | HPackage from: (org packageNamed: s) ].
-	space addAll: packages.
-	space open.
-]
-
-{ #category : #examples }
-HVisualizationExamples >> example06Simple [
-	<script: 'self new example06Simple'>
+HVisualizationExamples >> example02Simple [
+	<script: 'self new example02Simple open'>
 	| node1 node2 subnode1 subnode2 rootNode |
 	node1 := HNode new name: 'Node1'.
 	node2 := HNode new name: 'Node2'.
@@ -76,13 +28,13 @@ HVisualizationExamples >> example06Simple [
 	rootNode addAll: {node1. node2}.
 	node1 dependenciesFromNodes: { subnode1. subnode2 }.
 
-	rootNode open.
+	^ rootNode.
 
 ]
 
 { #category : #examples }
-HVisualizationExamples >> example07Simple2 [
-	<script: 'self new example07Simple2'>
+HVisualizationExamples >> example03Simple2 [
+	<script: 'self new example03Simple2 open'>
 	| node1 node2 subnode1 subnode2 rootNode subnode3 subnode4 |
 	node1 := HNode new name: 'Node1'.
 	subnode3 := HNode new name: 'Sub1-1'.
@@ -98,30 +50,79 @@ HVisualizationExamples >> example07Simple2 [
 	rootNode addAll: { node1. node2 }.
 	subnode3 dependenciesFromNodes: { subnode1. subnode2 }.
 
-	rootNode open.
+	^ rootNode.
 
 ]
 
 { #category : #examples }
-HVisualizationExamples >> example08Hierarchical [
-	<script: 'self new example08Hierarchical'>
-	| node org packages |
-	org := RPackage organizer. 
-	packages := org packageNames 
-		select: [:s | 'Hierarchical*' match: s]
-		thenCollect: [:s | org packageNamed: s ].
-	node := HNode fromPackages: packages.
-	node open.
+HVisualizationExamples >> example04WithPackage [
+	<script: 'self new example04WithPackage open'>
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Hierarchical-Model'.
+	b build.
+	^ b rootNode
 ]
 
 { #category : #examples }
-HVisualizationExamples >> example09RSChart [
-	<script: 'self new example09RSChart'>
-	| node org packages |
-	org := RPackage organizer. 
-	packages := org packageNames 
-		select: [:s | 'Roassal3-Chart*' match: s]
-		thenCollect: [:s | org packageNamed: s ].
-	node := HNode fromPackages: packages.
-	node open.
+HVisualizationExamples >> example05WithPackages [
+	<script: 'self new example05WithPackages open'>
+	| b nodes |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Roassal3-Chart*'.
+	b build.
+	nodes := b rootNode children flatCollect: [ :node | node children ].
+	nodes do: [ :node | node collapse ].
+	^ b rootNode
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example06WithManyPackages [
+	<script: 'self new example06WithManyPackages open'>
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Roassal3*'.
+	b build.
+	b rootNode children do: [ :node | node collapse ].
+	^ b rootNode
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example07Hierarchical [
+	<script: 'self new example07Hierarchical open'>
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Hierarchical*'.
+	b build.
+	^ b rootNode
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example08 [
+	<script: 'self new example08RSChart open'>
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Roassal3-Chart*'.
+	b build.
+	^ b rootNode
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example08RSChart [
+	<script: 'self new example08RSChart open'>
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Roassal3-Chart*'.
+	b build.
+	^ b rootNode
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example09Collection [
+	<script: 'self new example09Collection open'>
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Collections-Abstract*'.
+	b build.
+	^ b rootNode
 ]
