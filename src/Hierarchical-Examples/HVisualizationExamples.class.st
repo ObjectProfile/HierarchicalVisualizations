@@ -126,3 +126,29 @@ HVisualizationExamples >> example09Collection [
 	b build.
 	^ b rootNode
 ]
+
+{ #category : #examples }
+HVisualizationExamples >> example10RSChartLabeler [
+	<script: 'self new example10RSChartLabeler open'>
+	| b visualization |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Roassal3-Chart*'.
+	b build.
+	
+	visualization := HSimpleVisualizationBuilder new.
+	visualization rootNode: b rootNode.
+	visualization labeler: (HLabeler new 
+		text: [ :node | 
+			(node asString splitOn: '-') last. ];
+		fontSize: [:node |
+			10 + (5 * node level) ];
+		fontName: 'Arial';
+		color: [ :node |
+			(node asString endsWith: 'Plot')
+				ifTrue: [ Smalltalk ui theme backgroundColor ]
+				ifFalse: [ Smalltalk ui theme textColor ] ];
+		below;
+		yourself).
+	^ visualization
+	
+]

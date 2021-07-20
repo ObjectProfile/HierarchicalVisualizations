@@ -14,7 +14,9 @@ Class {
 		'isExpanded',
 		'children',
 		'dependencies',
-		'iconName'
+		'iconName',
+		'position',
+		'layout'
 	],
 	#category : #'Hierarchical-Model'
 }
@@ -220,6 +222,17 @@ HNode >> parent [
 HNode >> parent: anHNode [
 
 	parent := anHNode
+]
+
+{ #category : #accessing }
+HNode >> position [
+
+	^ position
+]
+
+{ #category : #accessing }
+HNode >> position: aPoint [
+	position := aPoint
 ]
 
 { #category : #printing }

@@ -12,12 +12,14 @@ Class {
 		'colorPalette',
 		'topCornerRadius',
 		'bottomCornerRadius',
-		'boxChildrenColor'
+		'boxChildrenColor',
+		'labeler',
+		'fullCornerRadius'
 	],
-	#category : #'Hierarchical-Roassal3'
+	#category : #'Hierarchical-Roassal3-Visualization'
 }
 
-{ #category : #hooks }
+{ #category : #'public - hooks' }
 HSimpleVisualizationBuilder >> borderFor: node [
 	^ node hasChildren
 		ifTrue: [ RSBorder new 
@@ -30,12 +32,14 @@ HSimpleVisualizationBuilder >> borderFor: node [
 		ifFalse: [ nil ]
 ]
 
-{ #category : #hooks }
+{ #category : #'accessing - attributes' }
 HSimpleVisualizationBuilder >> bottomCornerRadius [
-	^ bottomCornerRadius ifNil: [ bottomCornerRadius := RSCornerRadius new bottom: 7]
+	^ bottomCornerRadius ifNil: [ 
+		bottomCornerRadius := RSCornerRadius new 
+			bottom: self cornerRadius ]
 ]
 
-{ #category : #hooks }
+{ #category : #'public - hooks' }
 HSimpleVisualizationBuilder >> boxChildrenColorFor: anHNode [
 	^ boxChildrenColor scale: anHNode level
 ]
@@ -45,43 +49,46 @@ HSimpleVisualizationBuilder >> boxChildrenColorPalette: aNSOrdinalScale [
 	boxChildrenColor := aNSOrdinalScale
 ]
 
-{ #category : #hooks }
+{ #category : #'public - hooks' }
 HSimpleVisualizationBuilder >> boxChildrenFor: anHNode [
 	^ RSBox new
 		color: (self boxChildrenColorFor: anHNode);
-		cornerRadius: self bottomCornerRadius;
 		yourself.
 ]
 
 { #category : #hooks }
-HSimpleVisualizationBuilder >> buildInCompositeEmptyNode: shape [
-	| node |
+HSimpleVisualizationBuilder >> buildCompositeEmptyNodeIn: shape [
+	| node box rect |
 	node := shape model.
-	shape add: (self iconFor: node).
-	shape add: (self labelFor: node).
-	RSHorizontalLineLayout on: shape children.
-	shape schildren: #().
-	shape 
-		propertyAt: #background put: shape;
+	shape addAll: (self labeler labelAndIconFor: node).
+	rect := shape children encompassingRectangle.
+	box := RSBox new 
+		position: rect floatCenter;
+		extent: rect extent + 10;
+		cornerRadius: self fullCornerRadius;
 		color: (self colorFor: node);
-		adjustToChildren;
-		padding: 5;
-		border: (self borderFor: node) 
+		border: (self borderFor: node);
+		yourself.
+	shape add: box.
+	box pushBack.
+	shape schildren: #().
+	
+	shape 
+		propertyAt: #background put: box;
+		adjustToChildren
 ]
 
 { #category : #hooks }
-HSimpleVisualizationBuilder >> buildInCompositeFullNode: shape [
-	| childrenShapes node icon label title titleBox children boxChildren |
+HSimpleVisualizationBuilder >> buildCompositeFullNodeIn: shape [
+	| childrenShapes node icon label title titleBox children boxChildren titleRadius boxChildrenRadius list |
 	node := shape model.
-	icon := self iconFor: node.
-	label := self labelFor: node.
-	title := { icon. label } asGroup.
-	RSHorizontalLineLayout on: title.
+	title := self labeler labelAndIconFor: node.
+	icon := title first.
+	label := title second.
 	titleBox := RSBox new
 		extent: title extent + 10;
 		color: ((self colorFor: node) alpha: 0.7);
 		position: title position;
-		cornerRadius: self topCornerRadius;
 		yourself.
 	title := { titleBox. icon. label } asShape.
 	shape propertyAt: #background put: titleBox.
@@ -94,29 +101,40 @@ HSimpleVisualizationBuilder >> buildInCompositeFullNode: shape [
 	title width < children width
 		ifTrue: [ titleBox width: children width. title adjustToChildren ]
 		ifFalse: [ children width: title width ].
+	boxChildren := self boxChildrenFor: node.
+	titleRadius := self topCornerRadius.
+	boxChildrenRadius := self bottomCornerRadius.
+	list := { title. children }.
+	self labeler position = #below ifTrue: [ 
+		titleRadius := self bottomCornerRadius.
+		boxChildrenRadius := self topCornerRadius.
+		list := { children. title }.
+		 ].
 	RSVerticalLineLayout new
 		gapSize: 0;
-		on: { title. children }.
+		on: list.
+	titleBox cornerRadius: titleRadius.
+	boxChildren
+		cornerRadius: boxChildrenRadius;
+		fromRectangle: children encompassingRectangle.
 	
-	boxChildren := self boxChildrenFor: node.
-	boxChildren fromRectangle: children encompassingRectangle.
 	shape add: title; add: boxChildren; add: children.
 	shape adjustToChildren.
 ]
 
-{ #category : #hooks }
+{ #category : #'public - hooks' }
 HSimpleVisualizationBuilder >> childrenFor: node [
 	^ node children collect: [ :child | self shapeFor: child ] as: RSGroup
 ]
 
-{ #category : #hooks }
+{ #category : #'menu - operations' }
 HSimpleVisualizationBuilder >> collapseChildren: shape [
 	shape schildren do: [ :child | child model removeInteractionIfPresent: self ].
 	shape model collapseChildren.
 	self rebuildShape: shape.
 ]
 
-{ #category : #hooks }
+{ #category : #'public - hooks' }
 HSimpleVisualizationBuilder >> colorFor: node [
 	^ Color colorFrom: (colorPalette scale: node level)
 ]
@@ -129,6 +147,11 @@ HSimpleVisualizationBuilder >> colorPalette [
 { #category : #accessing }
 HSimpleVisualizationBuilder >> colorPalette: aNSOrdinalScale [
 	colorPalette := aNSOrdinalScale
+]
+
+{ #category : #'accessing - attributes' }
+HSimpleVisualizationBuilder >> cornerRadius [
+	^ 7
 ]
 
 { #category : #'accessing - defaults' }
@@ -151,14 +174,21 @@ HSimpleVisualizationBuilder >> defaultContainer [
 	^ canvas
 ]
 
-{ #category : #hooks }
+{ #category : #'menu - operations' }
 HSimpleVisualizationBuilder >> expandChildren: shape [
-	shape schildren do: [ :child | child model removeInteractionIfPresent: self ].
+	shape schildren do: [ :child | child model removeInteractionIfPresent: self class ].
 	shape model expandChildren.
 	self rebuildShape: shape.
 ]
 
-{ #category : #hooks }
+{ #category : #'accessing - attributes' }
+HSimpleVisualizationBuilder >> fullCornerRadius [
+	^ fullCornerRadius ifNil: [ 
+		fullCornerRadius := RSCornerRadius new 
+			radius: self cornerRadius ]
+]
+
+{ #category : #'accessing - attributes' }
 HSimpleVisualizationBuilder >> highlightable [
 	^ highlightable ifNil: [ 
 		highlightable := RSHighlightable new
@@ -180,32 +210,34 @@ HSimpleVisualizationBuilder >> highlightable [
 		 ].
 ]
 
-{ #category : #hooks }
-HSimpleVisualizationBuilder >> iconFor: node [
-	^ RSBitmap new
-		form: (self iconNamed: (node iconName ifNil: [#objects]));
-		yourself.
-		
-]
-
 { #category : #initialization }
 HSimpleVisualizationBuilder >> initialize [
 	super initialize.
+	self labeler: HLabeler new.
 	self colorPalette: NSScale category10.
 	self boxChildrenColorPalette: (NSScale ordinal 
 		range: Smalltalk ui theme roassalHNodeBackgroundColors).
 		
 ]
 
-{ #category : #hooks }
-HSimpleVisualizationBuilder >> labelFor: node [
-	^ RSLabel new
-		color: Smalltalk ui theme textColor;
-		text: node asString;
-		yourself
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> labeler [
+	^ labeler
 ]
 
-{ #category : #hooks }
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> labeler: anHLabeler [
+	labeler := anHLabeler
+]
+
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> layoutOn: aGroupOfShapes [
+	RSFlowLayout new
+		gapSize: 50;
+		on: aGroupOfShapes.
+]
+
+{ #category : #'accessing - attributes' }
 HSimpleVisualizationBuilder >> menuInteraction [
 	^ menuInteraction ifNil: [ 
 		menuInteraction := RSMenuActivable new
@@ -285,9 +317,8 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 	aCanvas schildren: rootShapes.
 	aCanvas addAll: rootShapes.
 	self renderLinesIn: aCanvas.
-	RSFlowLayout new
-		gapSize: 50;
-		on: rootShapes.
+	self layoutOn: rootShapes.
+	
 ]
 
 { #category : #hooks }
@@ -336,9 +367,10 @@ HSimpleVisualizationBuilder >> shapeFor: node [
 		yourself.
 		
 	(node isExpanded and: [node hasChildren]) 
-		ifTrue: [ self buildInCompositeFullNode: shape ]
-		ifFalse: [ self buildInCompositeEmptyNode: shape ].
-
+		ifTrue: [ self buildCompositeFullNodeIn: shape ]
+		ifFalse: [ self buildCompositeEmptyNodeIn: shape ].
+	shape
+		when: RSPositionChangedEvent do: [ :evt | node position: evt position ].
 	node 
 		removeInteractionIfPresent: self class;
 		when: HNodeAddedEvent do: [ :evt | self rebuildRootShape: shape ];
@@ -349,7 +381,9 @@ HSimpleVisualizationBuilder >> shapeFor: node [
 	
 ]
 
-{ #category : #hooks }
+{ #category : #'accessing - attributes' }
 HSimpleVisualizationBuilder >> topCornerRadius [
-	^ topCornerRadius ifNil: [ topCornerRadius := RSCornerRadius new top: 7 ]
+	^ topCornerRadius ifNil: [ 
+		topCornerRadius := RSCornerRadius new 
+			top: self cornerRadius ]
 ]

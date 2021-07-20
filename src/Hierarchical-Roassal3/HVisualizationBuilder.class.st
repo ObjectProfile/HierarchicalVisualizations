@@ -8,7 +8,7 @@ Class {
 		'hspace',
 		'colors'
 	],
-	#category : #'Hierarchical-Roassal3'
+	#category : #'Hierarchical-Roassal3-OLD'
 }
 
 { #category : #accessing }
