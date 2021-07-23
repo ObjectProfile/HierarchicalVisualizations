@@ -174,3 +174,52 @@ HNodeTest >> testLevel [
 	self assert: node1 level equals: 1.
 	self assert: subnode1 level equals: 2.
 ]
+
+{ #category : #tests }
+HNodeTest >> testRemoveLink01 [
+	| node1 node2 sub1 sub2 sub3 sub4 rootNode |
+	node1 := HNode new name: 'Node1'.
+	node2 := HNode new name: 'Node2'.
+	sub1 := HNode new name: 'Sub1'.
+	sub2 := HNode new name: 'Sub2'.
+	node1 addAll: {sub1. sub2}.
+	
+	sub3 := HNode new name: 'Sub3'.
+	sub4 := HNode new name: 'Sub4'.
+	node2 addAll: {sub3. sub4}.
+	
+	rootNode := HNode new name: 'Root'.
+	rootNode addAll: {node1. node2}.
+
+	sub1 dependenciesToNodes: { sub3. sub4 }.
+	
+	self assert: sub4 dependentsFromLinks size equals: 1.
+	sub1 removeLinkTo: sub4.
+	self assert: sub4 dependentsFromLinks size equals: 0.
+	
+]
+
+{ #category : #tests }
+HNodeTest >> testRemoveLink02 [
+	| node1 node2 sub1 sub2 sub3 sub4 rootNode |
+	node1 := HNode new name: 'Node1'.
+	node2 := HNode new name: 'Node2'.
+	sub1 := HNode new name: 'Sub1'.
+	sub2 := HNode new name: 'Sub2'.
+	node1 addAll: {sub1. sub2}.
+	
+	sub3 := HNode new name: 'Sub3'.
+	sub4 := HNode new name: 'Sub4'.
+	node2 addAll: {sub3. sub4}.
+	
+	rootNode := HNode new name: 'Root'.
+	rootNode addAll: {node1. node2}.
+
+	sub1 dependenciesToNodes: { sub3. sub4 }.
+	node1 collapse.
+	
+	self assert: sub4 dependentsFromLinks size equals: 1.
+	node1 removeLinkTo: sub4.
+	self assert: sub4 dependentsFromLinks size equals: 0.
+	
+]

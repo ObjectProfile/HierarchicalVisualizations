@@ -13,6 +13,7 @@ Class {
 { #category : #building }
 HPharoNodeBuilder >> build [
 	rootNode := HNode new.
+	rootNode name: 'Root'.
 	rootNode addAll: (self pharoPackages collect: [ :pkg | self buildNodeFromPackage: pkg ]).
 	self createDependenciesBetweenMethods.
 	

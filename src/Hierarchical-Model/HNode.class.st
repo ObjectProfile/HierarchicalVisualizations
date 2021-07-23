@@ -18,7 +18,7 @@ Class {
 		'position',
 		'layout'
 	],
-	#category : #'Hierarchical-Model'
+	#category : #'Hierarchical-Model-Core'
 }
 
 { #category : #adding }
@@ -35,27 +35,30 @@ HNode >> addAll: aCollection [
 { #category : #adding }
 HNode >> addChild: anHNode [
 	children add: anHNode.
+	anHNode parent: self.
 	self announce: (HNodeAddedEvent new
 		newChild: anHNode;
 		yourself)
 ]
 
-{ #category : #dependencies }
+{ #category : #adding }
 HNode >> addLink: link [
 	self dependencies isArray 
 		ifTrue: [ dependencies := dependencies asOrderedCollection ].
 	dependencies add: link
 ]
 
-{ #category : #dependencies }
-HNode >> addTo: anHNode [
-	
-]
-
 { #category : #adding }
 HNode >> addedIn: anHNode [
 	anHNode addChild: self.
-	self parent: anHNode.
+]
+
+{ #category : #dependencies }
+HNode >> allDependencies [
+	^ self dependencies, (self hasChildren 
+		ifTrue: [ self children flatCollect: [ :child|
+			child allDependencies ] ]
+		ifFalse: [ #() ])
 ]
 
 { #category : #announcer }
@@ -105,6 +108,8 @@ HNode >> dependencies: aCollectionOfLinks [
 
 { #category : #dependencies }
 HNode >> dependenciesToNodes: aCollection [
+	dependencies isArray ifTrue: [ 
+		dependencies := OrderedCollection new: aCollection size. ].
 	aCollection do: [ :node | self dependencyTo: node ].
 ]
 
@@ -254,6 +259,22 @@ HNode >> rawModel [
 { #category : #accessing }
 HNode >> rawModel: anObject [
 	rawModel := anObject
+]
+
+{ #category : #removing }
+HNode >> removeLink: anHLink [
+	dependencies remove: anHLink
+]
+
+{ #category : #removing }
+HNode >> removeLinkTo: anHNode [
+	
+	self allDependencies do: [ :link | 
+		link to visibleNodeOrParent = anHNode ifTrue: [ 
+			link to removeLink: link.
+			link from removeLink: link ].
+		 ].
+
 ]
 
 { #category : #dependencies }

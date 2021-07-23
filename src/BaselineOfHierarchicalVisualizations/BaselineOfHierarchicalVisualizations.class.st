@@ -27,7 +27,8 @@ BaselineOfHierarchicalVisualizations >> baseline: spec [
 			group: 'Core' with: #(
 				'Hierarchical-Model-Events'
 				'Hierarchical-Model'
-				'Hierarchical-Model-Tests');
+				'Hierarchical-Model-Tests'
+				'Hierarchical-Builder');
 			group: 'default' with: #(
 				'Core'
 				'Hierarchical-Roassal3'

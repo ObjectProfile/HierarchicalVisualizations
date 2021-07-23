@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'dependentClasses'
 	],
-	#category : #'Hierarchical-Model'
+	#category : #'Hierarchical-Model-OLD'
 }
 
 { #category : #'instance creation' }

@@ -86,7 +86,7 @@ HLabeler >> labelAndIconFor: anHNode [
 		add: (self iconFor: anHNode);
 		add: (self labelFor: anHNode).
 	
-	RSHorizontalLineLayout on: group.
+	RSHorizontalLineLayout new alignMiddle; on: group.
 	^ group.
 ]
 

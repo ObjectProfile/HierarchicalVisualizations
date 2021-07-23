@@ -8,7 +8,7 @@ Class {
 		'from',
 		'to'
 	],
-	#category : #'Hierarchical-Model'
+	#category : #'Hierarchical-Model-Core'
 }
 
 { #category : #accessing }
