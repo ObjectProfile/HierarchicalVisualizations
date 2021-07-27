@@ -259,10 +259,11 @@ HSimpleVisualizationBuilder >> nodeAnnouncer [
 	baseNode ifNotNil: [ ^ baseNode announcer ].
 	baseNode := RSComposite new
 		@ self nodePopup;
-		@ RSGhostDraggable new;
+		@ (RSGhostDraggable new 
+			color: Smalltalk ui theme caretColor);
 		@ self menuInteraction;
 		@ self highlightable;
-		when: RSPositionChangedEvent do: [ :evt | self resizeParent: evt shape ];
+		when: RSPositionChangedEvent do: [ :evt | self resizeParent: evt ];
 		yourself .
 	^ baseNode announcer
 	
@@ -361,17 +362,30 @@ HSimpleVisualizationBuilder >> renderLinesIn: aCanvas [
 ]
 
 { #category : #hooks }
-HSimpleVisualizationBuilder >> resizeParent: shape [
-	| parent children title titleBox list boxChildren lastPosition |
+HSimpleVisualizationBuilder >> resizeParent: event [
+	| parent children title titleBox list boxChildren lastPosition
+	shape delta brother referencePosition |
+	shape := event shape.
+	
 	parent := shape sparent.
 	parent ifNil: [ ^ self ].
 	parent isShape ifFalse: [ ^ self ].
 	
 	lastPosition := parent position.
+	delta := event newPosition - event oldPosition.
+	brother := referencePosition := nil.
+	parent schildren 
+		detect: [:child | child ~= shape ]
+		ifFound: [:child | 
+			brother := child.
+			referencePosition := child parent globalMatrix 
+				transform: child position ].
 	children := shape parent.
 	children adjustToChildren; padding: 10.
 	title := parent children first.
 	titleBox := title children first.
+	titleBox extent: title children allButFirst extent + 10.
+	title adjustToChildren.
 	boxChildren := parent children second.
 	title width < children width
 		ifTrue: [ titleBox width: children width. title adjustToChildren ]
@@ -385,7 +399,15 @@ HSimpleVisualizationBuilder >> resizeParent: shape [
 	parent announcer: nil.
 	parent adjustToChildren.
 	parent announcer: self nodeAnnouncer.
-	parent translateTo: lastPosition.
+	
+	parent schildren size = 1 ifTrue: [ 
+		shape position: event oldPosition.
+		parent translateTo: lastPosition + delta.
+		^ self ].
+	
+	parent position: lastPosition.
+	delta := (brother parent globalMatrix transform: brother position) - referencePosition.
+	parent translateBy: delta negated.
 ]
 
 { #category : #accessing }

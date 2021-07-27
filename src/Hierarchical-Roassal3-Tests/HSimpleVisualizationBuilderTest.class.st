@@ -40,3 +40,27 @@ HSimpleVisualizationBuilderTest >> testColorPalette [
 			range: #(red green blue));
 		build
 ]
+
+{ #category : #tests }
+HSimpleVisualizationBuilderTest >> testMoveOneChildInParent [
+	| root node1  subnode1 visualization shapeNode1 shapeSubnode1 |
+	root := HNode new name: 'Visualization'.
+	node1 := HNode new name: 'Node1'.
+	subnode1 := HNode new name: 'SubNode1'.
+	root addAll: { node1. }.
+	node1 addAll: { subnode1.}.
+	
+	visualization := HSimpleVisualizationBuilder new
+		rootNode: root;
+		build;
+		yourself.
+	shapeNode1 := visualization canvas shapeFromModel: node1.
+	shapeSubnode1 := visualization canvas deepShapeFromModel: subnode1.
+	shapeNode1 translateTo: 0@0.
+	shapeSubnode1 translateTo: 100@100.
+	self assert: shapeSubnode1 position equals: 0@0.
+	self deny: shapeNode1 position equals: 0@0.
+	
+
+	
+]
