@@ -128,7 +128,8 @@ HNode >> dependencyTo: anHNode [
 HNode >> dependentsFromLinks [
 	| list |
 	list := (self dependencies
-		select: [ :link | link to = self ]
+		select: [ :link | 
+			link isVisible and: [ link to = self] ]
 		thenCollect: [:link | 
 			link from visibleNodeOrParent ]) asOrderedCollection.
 	(self isExpanded and: [ self isVisible ]) ifTrue: [ ^ list asSet ].
@@ -167,6 +168,15 @@ HNode >> expandCollapse [
 { #category : #testing }
 HNode >> hasChildren [
 	^ children notEmpty
+]
+
+{ #category : #removing }
+HNode >> hideLinkTo: anHNode [
+	self allDependencies do: [ :link | 
+		link to visibleNodeOrParent = anHNode ifTrue: [ 
+			link isVisible: false ].
+		 ].
+
 ]
 
 { #category : #accessing }

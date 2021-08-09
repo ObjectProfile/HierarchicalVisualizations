@@ -13,6 +13,11 @@ HRemoveLineMenuItem >> label [
 ]
 
 { #category : #accessing }
+HRemoveLineMenuItem >> order [
+	^ 10
+]
+
+{ #category : #accessing }
 HRemoveLineMenuItem >> removeLink [
 	shape model key removeLinkTo: shape model value.
 	visualization rebuildLines: shape.

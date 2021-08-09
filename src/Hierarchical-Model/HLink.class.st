@@ -6,7 +6,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'from',
-		'to'
+		'to',
+		'visible'
 	],
 	#category : #'Hierarchical-Model-Core'
 }
@@ -21,6 +22,22 @@ HLink >> from [
 HLink >> from: anObject [
 
 	from := anObject
+]
+
+{ #category : #initialization }
+HLink >> initialize [
+	super initialize.
+	self isVisible: true
+]
+
+{ #category : #testing }
+HLink >> isVisible [
+	^ visible
+]
+
+{ #category : #testing }
+HLink >> isVisible: aBoolean [
+	visible := aBoolean
 ]
 
 { #category : #accessing }
