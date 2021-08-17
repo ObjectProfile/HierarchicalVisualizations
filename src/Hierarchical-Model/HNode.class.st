@@ -203,6 +203,16 @@ HNode >> isVisible [
 ]
 
 { #category : #accessing }
+HNode >> layout [
+	^ layout
+]
+
+{ #category : #accessing }
+HNode >> layout: aLayout [
+	layout := aLayout
+]
+
+{ #category : #accessing }
 HNode >> level [
 	^ parent 
 		ifNil: [ 0 ]
