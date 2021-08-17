@@ -98,16 +98,6 @@ HVisualizationExamples >> example07Hierarchical [
 ]
 
 { #category : #examples }
-HVisualizationExamples >> example08 [
-	<script: 'self new example08RSChart open'>
-	| b |
-	b := HPharoNodeBuilder new.
-	b packageQuery: 'Roassal3-Chart*'.
-	b build.
-	^ b rootNode
-]
-
-{ #category : #examples }
 HVisualizationExamples >> example08RSChart [
 	<script: 'self new example08RSChart open'>
 	| b |
