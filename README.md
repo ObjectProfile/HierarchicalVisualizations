@@ -5,6 +5,7 @@
 This project provide a small API to build hierarchical visualization using the [Pharo](http://pharo.org) programming language. HierarchicalVisualizations uses [Roassal](https://github.com/ObjectProfile/Roassal3).
 
 ### Install
+
 Execute the following code snippet in a Playground:
 
 ```Smalltalk
