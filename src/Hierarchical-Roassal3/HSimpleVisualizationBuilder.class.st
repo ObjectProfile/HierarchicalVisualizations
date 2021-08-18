@@ -102,11 +102,13 @@ HSimpleVisualizationBuilder >> buildCompositeFullNodeIn: shape [
 	title := { titleBox. icon. label } asShape.
 	shape propertyAt: #background put: titleBox.
 	childrenShapes := self childrenFor: node.
-	RSFlowLayout new gapSize: 10; on: childrenShapes.
+	self layoutOn: childrenShapes.
+	
 	shape schildren: childrenShapes.
 	childrenShapes do: [ :child | child sparent: shape ].
 	children := childrenShapes asShape
 		padding: 10.
+	childrenShapes do: [ :child | child model position: child position ].
 	title width < children width
 		ifTrue: [ titleBox width: children width. title adjustToChildren ]
 		ifFalse: [ children width: title width ].
@@ -228,8 +230,15 @@ HSimpleVisualizationBuilder >> labeler: anHLabeler [
 
 { #category : #accessing }
 HSimpleVisualizationBuilder >> layoutOn: aGroupOfShapes [
+	aGroupOfShapes ifEmpty: [ ^ self ].
+	
+	aGroupOfShapes first model position ifNotNil: [ 
+		aGroupOfShapes do: [ :child | child position: child model position ].
+		^ self.
+		 ].
+	
 	RSFlowLayout new
-		gapSize: 50;
+		gapSize: 10;
 		on: aGroupOfShapes.
 ]
 
@@ -392,8 +401,7 @@ HSimpleVisualizationBuilder >> shapeFor: node [
 	(node isExpanded and: [node hasChildren]) 
 		ifTrue: [ self buildCompositeFullNodeIn: shape ]
 		ifFalse: [ self buildCompositeEmptyNodeIn: shape ].
-	shape
-		when: RSPositionChangedEvent do: [ :evt | evt shape model position: evt position ].
+	
 	node 
 		removeInteractionIfPresent: self class;
 		when: HNodeAddedEvent do: [ :evt | self rebuildRootShape: shape ];
