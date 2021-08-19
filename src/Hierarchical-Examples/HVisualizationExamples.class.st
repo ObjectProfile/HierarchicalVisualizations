@@ -158,12 +158,5 @@ HVisualizationExamples >> example11HierarchicalDiferentLayout [
 			
 			 ] ].
 	^ b rootNode
-	
-"TODO
-canvas collapse all 
-canvas expand all.
-show all links 
-hide all links
-"
 
 ]
