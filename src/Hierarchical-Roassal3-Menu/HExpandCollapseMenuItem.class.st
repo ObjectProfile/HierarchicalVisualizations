@@ -23,3 +23,8 @@ HExpandCollapseMenuItem >> order [
 HExpandCollapseMenuItem >> selector [
 	^ #expandCollapse
 ]
+
+{ #category : #accessing }
+HExpandCollapseMenuItem >> target [
+	^ shape model
+]

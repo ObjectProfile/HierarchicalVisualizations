@@ -51,6 +51,10 @@ HAbstractMenuItem >> buildOn: aMenuMorph [
 	item icon: (self iconNamed: self iconName).
 ]
 
+{ #category : #execution }
+HAbstractMenuItem >> execute [
+]
+
 { #category : #accessing }
 HAbstractMenuItem >> iconName [
 	^ nil
@@ -68,7 +72,7 @@ HAbstractMenuItem >> order [
 
 { #category : #accessing }
 HAbstractMenuItem >> selector [
-	^ #yourself
+	^ #execute
 ]
 
 { #category : #accessing }
@@ -79,7 +83,7 @@ HAbstractMenuItem >> shape: anObject [
 
 { #category : #accessing }
 HAbstractMenuItem >> target [
-	^ shape model
+	^ self
 ]
 
 { #category : #accessing }

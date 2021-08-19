@@ -170,13 +170,34 @@ HNode >> hasChildren [
 	^ children notEmpty
 ]
 
-{ #category : #removing }
+{ #category : #'showing - hiding' }
+HNode >> hideAllLinks [
+	self allDependencies do: [ :link | link isVisible: false ]
+]
+
+{ #category : #'showing - hiding' }
+HNode >> hideIncomingLinks [
+	self dependencies
+		select: [ :link | link to = self ]
+		thenDo: [ :link | link isVisible: false ] .
+	self children do: #hideIncomingLinks
+]
+
+{ #category : #'showing - hiding' }
 HNode >> hideLinkTo: anHNode [
 	self allDependencies do: [ :link | 
 		link to visibleNodeOrParent = anHNode ifTrue: [ 
 			link isVisible: false ].
 		 ].
 
+]
+
+{ #category : #'showing - hiding' }
+HNode >> hideOutgoingLinks [
+	self dependencies
+		select: [ :link | link from = self ]
+		thenDo: [ :link | link isVisible: false ] .
+	self children do: #hideOutgoingLinks
 ]
 
 { #category : #accessing }
@@ -295,6 +316,11 @@ HNode >> removeLinkTo: anHNode [
 			link from removeLink: link ].
 		 ].
 
+]
+
+{ #category : #'showing - hiding' }
+HNode >> showAllLinks [
+	self allDependencies do: [ :link | link isVisible: true ]
 ]
 
 { #category : #dependencies }

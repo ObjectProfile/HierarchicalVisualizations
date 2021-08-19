@@ -7,8 +7,8 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
-{ #category : #events }
-HAddLinkMenuItem >> addDependencyTo [
+{ #category : #adding }
+HAddLinkMenuItem >> execute [
 	| canvas line currentShapes pointer |
 	canvas := visualization canvas.
 	pointer := RSEllipse new
@@ -49,14 +49,4 @@ HAddLinkMenuItem >> label [
 { #category : #accessing }
 HAddLinkMenuItem >> order [
 	^ 40
-]
-
-{ #category : #accessing }
-HAddLinkMenuItem >> selector [
-	^ #addDependencyTo
-]
-
-{ #category : #accessing }
-HAddLinkMenuItem >> target [
-	^ self
 ]

@@ -4,8 +4,8 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
-{ #category : #accessing }
-HNewContainerMenuItem >> addContainer [
+{ #category : #execution }
+HNewContainerMenuItem >> execute [
 	| name root |
 	name := UIManager default request: 'Enter a name' initialAnswer: ''.
 	name ifNil: [ ^ self ].
@@ -19,11 +19,6 @@ HNewContainerMenuItem >> label [
 ]
 
 { #category : #accessing }
-HNewContainerMenuItem >> selector [
-	^ #addContainer
-]
-
-{ #category : #accessing }
-HNewContainerMenuItem >> target [
-	^ self
+HNewContainerMenuItem >> order [
+	^ 10
 ]

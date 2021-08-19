@@ -7,13 +7,8 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
-{ #category : #accessing }
-HNewEntityMenuItem >> label [
-	^ 'New Entity'
-]
-
-{ #category : #accessing }
-HNewEntityMenuItem >> newEntity [
+{ #category : #execution }
+HNewEntityMenuItem >> execute [
 	| name node |
 	name := UIManager default request: 'Enter a name' initialAnswer: ''.
 	name ifNil: [ ^ self ].
@@ -22,16 +17,11 @@ HNewEntityMenuItem >> newEntity [
 ]
 
 { #category : #accessing }
+HNewEntityMenuItem >> label [
+	^ 'New Entity'
+]
+
+{ #category : #accessing }
 HNewEntityMenuItem >> order [
 	^ 30
-]
-
-{ #category : #accessing }
-HNewEntityMenuItem >> selector [
-	^ #newEntity
-]
-
-{ #category : #accessing }
-HNewEntityMenuItem >> target [
-	^ self
 ]

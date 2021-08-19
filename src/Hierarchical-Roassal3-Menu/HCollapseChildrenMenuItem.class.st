@@ -7,8 +7,8 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
-{ #category : #accessing }
-HCollapseChildrenMenuItem >> collapseChildren [
+{ #category : #execution }
+HCollapseChildrenMenuItem >> execute [
 	shape schildren do: [ :child | child model removeInteractionIfPresent: visualization class ].
 	shape model collapseChildren.
 	visualization rebuildShape: shape.
@@ -22,14 +22,4 @@ HCollapseChildrenMenuItem >> label [
 { #category : #accessing }
 HCollapseChildrenMenuItem >> order [
 	^ 15
-]
-
-{ #category : #accessing }
-HCollapseChildrenMenuItem >> selector [
-	^ #collapseChildren
-]
-
-{ #category : #accessing }
-HCollapseChildrenMenuItem >> target [
-	^ self
 ]

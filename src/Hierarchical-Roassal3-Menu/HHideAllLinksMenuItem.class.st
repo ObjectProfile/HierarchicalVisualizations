@@ -4,6 +4,12 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
+{ #category : #execution }
+HHideAllLinksMenuItem >> execute [
+	shape model hideAllLinks.
+	visualization rebuildLines: shape.
+]
+
 { #category : #accessing }
 HHideAllLinksMenuItem >> label [
 	^ 'Hide All links'
@@ -12,14 +18,4 @@ HHideAllLinksMenuItem >> label [
 { #category : #accessing }
 HHideAllLinksMenuItem >> order [
 	^ 60
-]
-
-{ #category : #accessing }
-HHideAllLinksMenuItem >> selector [
-	^ #hideAllLinks
-]
-
-{ #category : #accessing }
-HHideAllLinksMenuItem >> target [
-	^ self
 ]

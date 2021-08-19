@@ -102,7 +102,7 @@ HSimpleVisualizationBuilder >> buildCompositeFullNodeIn: shape [
 	title := { titleBox. icon. label } asShape.
 	shape propertyAt: #background put: titleBox.
 	childrenShapes := self childrenFor: node.
-	self layoutOn: childrenShapes.
+	self layoutOn: childrenShapes parent: node.
 	
 	shape schildren: childrenShapes.
 	childrenShapes do: [ :child | child sparent: shape ].
@@ -228,18 +228,17 @@ HSimpleVisualizationBuilder >> labeler: anHLabeler [
 	labeler := anHLabeler
 ]
 
-{ #category : #accessing }
-HSimpleVisualizationBuilder >> layoutOn: aGroupOfShapes [
+{ #category : #layout }
+HSimpleVisualizationBuilder >> layoutOn: aGroupOfShapes parent: shape [
 	aGroupOfShapes ifEmpty: [ ^ self ].
 	
 	aGroupOfShapes first model position ifNotNil: [ 
 		aGroupOfShapes do: [ :child | child position: child model position ].
 		^ self.
 		 ].
+	self relayout: aGroupOfShapes parent: shape.
 	
-	RSFlowLayout new
-		gapSize: 10;
-		on: aGroupOfShapes.
+	
 ]
 
 { #category : #hooks }
@@ -323,6 +322,18 @@ HSimpleVisualizationBuilder >> rebuildShape: shape [
 	canvas signalUpdate.
 ]
 
+{ #category : #layout }
+HSimpleVisualizationBuilder >> relayout: aGroupOfShapes parent: shape [
+	shape layout ifNil: [ 
+		RSFlowLayout new
+			gapSize: 10;
+			on: aGroupOfShapes. 
+		^ self ].
+	shape layout on: aGroupOfShapes.
+	
+	
+]
+
 { #category : #hooks }
 HSimpleVisualizationBuilder >> removeShapeWithAllChildren: shape [
 	
@@ -351,7 +362,7 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 		aCanvas signalUpdate.
 		 ].
 	self renderLinesIn: aCanvas.
-	self layoutOn: rootShapes.
+	self layoutOn: rootShapes parent: rootNode.
 	
 ]
 

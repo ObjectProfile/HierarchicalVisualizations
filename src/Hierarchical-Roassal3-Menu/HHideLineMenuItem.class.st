@@ -7,8 +7,8 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
-{ #category : #accessing }
-HHideLineMenuItem >> hideLink [
+{ #category : #execution }
+HHideLineMenuItem >> execute [
 	shape model key hideLinkTo: shape model value.
 	visualization rebuildLines: shape.
 ]
@@ -16,14 +16,4 @@ HHideLineMenuItem >> hideLink [
 { #category : #accessing }
 HHideLineMenuItem >> label [
 	^ 'Hide link'
-]
-
-{ #category : #accessing }
-HHideLineMenuItem >> selector [
-	^ #hideLink
-]
-
-{ #category : #accessing }
-HHideLineMenuItem >> target [
-	^ self
 ]

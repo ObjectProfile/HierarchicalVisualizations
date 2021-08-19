@@ -142,3 +142,28 @@ HVisualizationExamples >> example10RSChartLabeler [
 	^ visualization
 	
 ]
+
+{ #category : #examples }
+HVisualizationExamples >> example11HierarchicalDiferentLayout [
+	<script: 'self new example11HierarchicalDiferentLayout open'>
+	| b |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Hierarchical*'.
+	b build.
+	b rootNode layout: RSVerticalLineLayout new. 
+	b rootNode children do: [ :child | 
+		child layout: RSFlowLayout new.
+		child children do: [:c | 
+			c layout: (RSForceBasedLayout new charge: -600; doNotUseProgressBar)
+			
+			 ] ].
+	^ b rootNode
+	
+"TODO
+canvas collapse all 
+canvas expand all.
+show all links 
+hide all links
+"
+
+]
