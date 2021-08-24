@@ -43,3 +43,4 @@ Node can be collapsed or expanded:
 
 <img width="500" alt="portfolio_view" src="https://raw.githubusercontent.com/ObjectProfile/HierarchicalVisualizations/main/scripts/simpleExample02.png">
 
+New menu items can be defined by creating a subclass of `HAbstractMenuItem`. The package [`Hierarchical-Roassal3-Menu`](https://github.com/ObjectProfile/HierarchicalVisualizations/tree/main/src/Hierarchical-Roassal3-Menu) contains many examples on how to define a new menu item.
