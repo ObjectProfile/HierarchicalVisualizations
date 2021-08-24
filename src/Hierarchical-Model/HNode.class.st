@@ -283,7 +283,7 @@ HNode >> position: aPoint [
 
 { #category : #printing }
 HNode >> printOn: stream [
-	stream << name.
+	stream << (name ifNil: [ 'nil' ])
 ]
 
 { #category : #announcer }
