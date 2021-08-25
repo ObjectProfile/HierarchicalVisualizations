@@ -33,11 +33,12 @@ HSimpleVisualizationBuilderTest >> testColorPalette [
 
 	gnode1 dependenciesToNodes: { gnode3. gnode4 }.
 	gnode4 dependenciesToNodes: { gnode1. gnode2 }.
+	root children do: [ :c1 |
+		c1 color: Color red.
+		c1 children do: [ :c2 | c2 color: Color green ] ].
 
 	HSimpleVisualizationBuilder new
 		rootNode: root;
-		colorPalette: (NSScale ordinal
-			range: #(red green blue));
 		build
 ]
 
