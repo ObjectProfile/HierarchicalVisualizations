@@ -7,6 +7,11 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
+{ #category : #testing }
+HExpandChildrenMenuItem >> canBeExecuted [
+	^ shape model children isNotEmpty
+]
+
 { #category : #execution }
 HExpandChildrenMenuItem >> execute [
 	shape schildren do: [ :child | child model removeInteractionIfPresent: visualization class ].

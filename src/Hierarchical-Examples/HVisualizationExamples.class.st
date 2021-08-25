@@ -39,6 +39,7 @@ HVisualizationExamples >> example03Simple2 [
 	node1 := HNode new name: 'Node1'.
 	subnode3 := HNode new name: 'Sub1-1'.
 	subnode4 := HNode new name: 'Sub1-2'.
+	
 	node1 addAll: { subnode3 . subnode4 }.
 
 	node2 := HNode new name: 'Node2'.
@@ -46,6 +47,7 @@ HVisualizationExamples >> example03Simple2 [
 	subnode2 := HNode new name: 'Sub2-2'.
 	node2 addAll: {subnode1. subnode2}.
 	
+	node1 children, node2 children do: [ :child | child color: Color blue translucent ].
 	rootNode := HNode new name: 'Root'.
 	rootNode addAll: { node1. node2 }.
 	subnode3 dependenciesToNodes: { subnode1. subnode2 }.
@@ -113,6 +115,7 @@ HVisualizationExamples >> example09Collection [
 	| b |
 	b := HPharoNodeBuilder new.
 	b packageQuery: 'Collections-Abstract*'.
+	b colorPalette: NSScale eva10.
 	b build.
 	^ b rootNode
 ]
@@ -158,5 +161,25 @@ HVisualizationExamples >> example11HierarchicalDiferentLayout [
 			
 			 ] ].
 	^ b rootNode
+
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example12HierarchicalWithDifferentLines [
+	<script: 'self new example12HierarchicalWithDifferentLines open'>
+	| b v |
+	b := HPharoNodeBuilder new.
+	b packageQuery: 'Hierarchical*'.
+	b build.
+	v := HSimpleVisualizationBuilder new
+		rootNode: b rootNode;
+		yourself.
+	v lineBuilder
+		markerStart: (RSEllipse new size: 10);
+		width: 5;
+		color: Color purple;
+		dashArray: #(15 5).
+	v build.
+	^ v canvas
 
 ]

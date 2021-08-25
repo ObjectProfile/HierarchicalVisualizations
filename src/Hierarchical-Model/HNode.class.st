@@ -16,7 +16,8 @@ Class {
 		'dependencies',
 		'iconName',
 		'position',
-		'layout'
+		'layout',
+		'color'
 	],
 	#category : #'Hierarchical-Model-Core'
 }
@@ -93,6 +94,18 @@ HNode >> collapse [
 { #category : #public }
 HNode >> collapseChildren [
 	children do: [ :child | child collapse ].
+]
+
+{ #category : #accessing }
+HNode >> color [
+
+	^ color
+]
+
+{ #category : #accessing }
+HNode >> color: anObject [
+
+	color := anObject
 ]
 
 { #category : #dependencies }
@@ -202,7 +215,14 @@ HNode >> hideOutgoingLinks [
 
 { #category : #accessing }
 HNode >> iconName: aString [
-	iconName := aString
+	| oldName |
+	oldName := iconName.
+	iconName := aString.
+	oldName = aString ifTrue: [ ^ self ].
+	self announce: (HIconChangedEvent new
+		oldName: oldName;
+		newName: aString;
+		yourself).
 ]
 
 { #category : #initialization }

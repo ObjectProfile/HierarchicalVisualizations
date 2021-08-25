@@ -62,8 +62,9 @@ HLabeler >> fontSize: anObject [
 
 { #category : #hooks }
 HLabeler >> iconFor: anHNode [
+	anHNode iconName ifNil: [ ^ nil ].
 	^ RSBitmap new
-		form: (self iconNamed: (anHNode iconName ifNil: [#objects]));
+		form: (self iconNamed: anHNode iconName);
 		yourself.
 		
 ]
@@ -80,11 +81,11 @@ HLabeler >> initialize [
 
 { #category : #hooks }
 HLabeler >> labelAndIconFor: anHNode [
-	| group |
+	| group icon |
 	group := RSGroup new.
-	group 
-		add: (self iconFor: anHNode);
-		add: (self labelFor: anHNode).
+	icon := self iconFor: anHNode.
+	icon ifNotNil: [ group add: icon ].
+	group add: (self labelFor: anHNode).
 	
 	RSHorizontalLineLayout new alignMiddle; on: group.
 	^ group.

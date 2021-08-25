@@ -5,7 +5,8 @@ Class {
 	#name : #HPharoNodeBuilder,
 	#superclass : #HNodeBuilder,
 	#instVars : [
-		'packageQuery'
+		'packageQuery',
+		'colorPalette'
 	],
 	#category : #'Hierarchical-Builder'
 }
@@ -16,6 +17,7 @@ HPharoNodeBuilder >> build [
 	rootNode name: 'Root'.
 	rootNode addAll: (self pharoPackages collect: [ :pkg | self buildNodeFromPackage: pkg ]).
 	self createDependenciesBetweenMethods.
+	self updateNode: rootNode.
 	
 ]
 
@@ -50,6 +52,16 @@ HPharoNodeBuilder >> buildNodefromMethod: method [
 	
 ]
 
+{ #category : #accessing }
+HPharoNodeBuilder >> colorPalette [
+	^ colorPalette
+]
+
+{ #category : #accessing }
+HPharoNodeBuilder >> colorPalette: aNSOrdinalScale [
+	colorPalette := aNSOrdinalScale
+]
+
 { #category : #building }
 HPharoNodeBuilder >> createDependenciesBetweenMethods [
 	| methods |
@@ -62,6 +74,12 @@ HPharoNodeBuilder >> createDependenciesBetweenMethods [
 		met dependenciesToNodes: nodes.
 	].
 	
+]
+
+{ #category : #initialization }
+HPharoNodeBuilder >> initialize [
+	super initialize.
+	self colorPalette: (NSScale category10 in: [:s | s range: {Color gray}, s range ]).
 ]
 
 { #category : #accessing }
@@ -83,5 +101,12 @@ HPharoNodeBuilder >> pharoPackages [
 	^ org packageNames
 		select: [ :s | packageQuery match: s ]
 		thenCollect: [ :s | org packageNamed: s ]
+	
+]
+
+{ #category : #building }
+HPharoNodeBuilder >> updateNode: node [
+	node color: (self colorPalette scale: node level).
+	node children do: [ :child| self updateNode: child ].
 	
 ]

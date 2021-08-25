@@ -15,7 +15,8 @@ Class {
 		'boxChildrenColor',
 		'labeler',
 		'fullCornerRadius',
-		'baseNode'
+		'baseNode',
+		'linkStyler'
 	],
 	#category : #'Hierarchical-Roassal3-Visualization'
 }
@@ -87,19 +88,21 @@ HSimpleVisualizationBuilder >> buildCompositeEmptyNodeIn: shape [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> buildCompositeFullNodeIn: shape [
-	| childrenShapes node icon label title titleBox children 
+	| childrenShapes node titleGroup title titleBox children 
 	boxChildren titleRadius boxChildrenRadius list |
 	node := shape model.
-	title := self labeler labelAndIconFor: node.
-	icon := title first.
-	label := title second.
+	titleGroup := self labeler labelAndIconFor: node.
 	titleBox := RSBox new
-		extent: title extent + 10;
+		extent: titleGroup extent + 10;
 		model: node;
 		color: ((self colorFor: node) alpha: 0.7);
-		position: title position;
+		position: titleGroup position;
 		yourself.
-	title := { titleBox. icon. label } asShape.
+	title := RSComposite new
+		add: titleBox; 
+		addAll: titleGroup;
+		adjustToChildren;
+		yourself.
 	shape propertyAt: #background put: titleBox.
 	childrenShapes := self childrenFor: node.
 	self layoutOn: childrenShapes parent: node.
@@ -141,17 +144,7 @@ HSimpleVisualizationBuilder >> childrenFor: node [
 
 { #category : #'public - hooks' }
 HSimpleVisualizationBuilder >> colorFor: node [
-	^ Color colorFrom: (colorPalette scale: node level)
-]
-
-{ #category : #accessing }
-HSimpleVisualizationBuilder >> colorPalette [
-	^ colorPalette
-]
-
-{ #category : #accessing }
-HSimpleVisualizationBuilder >> colorPalette: aNSOrdinalScale [
-	colorPalette := aNSOrdinalScale
+	^ Color colorFrom: (node color ifNil: [ #gray ])
 ]
 
 { #category : #'accessing - attributes' }
@@ -212,7 +205,7 @@ HSimpleVisualizationBuilder >> highlightable [
 HSimpleVisualizationBuilder >> initialize [
 	super initialize.
 	self labeler: HLabeler new.
-	self colorPalette: NSScale category10.
+	self linkStyler: HLinkStyler new.
 	self boxChildrenColorPalette: (NSScale ordinal 
 		range: Smalltalk ui theme roassalHNodeBackgroundColors).
 		
@@ -233,7 +226,7 @@ HSimpleVisualizationBuilder >> layoutOn: aGroupOfShapes parent: shape [
 	aGroupOfShapes ifEmpty: [ ^ self ].
 	
 	aGroupOfShapes first model position ifNotNil: [ 
-		aGroupOfShapes do: [ :child | child position: child model position ].
+		aGroupOfShapes do: [ :child | child position: (child model position ifNil: [ 0@0 ]) ].
 		^ self.
 		 ].
 	self relayout: aGroupOfShapes parent: shape.
@@ -243,11 +236,17 @@ HSimpleVisualizationBuilder >> layoutOn: aGroupOfShapes parent: shape [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> lineBuilder [
-	^ RSLineBuilder line
-		attachPoint: (RSBorderAttachPoint new endOffset: 5);
-		markerEnd: (RSShapeFactory arrow size: 10);
-		color: Smalltalk ui theme textColor translucent;
-		yourself
+	^ self linkStyler lineBuilder
+]
+
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> linkStyler [
+	^ linkStyler
+]
+
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> linkStyler: anHLinkStyler [
+	linkStyler :=anHLinkStyler
 ]
 
 { #category : #'accessing - attributes' }
@@ -368,16 +367,14 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> renderLinesIn: aCanvas [
-	| announcer color |
-	color := Smalltalk ui theme textColor translucent.
+	| announcer high |
 	self lineBuilder
 		canvas: aCanvas;
 		shapes: shapes;
 		connectFromAll: #dependentsFromLinks.
 	announcer := Announcer new.
-	announcer
-		when: RSMouseEnter do: [ :evt | evt shape color: Color red; signalUpdate ];
-		when: RSMouseLeave do: [ :evt | evt shape color: color; signalUpdate ].
+	high := RSHighlightable red.
+	high onShape: announcer.
 	self menuInteraction onShape: announcer.
 	aCanvas lines do: [ :line| line announcer: announcer ].
 ]
@@ -417,7 +414,8 @@ HSimpleVisualizationBuilder >> shapeFor: node [
 		removeInteractionIfPresent: self class;
 		when: HNodeAddedEvent do: [ :evt | self rebuildRootShape: shape ];
 		when: HCollapseEvent do: [ :evt |	self rebuildShape: shape ];
-		when: HExpandEvent do: [ :evt | self rebuildRootShape: shape ].
+		when: HExpandEvent do: [ :evt | self rebuildRootShape: shape ];
+		when: HIconChangedEvent do: [ :evt | self rebuildShape: shape ].
 	shapes add: shape.
 	^ shape 
 	
