@@ -415,7 +415,7 @@ HSimpleVisualizationBuilder >> shapeFor: node [
 		when: HNodeAddedEvent do: [ :evt | self rebuildRootShape: shape ];
 		when: HCollapseEvent do: [ :evt |	self rebuildShape: shape ];
 		when: HExpandEvent do: [ :evt | self rebuildRootShape: shape ];
-		when: HIconChangedEvent do: [ :evt | self rebuildShape: shape ].
+		when: HNodeChangedEvent do: [ :evt | self rebuildShape: shape ].
 	shapes add: shape.
 	^ shape 
 	

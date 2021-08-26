@@ -1,11 +1,6 @@
 Extension { #name : #HNode }
 
 { #category : #'*Hierarchical-Roassal3' }
-HNode >> iconName [
-	^ iconName
-]
-
-{ #category : #'*Hierarchical-Roassal3' }
 HNode >> open [
 	^ HSimpleVisualizationBuilder new
 		rootNode: self;

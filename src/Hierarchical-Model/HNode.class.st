@@ -103,9 +103,14 @@ HNode >> color [
 ]
 
 { #category : #accessing }
-HNode >> color: anObject [
-
-	color := anObject
+HNode >> color: aColor [
+	| oldColor |
+	oldColor := color.
+	color := aColor.
+	oldColor = color ifTrue: [ ^ self ].
+	self announce: (HNodeChangedEvent new
+		node: self;
+		yourself).
 ]
 
 { #category : #dependencies }
@@ -214,14 +219,18 @@ HNode >> hideOutgoingLinks [
 ]
 
 { #category : #accessing }
+HNode >> iconName [
+	^ iconName
+]
+
+{ #category : #accessing }
 HNode >> iconName: aString [
 	| oldName |
 	oldName := iconName.
 	iconName := aString.
 	oldName = aString ifTrue: [ ^ self ].
-	self announce: (HIconChangedEvent new
-		oldName: oldName;
-		newName: aString;
+	self announce: (HNodeChangedEvent new
+		node: self;
 		yourself).
 ]
 
@@ -270,10 +279,9 @@ HNode >> name: aString [
 	| oldName |
 	oldName := name.
 	name := aString.
-	self announce: (HNodeNameChangedEvent new
+	oldName = name ifTrue: [ ^ self ].
+	self announce: (HNodeChangedEvent new
 		node: self;
-		oldName: oldName;
-		newName: name;
 		yourself)
 		
 ]
