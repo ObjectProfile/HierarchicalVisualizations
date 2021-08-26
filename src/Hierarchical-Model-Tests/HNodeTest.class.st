@@ -9,7 +9,7 @@ Class {
 
 { #category : #tests }
 HNodeTest >> testBasic [
-	| node1 node2 subnode1 subnode2 rootNode w |
+	| node1 node2 subnode1 subnode2 rootNode w nodeWithoutTitle |
 	node1 := HNode new name: 'Node1'.
 	node2 := HNode new name: 'Node2'.
 	subnode1 := HNode new name: 'Sub2-1'.
@@ -18,8 +18,10 @@ HNodeTest >> testBasic [
 	rootNode := HNode new name: 'Root'.
 	rootNode addAll: {node1. node2}.
 	node1 dependenciesToNodes: { subnode1. subnode2 }.
-	
+	nodeWithoutTitle := HNode new.
+	rootNode add: nodeWithoutTitle.
 	w := rootNode open.
+	
 	w delete.
 
 ]
