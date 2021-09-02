@@ -18,12 +18,12 @@ HResizeParentWhenChildMoves >> defaultPadding [
 ]
 
 { #category : #accessing }
-HResizeParentWhenChildMoves >> labeler [
+HResizeParentWhenChildMoves >> nodeStyler [
 	^ labeler
 ]
 
 { #category : #accessing }
-HResizeParentWhenChildMoves >> labeler: anHLabeler [
+HResizeParentWhenChildMoves >> nodeStyler: anHLabeler [
 	labeler := anHLabeler
 ]
 
@@ -49,7 +49,7 @@ HResizeParentWhenChildMoves >> prepare: shape with: parent [
 		ifTrue: [ titleBox width: children width. title adjustToChildren ]
 		ifFalse: [ children width: title width ].
 	list := { title. children }.
-	self labeler position = #below ifTrue: [ list := { children. title } ].
+	self nodeStyler position = #below ifTrue: [ list := { children. title } ].
 	RSVerticalLineLayout new
 		gapSize: 0;
 		on: list.

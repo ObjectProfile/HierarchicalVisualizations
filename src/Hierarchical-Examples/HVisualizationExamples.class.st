@@ -130,7 +130,7 @@ HVisualizationExamples >> example10RSChartLabeler [
 	
 	visualization := HSimpleVisualizationBuilder new.
 	visualization rootNode: b rootNode.
-	visualization labeler: (HLabeler new 
+	visualization nodeStyler: (HNodeStyler new 
 		text: [ :node | 
 			(node asString splitOn: '-') last. ];
 		fontSize: [:node |

@@ -65,3 +65,25 @@ HSimpleVisualizationBuilderTest >> testMoveOneChildInParent [
 
 	
 ]
+
+{ #category : #tests }
+HSimpleVisualizationBuilderTest >> testTestMoveNode [
+	| root node1 node2 subnode1 visualization shapeNode1 |
+	"This test is for class HNodeOnTopWhenPositionChanged"
+	root := HNode new name: 'Visualization'.
+	node1 := HNode new name: 'Node1'.
+	node2 := HNode new name: 'node2'.
+	subnode1 := HNode new name: 'SubNode1'.
+	root addAll: { node1. node2 }.
+	node1 addAll: { subnode1.}.
+	
+	visualization := HSimpleVisualizationBuilder new
+		rootNode: root;
+		build;
+		yourself.
+	shapeNode1 := visualization canvas shapeFromModel: node1.
+	self assert: visualization canvas shapes first equals: shapeNode1.
+	shapeNode1 translateTo: 100 asPoint.
+	self assert: visualization canvas shapes last equals: shapeNode1.
+	
+]

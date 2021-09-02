@@ -2,7 +2,7 @@
 You can create a subclass of HLabeler, you will need to override the method labelFor:
 "
 Class {
-	#name : #HLabeler,
+	#name : #HNodeStyler,
 	#superclass : #Object,
 	#instVars : [
 		'position',
@@ -15,53 +15,53 @@ Class {
 }
 
 { #category : #public }
-HLabeler >> above [
+HNodeStyler >> above [
 	position := #above
 ]
 
 { #category : #public }
-HLabeler >> below [
+HNodeStyler >> below [
 	position := #below
 ]
 
 { #category : #accessing }
-HLabeler >> color [
+HNodeStyler >> color [
 
 	^ color
 ]
 
 { #category : #accessing }
-HLabeler >> color: anObject [
+HNodeStyler >> color: anObject [
 
 	color := anObject
 ]
 
 { #category : #accessing }
-HLabeler >> fontName [
+HNodeStyler >> fontName [
 
 	^ fontName
 ]
 
 { #category : #accessing }
-HLabeler >> fontName: anObject [
+HNodeStyler >> fontName: anObject [
 
 	fontName := anObject
 ]
 
 { #category : #accessing }
-HLabeler >> fontSize [
+HNodeStyler >> fontSize [
 
 	^ fontSize
 ]
 
 { #category : #accessing }
-HLabeler >> fontSize: anObject [
+HNodeStyler >> fontSize: anObject [
 
 	fontSize := anObject
 ]
 
 { #category : #hooks }
-HLabeler >> iconFor: anHNode [
+HNodeStyler >> iconFor: anHNode [
 	anHNode iconName ifNil: [ ^ nil ].
 	^ RSBitmap new
 		form: (self iconNamed: anHNode iconName);
@@ -70,7 +70,7 @@ HLabeler >> iconFor: anHNode [
 ]
 
 { #category : #initialization }
-HLabeler >> initialize [
+HNodeStyler >> initialize [
 	super initialize.
 	self text: #yourself.
 	self color: Smalltalk ui theme textColor.
@@ -80,7 +80,7 @@ HLabeler >> initialize [
 ]
 
 { #category : #hooks }
-HLabeler >> labelAndIconFor: anHNode [
+HNodeStyler >> labelAndIconFor: anHNode [
 	| group icon |
 	group := RSGroup new.
 	icon := self iconFor: anHNode.
@@ -92,7 +92,7 @@ HLabeler >> labelAndIconFor: anHNode [
 ]
 
 { #category : #hooks }
-HLabeler >> labelFor: anHNode [
+HNodeStyler >> labelFor: anHNode [
 	^ RSLabel new
 		color: (self color rsValue: anHNode);
 		text: (self text rsValue: anHNode);
@@ -102,24 +102,24 @@ HLabeler >> labelFor: anHNode [
 ]
 
 { #category : #accessing }
-HLabeler >> position [
+HNodeStyler >> position [
 
 	^ position
 ]
 
 { #category : #accessing }
-HLabeler >> text [
+HNodeStyler >> text [
 
 	^ text
 ]
 
 { #category : #accessing }
-HLabeler >> text: anObject [
+HNodeStyler >> text: anObject [
 
 	text := anObject
 ]
 
 { #category : #hooks }
-HLabeler >> textFor: anHNode [
+HNodeStyler >> textFor: anHNode [
 	^ text rsValue: anHNode
 ]

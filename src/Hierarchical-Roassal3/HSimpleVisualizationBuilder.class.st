@@ -13,10 +13,10 @@ Class {
 		'topCornerRadius',
 		'bottomCornerRadius',
 		'boxChildrenColor',
-		'labeler',
 		'fullCornerRadius',
 		'baseNode',
-		'linkStyler'
+		'linkStyler',
+		'nodeStyler'
 	],
 	#category : #'Hierarchical-Roassal3-Visualization'
 }
@@ -67,7 +67,7 @@ HSimpleVisualizationBuilder >> boxChildrenFor: anHNode [
 HSimpleVisualizationBuilder >> buildCompositeEmptyNodeIn: shape [
 	| node box rect |
 	node := shape model.
-	shape addAll: (self labeler labelAndIconFor: node).
+	shape addAll: (self nodeStyler labelAndIconFor: node).
 	rect := shape children encompassingRectangle.
 	box := RSBox new 
 		model: node;
@@ -91,7 +91,7 @@ HSimpleVisualizationBuilder >> buildCompositeFullNodeIn: shape [
 	| childrenShapes node titleGroup title titleBox children 
 	boxChildren titleRadius boxChildrenRadius list |
 	node := shape model.
-	titleGroup := self labeler labelAndIconFor: node.
+	titleGroup := self nodeStyler labelAndIconFor: node.
 	titleBox := RSBox new
 		extent: titleGroup extent + 10;
 		model: node;
@@ -119,7 +119,7 @@ HSimpleVisualizationBuilder >> buildCompositeFullNodeIn: shape [
 	titleRadius := self topCornerRadius.
 	boxChildrenRadius := self bottomCornerRadius.
 	list := { title. children }.
-	self labeler position = #below ifTrue: [ 
+	self nodeStyler position = #below ifTrue: [ 
 		titleRadius := self bottomCornerRadius.
 		boxChildrenRadius := self topCornerRadius.
 		list := { children. title }.
@@ -204,21 +204,11 @@ HSimpleVisualizationBuilder >> highlightable [
 { #category : #initialization }
 HSimpleVisualizationBuilder >> initialize [
 	super initialize.
-	self labeler: HLabeler new.
+	self nodeStyler: HNodeStyler new.
 	self linkStyler: HLinkStyler new.
 	self boxChildrenColorPalette: (NSScale ordinal 
 		range: Smalltalk ui theme roassalHNodeBackgroundColors).
 		
-]
-
-{ #category : #accessing }
-HSimpleVisualizationBuilder >> labeler [
-	^ labeler
-]
-
-{ #category : #accessing }
-HSimpleVisualizationBuilder >> labeler: anHLabeler [
-	labeler := anHLabeler
 ]
 
 { #category : #layout }
@@ -263,6 +253,7 @@ HSimpleVisualizationBuilder >> menuInteraction [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> nodeAnnouncer [
+	"plug new events here"
 	baseNode ifNotNil: [ ^ baseNode announcer ].
 	baseNode := RSComposite new
 		@ self nodePopup;
@@ -270,8 +261,8 @@ HSimpleVisualizationBuilder >> nodeAnnouncer [
 			color: Smalltalk ui theme caretColor);
 		@ self menuInteraction;
 		@ self highlightable;
-		
-		@ (HResizeParentWhenChildMoves new labeler: self labeler);
+		@ (HNodeOnTopWhenPositionChanged new);
+		@ (HResizeParentWhenChildMoves new nodeStyler: self nodeStyler);
 		yourself.
 	^ baseNode announcer
 	
@@ -280,6 +271,16 @@ HSimpleVisualizationBuilder >> nodeAnnouncer [
 { #category : #'accessing - attributes' }
 HSimpleVisualizationBuilder >> nodePopup [
 	^ RSPopup new
+]
+
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> nodeStyler [
+	^ nodeStyler
+]
+
+{ #category : #accessing }
+HSimpleVisualizationBuilder >> nodeStyler: anHLabeler [
+	nodeStyler := anHLabeler
 ]
 
 { #category : #hooks }
