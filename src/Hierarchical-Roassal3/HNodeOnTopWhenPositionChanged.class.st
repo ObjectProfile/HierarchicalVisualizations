@@ -1,7 +1,7 @@
 Class {
 	#name : #HNodeOnTopWhenPositionChanged,
 	#superclass : #RSInteraction,
-	#category : #'Hierarchical-Roassal3-Visualization'
+	#category : #'Hierarchical-Roassal3-Interactions'
 }
 
 { #category : #hooks }

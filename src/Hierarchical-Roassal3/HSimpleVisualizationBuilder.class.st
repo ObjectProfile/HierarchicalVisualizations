@@ -256,7 +256,7 @@ HSimpleVisualizationBuilder >> nodeAnnouncer [
 	"plug new events here"
 	baseNode ifNotNil: [ ^ baseNode announcer ].
 	baseNode := RSComposite new
-		@ self nodePopup;
+		@ self nodeStyler popup;
 		@ (RSGhostDraggable new 
 			color: Smalltalk ui theme caretColor);
 		@ self menuInteraction;
@@ -266,11 +266,6 @@ HSimpleVisualizationBuilder >> nodeAnnouncer [
 		yourself.
 	^ baseNode announcer
 	
-]
-
-{ #category : #'accessing - attributes' }
-HSimpleVisualizationBuilder >> nodePopup [
-	^ RSPopup new
 ]
 
 { #category : #accessing }

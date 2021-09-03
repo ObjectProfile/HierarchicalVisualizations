@@ -9,7 +9,8 @@ Class {
 		'fontName',
 		'fontSize',
 		'color',
-		'text'
+		'text',
+		'popup'
 	],
 	#category : #'Hierarchical-Roassal3-Configuration'
 }
@@ -76,6 +77,7 @@ HNodeStyler >> initialize [
 	self color: Smalltalk ui theme textColor.
 	self fontSize: 12.
 	self fontName: 'Source Sans Pro'.
+	self popup: RSPopup new.
 	self above
 ]
 
@@ -99,6 +101,18 @@ HNodeStyler >> labelFor: anHNode [
 		fontName: (self fontName rsValue: anHNode);
 		fontSize: (self fontSize rsValue: anHNode);
 		yourself
+]
+
+{ #category : #accessing }
+HNodeStyler >> popup [
+
+	^ popup
+]
+
+{ #category : #accessing }
+HNodeStyler >> popup: anObject [
+
+	popup := anObject
 ]
 
 { #category : #accessing }

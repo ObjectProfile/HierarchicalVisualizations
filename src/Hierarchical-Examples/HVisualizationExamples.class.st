@@ -131,6 +131,11 @@ HVisualizationExamples >> example10RSChartLabeler [
 	visualization := HSimpleVisualizationBuilder new.
 	visualization rootNode: b rootNode.
 	visualization nodeStyler: (HNodeStyler new 
+		popup: (RSPopup new
+			in: [:p | p shapeBuilder labelBuilder labelShape 
+				fontSize: 20;
+				color: Color black. ];
+			yourself);
 		text: [ :node | 
 			(node asString splitOn: '-') last. ];
 		fontSize: [:node |
