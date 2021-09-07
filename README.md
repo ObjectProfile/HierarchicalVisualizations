@@ -39,10 +39,10 @@ rootNode open.
 ```
 
 The code above defines four nodes in total, structured as a hierarchy. Executing the code should shows:
-<img width="1023" alt="image" src="https://user-images.githubusercontent.com/393742/132356571-bf07db43-cfb1-4144-951b-ebafaae2cd16.png">
+<img width="1021" alt="image" src="https://user-images.githubusercontent.com/393742/132356755-e3df5336-500a-4768-b585-c4a5c3e4f3bc.png">
 
 Node can be collapsed or expanded:
 
-<img width="500" alt="portfolio_view" src="https://raw.githubusercontent.com/ObjectProfile/HierarchicalVisualizations/main/scripts/simpleExample02.png">
+<img width="496" alt="image" src="https://user-images.githubusercontent.com/393742/132356828-8dcd18d6-87d4-4cbe-8644-3b4ff91c1584.png">
 
 New menu items can be defined by creating a subclass of `HAbstractMenuItem`. The package [`Hierarchical-Roassal3-Menu`](https://github.com/ObjectProfile/HierarchicalVisualizations/tree/main/src/Hierarchical-Roassal3-Menu) contains many examples on how to define a new menu item.
