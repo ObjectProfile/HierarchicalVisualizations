@@ -5,5 +5,5 @@ HNode >> open [
 	^ HSimpleVisualizationBuilder new
 		rootNode: self;
 		build;
-		in: [:b | b canvas openWithTitle: 'Hierarchycal Visualizations']
+		in: [:b | b canvas openWithTitle: 'Hierarchical Visualization']
 ]
