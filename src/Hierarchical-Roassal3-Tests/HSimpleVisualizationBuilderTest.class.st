@@ -67,6 +67,37 @@ HSimpleVisualizationBuilderTest >> testMoveOneChildInParent [
 ]
 
 { #category : #tests }
+HSimpleVisualizationBuilderTest >> testNodeWithoutTitle [
+
+	| node1 node2 subnode1 subnode2 subnode3 subnode4 rootNode |
+	node1 := HNode new name: 'Node1'.
+	node2 := HNode new name: 'Node2'.
+	subnode1 := HNode new name: 'Sub1'.
+	subnode2 := HNode new name: 'Sub2'.
+	subnode3 := HNode new name: 'Sub3'.
+	subnode4 := HNode new name: 'Sub4'.
+
+	node1 addAll: { 
+			subnode1.
+			subnode2 }.
+	node2 addAll: { 
+			subnode3.
+			subnode4 }.
+
+	rootNode := HNode new name: 'Root'.
+	rootNode addAll: { 
+			node1.
+			node2 }.
+	subnode3 dependenciesToNodes: { 
+			subnode1.
+			subnode2 }.
+
+	rootNode add: HNode new.
+
+	rootNode open delete
+]
+
+{ #category : #tests }
 HSimpleVisualizationBuilderTest >> testTestMoveNode [
 	| root node1 node2 subnode1 visualization shapeNode1 |
 	"This test is for class HNodeOnTopWhenPositionChanged"
