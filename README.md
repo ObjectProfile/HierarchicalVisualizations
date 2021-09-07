@@ -46,3 +46,28 @@ Node can be collapsed or expanded:
 <img width="496" alt="image" src="https://user-images.githubusercontent.com/393742/132356828-8dcd18d6-87d4-4cbe-8644-3b4ff91c1584.png">
 
 New menu items can be defined by creating a subclass of `HAbstractMenuItem`. The package [`Hierarchical-Roassal3-Menu`](https://github.com/ObjectProfile/HierarchicalVisualizations/tree/main/src/Hierarchical-Roassal3-Menu) contains many examples on how to define a new menu item.
+
+Roassal's layouts may be set in a `HNode`, as for example:
+
+```Smalltalk
+node1 := HNode new name: 'Node1'.
+node1 layout: RSVerticalLineLayout new.
+node2 := HNode new name: 'Node2'.
+subnode1 := HNode new name: 'Sub1'.
+subnode2 := HNode new name: 'Sub2'.
+subnode3 := HNode new name: 'Sub3'.
+subnode4 := HNode new name: 'Sub4'.
+
+node1 addAll: {subnode1. subnode2}.
+node2 addAll: {subnode3. subnode4}.
+	
+rootNode := HNode new name: 'Root'.
+rootNode addAll: { node1. node2 }.
+subnode3 dependenciesToNodes: { subnode1. subnode2 }.
+
+rootNode add: HNode new.
+
+rootNode open.
+```
+which produces: 
+<img width="1021" alt="image" src="https://user-images.githubusercontent.com/393742/132359190-d0e41669-aa89-4413-9d33-c0d809fe2842.png">
