@@ -19,7 +19,10 @@ Execute the following code snippet in a Playground:
 Consider the following code snippet:
 ```Smalltalk
 node1 := HNode new name: 'Node1'.
+node1 color: Color blue translucent.
+
 node2 := HNode new name: 'Node2'.
+node2 color: Color green lighter lighter.
 subnode1 := HNode new name: 'Sub1'.
 subnode2 := HNode new name: 'Sub2'.
 subnode3 := HNode new name: 'Sub3'.
@@ -33,11 +36,10 @@ rootNode addAll: { node1. node2 }.
 subnode3 dependenciesToNodes: { subnode1. subnode2 }.
 
 rootNode open.
-
 ```
 
 The code above defines four nodes in total, structured as a hierarchy. Executing the code should shows:
-<img width="800" alt="portfolio_view" src="https://raw.githubusercontent.com/ObjectProfile/HierarchicalVisualizations/main/scripts/simpleExample.png">
+<img width="1023" alt="image" src="https://user-images.githubusercontent.com/393742/132356571-bf07db43-cfb1-4144-951b-ebafaae2cd16.png">
 
 Node can be collapsed or expanded:
 
