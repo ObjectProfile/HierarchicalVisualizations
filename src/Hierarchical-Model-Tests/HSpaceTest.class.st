@@ -4,7 +4,7 @@ A HSpaceTest is a test class for testing the behavior of HSpace
 Class {
 	#name : #HSpaceTest,
 	#superclass : #TestCase,
-	#category : #'Hierarchical-Model-Tests'
+	#category : #'Hierarchical-Model-Tests-Core'
 }
 
 { #category : #tests }

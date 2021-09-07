@@ -4,7 +4,7 @@ A HNodeTest is a test class for testing the behavior of HNode
 Class {
 	#name : #HNodeTest,
 	#superclass : #TestCase,
-	#category : #'Hierarchical-Model-Tests'
+	#category : #'Hierarchical-Model-Tests-Core'
 }
 
 { #category : #tests }
