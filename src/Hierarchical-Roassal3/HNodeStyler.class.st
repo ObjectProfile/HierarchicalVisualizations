@@ -44,9 +44,9 @@ HNodeStyler >> fontName [
 ]
 
 { #category : #accessing }
-HNodeStyler >> fontName: anObject [
+HNodeStyler >> fontName: aFontname [
 
-	fontName := anObject
+	fontName := aFontname
 ]
 
 { #category : #accessing }
@@ -56,9 +56,9 @@ HNodeStyler >> fontSize [
 ]
 
 { #category : #accessing }
-HNodeStyler >> fontSize: anObject [
+HNodeStyler >> fontSize: anInteger [
 
-	fontSize := anObject
+	fontSize := anInteger
 ]
 
 { #category : #hooks }
@@ -128,9 +128,9 @@ HNodeStyler >> text [
 ]
 
 { #category : #accessing }
-HNodeStyler >> text: anObject [
+HNodeStyler >> text: aStringOrABlock [
 
-	text := anObject
+	text := aStringOrABlock
 ]
 
 { #category : #hooks }
