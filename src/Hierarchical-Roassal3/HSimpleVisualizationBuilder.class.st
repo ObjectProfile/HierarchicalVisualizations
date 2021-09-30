@@ -137,6 +137,23 @@ HSimpleVisualizationBuilder >> buildCompositeFullNodeIn: shape [
 	
 ]
 
+{ #category : #'accessing - defaults' }
+HSimpleVisualizationBuilder >> canvasController: canvas [
+	^ RSCanvasController new 
+		noLegend;
+		in: [:i | 
+			canvas newAnimation
+				duration: 500 milliSeconds;
+				onStepDo: [ canvas signalUpdate ];
+				when: RSAnimationEndEvent do: [ i configuration noZoomToFitOnExtendChanged ].
+			(i interactions at: RSDraggableCanvasInteraction) left.
+			i configuration
+				"useBasicZoom;"
+				maxScale: 3;
+				minScale: 0.5];
+		yourself
+]
+
 { #category : #'public - hooks' }
 HSimpleVisualizationBuilder >> childrenFor: node [
 	^ node children collect: [ :child | self shapeFor: child ] as: RSGroup
@@ -156,20 +173,62 @@ HSimpleVisualizationBuilder >> cornerRadius [
 HSimpleVisualizationBuilder >> defaultContainer [
 	| canvas |
 	canvas := RSCanvas new.
-	canvas  @ (RSCanvasController new 
-		noLegend;
-		in: [:i | 
-			canvas newAnimation
-				duration: 500 milliSeconds;
-				onStepDo: [ canvas signalUpdate ];
-				when: RSAnimationEndEvent do: [ i configuration noZoomToFitOnExtendChanged  ].
-			i configuration
-				"useBasicZoom;"
-				maxScale: 3;
-				minScale: 0.5];
-		yourself).
-		
+	canvas @ (self elasticBoxFor: canvas).
+	canvas @ (self canvasController: canvas).
 	^ canvas
+]
+
+{ #category : #'accessing - defaults' }
+HSimpleVisualizationBuilder >> elasticBoxFor: aRSCanvas [
+	| elastic selectionHigh key remove |
+	elastic := RSElasticBoxInteraction new.
+	elastic targetShapes: aRSCanvas nodes.
+	key := #shadow.
+	remove := [:evt | 
+			| shape |
+			shape := evt shape.
+			(shape hasProperty: key) ifTrue: [ 
+				(shape propertyAt: key) remove.
+				shape removeKey: key ] ].
+	selectionHigh := RSHighlightable new
+		when: RSHighlightEvent do: [:evt | 
+			| border shape canvas |
+			shape := evt shape.
+			canvas := shape parent.
+			remove value: evt.
+			border := RSBox new
+				cornerRadius: 10;
+				fromRectangle: shape encompassingRectangle;
+				noPaint;
+				border: (RSBorder new 
+					color: Smalltalk ui theme textColor;
+					width: 5;
+					yourself);
+				yourself.
+			border extent: border extent + 4.
+			canvas addShape: border.
+			shape propertyAt: key put: border.
+			border pushBack ];
+		when: RSUnHighlightEvent do: remove.
+	elastic 
+		when: RSSelectionStartEvent do: [ :evt | selectionHigh unhighlightRecordedShapes: evt canvas ];
+		when: RSSelectionChangedEvent do: [:evt | selectionHigh doHighlightShapes: evt selectedShapes ];
+		when: RSSelectionEndEvent do: [:evt | evt canvas selectedShapes: evt selectedShapes ].
+		
+	^ elastic.
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> fixShadowForSelectedShape: shape and: newShape [
+	| key canvas selectedShapes border |
+	key := #shadow.
+	(shape hasProperty: key) ifFalse: [ ^ self ].
+	canvas := newShape canvas.
+	selectedShapes := canvas selectedShapes.
+	border := shape propertyAt: key.
+	newShape propertyAt: key put: border.
+	border extent: newShape extent + 4.
+	selectedShapes at: (selectedShapes indexOf: shape) put: newShape
 ]
 
 { #category : #'accessing - attributes' }
@@ -257,7 +316,7 @@ HSimpleVisualizationBuilder >> nodeAnnouncer [
 	baseNode ifNotNil: [ ^ baseNode announcer ].
 	baseNode := RSComposite new
 		@ self nodeStyler popup;
-		@ (RSGhostDraggable new 
+		@ (HGhostDraggable new 
 			color: Smalltalk ui theme caretColor);
 		@ self menuInteraction;
 		@ self highlightable;
@@ -296,24 +355,26 @@ HSimpleVisualizationBuilder >> rebuildRootShape: shape [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> rebuildShape: shape [
-	| canvas newShape node |
+	| canvas newShape node parent children |
 	node := shape model.
 	canvas := shape canvas.
 	canvas lines copy do: #remove.
 	self removeShapeWithAllChildren: shape.
 	newShape := self shapeFor: node.
 	newShape position: shape position.
-	
-	shape parent add: newShape.
+	parent := shape parent.
+	parent add: newShape.
 	
 	"shape sparent schildren add: newShape."
-	shape sparent schildren 
+	children := shape sparent schildren.
+	children
 		remove: shape;
 		add: newShape.
 	newShape sparent: shape sparent.
 	shape remove.
 
 	self renderLinesIn: canvas.
+	self fixShadowForSelectedShape: shape and: newShape.
 	canvas signalUpdate.
 ]
 

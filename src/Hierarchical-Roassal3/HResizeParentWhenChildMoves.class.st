@@ -1,3 +1,6 @@
+"
+This class resizes the parent node when the whild node moves, this also move the inner title, and tried to ajust to the new size
+"
 Class {
 	#name : #HResizeParentWhenChildMoves,
 	#superclass : #RSResizeParentWhenChildMoves,

@@ -1,3 +1,6 @@
+"
+My instances put events on a shape, when this shapes moves it will be on top of the visualization
+"
 Class {
 	#name : #HNodeOnTopWhenPositionChanged,
 	#superclass : #RSInteraction,
