@@ -1,3 +1,6 @@
+"
+This menu adds a new node into the visualization using ui manager to write its name
+"
 Class {
 	#name : #HNewContainerMenuItem,
 	#superclass : #HCanvasMenuItem,

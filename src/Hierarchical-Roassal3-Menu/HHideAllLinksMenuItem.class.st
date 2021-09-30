@@ -1,3 +1,6 @@
+"
+This menu item hide all the links for this node and all children
+"
 Class {
 	#name : #HHideAllLinksMenuItem,
 	#superclass : #HNodeMenuItem,

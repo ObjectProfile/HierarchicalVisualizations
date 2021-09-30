@@ -29,7 +29,11 @@ HAbstractMenuItem class >> classFor: aRoassalShape [
 	aRoassalShape isShape
 		ifFalse: [ ^ HCanvasMenuItem ].
 	^ aRoassalShape isNode
-		ifTrue: [ HNodeMenuItem ]
+		ifTrue: [ 
+			(aRoassalShape canvas selectedShapes notEmpty 
+				and: [ (aRoassalShape canvas selectedShapes includes: aRoassalShape)])
+				ifTrue: [ HGroupMenuItem ]
+			 	ifFalse: [ HNodeMenuItem ] ]
 		ifFalse: [ HLineMenuItem ]
 		
 ]

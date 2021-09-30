@@ -1,3 +1,6 @@
+"
+this menu item show all the links of the node and all children
+"
 Class {
 	#name : #HShowAllLinksMenuItem,
 	#superclass : #HNodeMenuItem,

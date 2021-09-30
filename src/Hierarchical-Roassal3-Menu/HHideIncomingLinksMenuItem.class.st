@@ -1,3 +1,6 @@
+"
+this menu hide incoming links
+"
 Class {
 	#name : #HHideIncomingLinksMenuItem,
 	#superclass : #HNodeMenuItem,

@@ -1,3 +1,6 @@
+"
+this menu hide outgoing links
+"
 Class {
 	#name : #HHideOutgoingLinksMenuItem,
 	#superclass : #HNodeMenuItem,
