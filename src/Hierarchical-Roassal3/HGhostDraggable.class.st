@@ -25,7 +25,7 @@ HGhostDraggable >> removeGhost: evt [
 	(shapes includes: evt shape) ifTrue: [ 
 		shapes do: [ :shape | 
 			super removeGhost: shape.
-			(shape propertyAt: #shadow) translateTo: shape position.
+			"(shape propertyAt: #shadow) translateTo: shape position."
 			 ] ]
 	ifFalse: [ super removeGhost: evt ].
 

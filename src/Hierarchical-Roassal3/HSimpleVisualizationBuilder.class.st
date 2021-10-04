@@ -170,6 +170,27 @@ HSimpleVisualizationBuilder >> cornerRadius [
 ]
 
 { #category : #'accessing - defaults' }
+HSimpleVisualizationBuilder >> createBoxSelectionFor: shape [
+	| border canvas |
+	canvas := shape parent.
+	shape removeSelectionBox.
+			
+	border := RSBox new
+		cornerRadius: 10;
+		noPaint;
+		border: (RSBorder new 
+			color: Smalltalk ui theme textColor;
+			width: 5;
+			yourself);
+		yourself.
+	shape selectionBox: border.
+	HUpdateSelectionBox new updateSelectionBox: shape.
+	canvas addShape: border.
+	border pushBack.
+	
+]
+
+{ #category : #'accessing - defaults' }
 HSimpleVisualizationBuilder >> defaultContainer [
 	| canvas |
 	canvas := RSCanvas new.
@@ -180,36 +201,12 @@ HSimpleVisualizationBuilder >> defaultContainer [
 
 { #category : #'accessing - defaults' }
 HSimpleVisualizationBuilder >> elasticBoxFor: aRSCanvas [
-	| elastic selectionHigh key remove |
+	| elastic selectionHigh |
 	elastic := RSElasticBoxInteraction new.
 	elastic targetShapes: aRSCanvas nodes.
-	key := #shadow.
-	remove := [:evt | 
-			| shape |
-			shape := evt shape.
-			(shape hasProperty: key) ifTrue: [ 
-				(shape propertyAt: key) remove.
-				shape removeKey: key ] ].
 	selectionHigh := RSHighlightable new
-		when: RSHighlightEvent do: [:evt | 
-			| border shape canvas |
-			shape := evt shape.
-			canvas := shape parent.
-			remove value: evt.
-			border := RSBox new
-				cornerRadius: 10;
-				fromRectangle: shape encompassingRectangle;
-				noPaint;
-				border: (RSBorder new 
-					color: Smalltalk ui theme textColor;
-					width: 5;
-					yourself);
-				yourself.
-			border extent: border extent + 4.
-			canvas addShape: border.
-			shape propertyAt: key put: border.
-			border pushBack ];
-		when: RSUnHighlightEvent do: remove.
+		when: RSHighlightEvent do: [:evt | self createBoxSelectionFor: evt shape ];
+		when: RSUnHighlightEvent do: [:evt | evt shape removeSelectionBox ].
 	elastic 
 		when: RSSelectionStartEvent do: [ :evt | selectionHigh unhighlightRecordedShapes: evt canvas ];
 		when: RSSelectionChangedEvent do: [:evt | selectionHigh doHighlightShapes: evt selectedShapes ];
@@ -220,14 +217,13 @@ HSimpleVisualizationBuilder >> elasticBoxFor: aRSCanvas [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> fixShadowForSelectedShape: shape and: newShape [
-	| key canvas selectedShapes border |
-	key := #shadow.
-	(shape hasProperty: key) ifFalse: [ ^ self ].
+	| canvas selectedShapes border |
+	border := shape selectionBox.
+	border ifNil: [ ^ self ].
 	canvas := newShape canvas.
 	selectedShapes := canvas selectedShapes.
-	border := shape propertyAt: key.
-	newShape propertyAt: key put: border.
-	border extent: newShape extent + 4.
+	newShape selectionBox: border.
+	HUpdateSelectionBox new updateSelectionBox: newShape.
 	selectedShapes at: (selectedShapes indexOf: shape) put: newShape
 ]
 
@@ -321,6 +317,7 @@ HSimpleVisualizationBuilder >> nodeAnnouncer [
 		@ self menuInteraction;
 		@ self highlightable;
 		@ (HNodeOnTopWhenPositionChanged new);
+		@ (HUpdateSelectionBox new);
 		@ (HResizeParentWhenChildMoves new nodeStyler: self nodeStyler);
 		yourself.
 	^ baseNode announcer
@@ -418,6 +415,7 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 		aCanvas signalUpdate.
 		 ].
 	self renderLinesIn: aCanvas.
+	aCanvas when: RSMouseDoubleClick do: [ :evt | evt canvas inspect ].
 	self layoutOn: rootShapes parent: rootNode.
 	
 ]

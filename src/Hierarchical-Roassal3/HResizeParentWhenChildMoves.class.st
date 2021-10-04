@@ -38,7 +38,6 @@ HResizeParentWhenChildMoves >> parentFor: shape [
 { #category : #hooks }
 HResizeParentWhenChildMoves >> prepare: shape with: parent [
 	| children title titleBox boxChildren list |
-	
 	children := shape parent.
 	children adjustToChildren; padding: 10.
 	parent schildren do: [ :child | child model position: child position ].

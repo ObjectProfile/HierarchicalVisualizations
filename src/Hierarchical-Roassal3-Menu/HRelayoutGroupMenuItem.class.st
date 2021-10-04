@@ -17,7 +17,6 @@ HRelayoutGroupMenuItem >> execute [
 	otherShapes := visualization canvas nodes reject: [ :node | selectedShapes includes: node ].
 	"To move to the side the new elements "
 	RSHorizontalLineLayout new gapSize: 10; on: { otherShapes. selectedShapes }.
-	selectedShapes do: [:aShape | (aShape propertyAt: #shadow) translateTo: aShape position]
 ]
 
 { #category : #accessing }
