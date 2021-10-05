@@ -12,6 +12,7 @@ Class {
 		'name',
 		'parent',
 		'isExpanded',
+		'isLinksExpanded',
 		'children',
 		'dependencies',
 		'iconName',
@@ -80,7 +81,6 @@ HNode >> children [
 
 { #category : #accessing }
 HNode >> children: aCollection [
-
 	children := aCollection
 ]
 
@@ -94,6 +94,11 @@ HNode >> collapse [
 { #category : #public }
 HNode >> collapseChildren [
 	children do: [ :child | child collapse ].
+]
+
+{ #category : #public }
+HNode >> collapseLinks [
+	isLinksExpanded := false.
 ]
 
 { #category : #accessing }
@@ -183,6 +188,11 @@ HNode >> expandCollapse [
 		ifFalse: [ self expand ].
 ]
 
+{ #category : #public }
+HNode >> expandLinks [
+	isLinksExpanded := true.
+]
+
 { #category : #testing }
 HNode >> hasChildren [
 	^ children notEmpty
@@ -238,7 +248,8 @@ HNode >> iconName: aString [
 HNode >> initialize [
 	super initialize.
 	children := OrderedCollection new.
-	isExpanded := true.
+	isLinksExpanded := isExpanded := true.
+
 ]
 
 { #category : #testing }
