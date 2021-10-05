@@ -15,7 +15,9 @@ HExpandChildrenMenuItem >> canBeExecuted [
 { #category : #execution }
 HExpandChildrenMenuItem >> execute [
 	shape schildren do: [ :child | child model removeInteractionIfPresent: visualization class ].
-	shape model expandChildren.
+	shape model
+		expand;
+		expandChildren.
 	visualization rebuildShape: shape.
 ]
 

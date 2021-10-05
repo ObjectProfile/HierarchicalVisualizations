@@ -17,6 +17,11 @@ HRelayoutCanvasMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HRelayoutCanvasMenuItem >> group [
+	^ 1
+]
+
+{ #category : #accessing }
 HRelayoutCanvasMenuItem >> label [
 	^ 'Relayout'
 ]

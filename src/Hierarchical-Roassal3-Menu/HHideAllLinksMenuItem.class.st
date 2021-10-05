@@ -14,6 +14,11 @@ HHideAllLinksMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HHideAllLinksMenuItem >> group [
+	^ 3
+]
+
+{ #category : #accessing }
 HHideAllLinksMenuItem >> label [
 	^ 'Hide All links'
 ]

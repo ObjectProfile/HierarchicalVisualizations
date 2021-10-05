@@ -17,6 +17,11 @@ HNewEntityMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HNewEntityMenuItem >> group [
+	^ 2
+]
+
+{ #category : #accessing }
 HNewEntityMenuItem >> label [
 	^ 'New Entity'
 ]

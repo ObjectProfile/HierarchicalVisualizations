@@ -14,6 +14,11 @@ HShowAllLinksMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HShowAllLinksMenuItem >> group [
+	^ 3
+]
+
+{ #category : #accessing }
 HShowAllLinksMenuItem >> label [
 	^ 'Show All links'
 ]

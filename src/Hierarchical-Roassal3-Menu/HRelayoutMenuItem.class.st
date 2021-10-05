@@ -16,6 +16,11 @@ HRelayoutMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HRelayoutMenuItem >> group [
+	^ 1
+]
+
+{ #category : #accessing }
 HRelayoutMenuItem >> label [
 	^ 'Relayout'
 ]

@@ -42,6 +42,11 @@ HAddLinkMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HAddLinkMenuItem >> group [
+	^ 2
+]
+
+{ #category : #accessing }
 HAddLinkMenuItem >> label [
 	^ 'Add dependency to'
 ]

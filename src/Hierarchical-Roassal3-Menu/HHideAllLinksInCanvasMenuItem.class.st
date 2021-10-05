@@ -14,6 +14,11 @@ HHideAllLinksInCanvasMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HHideAllLinksInCanvasMenuItem >> group [
+	^ 2
+]
+
+{ #category : #accessing }
 HHideAllLinksInCanvasMenuItem >> label [
 	^ 'Hide all links'
 ]

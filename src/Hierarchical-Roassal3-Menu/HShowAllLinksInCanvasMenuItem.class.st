@@ -11,6 +11,11 @@ HShowAllLinksInCanvasMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HShowAllLinksInCanvasMenuItem >> group [
+	^ 2
+]
+
+{ #category : #accessing }
 HShowAllLinksInCanvasMenuItem >> label [
 	^ 'Show all links'
 ]

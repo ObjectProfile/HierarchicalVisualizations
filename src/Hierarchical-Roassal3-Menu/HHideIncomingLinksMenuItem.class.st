@@ -14,6 +14,11 @@ HHideIncomingLinksMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HHideIncomingLinksMenuItem >> group [
+	^ 3
+]
+
+{ #category : #accessing }
 HHideIncomingLinksMenuItem >> label [
 	^ 'Hide incoming links'
 ]

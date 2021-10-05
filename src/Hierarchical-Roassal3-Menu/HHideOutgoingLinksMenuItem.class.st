@@ -14,6 +14,11 @@ HHideOutgoingLinksMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HHideOutgoingLinksMenuItem >> group [
+	^ 3
+]
+
+{ #category : #accessing }
 HHideOutgoingLinksMenuItem >> label [
 	^ 'Hide outgoing links'
 ]

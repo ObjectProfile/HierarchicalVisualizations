@@ -17,6 +17,11 @@ HNewContainerMenuItem >> execute [
 ]
 
 { #category : #accessing }
+HNewContainerMenuItem >> group [
+	^ 1
+]
+
+{ #category : #accessing }
 HNewContainerMenuItem >> label [
 	^ 'Add Container'
 ]

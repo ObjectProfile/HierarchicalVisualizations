@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #accessing }
+HInspectorMenuItem >> group [
+	^ 100
+]
+
+{ #category : #accessing }
 HInspectorMenuItem >> iconName [
 	^ #smallInspectIt
 ]
