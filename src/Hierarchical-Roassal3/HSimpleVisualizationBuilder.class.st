@@ -355,6 +355,7 @@ HSimpleVisualizationBuilder >> rebuildShape: shape [
 	| canvas newShape node parent children |
 	node := shape model.
 	canvas := shape canvas.
+	canvas ifNil: [ ^ self ].
 	canvas lines copy do: #remove.
 	self removeShapeWithAllChildren: shape.
 	newShape := self shapeFor: node.
