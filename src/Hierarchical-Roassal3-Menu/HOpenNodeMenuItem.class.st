@@ -14,7 +14,22 @@ HOpenNodeMenuItem >> canBeExecuted [
 
 { #category : #accessing }
 HOpenNodeMenuItem >> execute [
-	shape model open
+	| copy |
+	copy := shape model copy.
+	self fixDependencies: copy.
+	copy open
+]
+
+{ #category : #accessing }
+HOpenNodeMenuItem >> fixDependencies: node [
+	node dependencies: (node dependencies collect: [:link | | linkCopy |
+		linkCopy := link copy.
+		linkCopy
+			from: (node topParent globalChildEquals: link from);
+			to: (node topParent globalChildEquals: link to);
+			yourself
+		] thenReject: [:link | link from isNil or: [ link to isNil ] ]).
+	node children do: [ :child | self fixDependencies: child ].
 ]
 
 { #category : #accessing }
