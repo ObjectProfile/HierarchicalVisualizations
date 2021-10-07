@@ -54,8 +54,6 @@ HNodeTest >> testCollapseLinks [
 	
 	node1 collapseLinks.
 	node2 collapseLinks.
-	self flag: #TODO.
-	true ifTrue: [ ^ self ].
 	self deny: node1 dependentsFromLinks isEmpty.
 	self deny: node2 dependentsFromLinks isEmpty.
 	self assert: node1 dependentsFromLinks asArray first equals: node2.

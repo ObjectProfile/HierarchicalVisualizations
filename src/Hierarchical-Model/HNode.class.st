@@ -147,21 +147,28 @@ HNode >> dependencyTo: anHNode [
 	self addLink: link.
 ]
 
-{ #category : #dependencies }
+{ #category : #'computing - dependencies' }
 HNode >> dependentsFromLinks [
-	| list |
-	list :=self dependencies
-		select: [ :link | 	self isValidLink: link ]
+	"main code to generate lines between nodes"
+	^ self doesParentDisplayLinks
+		ifTrue: [ self dependentsFromLinksForNode ]
+		ifFalse: [ self dependentsToLinksForNode: self parentNotDisplayLinks ].
+]
+
+{ #category : #'computing - dependencies' }
+HNode >> dependentsFromLinksForNode [
+	| set |
+	set := self dependencies
+		select: [ :link | self shouldDisplayLink: link ]
 		thenCollect: [:link | link from visibleNodeOrParent ].
 	
-	list := list asOrderedCollection.
-	(self isExpanded 
-		and: [ self isLinksExpanded 
-			and: [ self isVisible ] ]) 
-				ifTrue: [ ^ list asSet ].
-	self children do: [ :child | list addAll: child dependentsFromLinks ].
+	set := set asSet.
+	(self isExpanded and: [ self isVisible and: [ self isLinksExpanded ] ]) 
+		ifTrue: [ ^ set ].
+	self children do: [ :child | 
+		set addAll: child dependentsFromLinksForNode ].
+	^ set
 	
-	^ list asSet.
 ]
 
 { #category : #dependencies }
@@ -170,6 +177,27 @@ HNode >> dependentsToLinks [
 		select: [ :link | link from = self ]
 		thenCollect: [:link | 
 			link to visibleNodeOrParent ]) asSet.
+]
+
+{ #category : #'computing - dependencies' }
+HNode >> dependentsToLinksForNode: aNode [
+	| set |
+	set := self dependencies
+		select: [ :link | self shouldDisplayLink: link in: aNode ]
+		thenCollect: [:link | link from visibleNodeOrParentIn: aNode ].
+	
+	set := set asSet.
+	(self isExpanded and: [ self isVisible and: [ self isLinksExpanded ] ]) 
+		ifTrue: [ ^ set ].
+	self children do: [ :child |
+		set addAll: (child dependentsToLinksForNode: aNode) ].
+	^ set
+]
+
+{ #category : #testing }
+HNode >> doesParentDisplayLinks [
+	parent ifNil: [ ^ true ].
+	^ parent isVisible and: [ parent isLinksExpanded and: [ parent doesParentDisplayLinks ] ]
 ]
 
 { #category : #public }
@@ -276,13 +304,6 @@ HNode >> isLinksExpanded [
 ]
 
 { #category : #testing }
-HNode >> isValidLink: anHLink [
-	| link |
-	link := anHLink.
-	^ link isVisible and: [ link to = self "and: [ link from shouldHaveLinks ]" ] 
-]
-
-{ #category : #testing }
 HNode >> isVisible [
 	parent ifNil: [ ^ true ].
 	^ parent isExpanded and: [ parent isVisible ]
@@ -332,6 +353,15 @@ HNode >> parent [
 HNode >> parent: anHNode [
 
 	parent := anHNode
+]
+
+{ #category : #'computing - dependencies' }
+HNode >> parentNotDisplayLinks [
+	parent ifNil: [ ^ self ].
+	(parent isVisible and: [ parent isLinksExpanded not ])
+		ifTrue: [ ^ parent ].
+	^ parent parentNotDisplayLinks.
+	
 ]
 
 { #category : #accessing }
@@ -392,9 +422,17 @@ HNode >> removeLinkTo: anHNode [
 ]
 
 { #category : #testing }
-HNode >> shouldHaveLinks [
-	parent ifNil: [ ^ true ].
-	^ parent isVisible and: [ parent isLinksExpanded and: [ parent shouldHaveLinks ] ]
+HNode >> shouldDisplayLink: anHLink [
+	| link |
+	link := anHLink.
+	^ link isVisible and: [ link to = self ] 
+]
+
+{ #category : #testing }
+HNode >> shouldDisplayLink: anHLink in: aNode [
+	| link |
+	link := anHLink.
+	^ link isVisible and: [ link to = self and: [ (aNode globalChildEquals: link from) notNil ] ] 
 ]
 
 { #category : #'showing - hiding' }
@@ -410,10 +448,18 @@ HNode >> topParent [
 
 ]
 
-{ #category : #dependencies }
+{ #category : #'computing - dependencies' }
 HNode >> visibleNodeOrParent [
+	parent ifNil: [ ^ self ].
+	^ (self isVisible and: [ parent isLinksExpanded ])
+		ifTrue: [ self ]
+		ifFalse: [ parent visibleNodeOrParent ]
+]
+
+{ #category : #'computing - dependencies' }
+HNode >> visibleNodeOrParentIn: aNode [
 	parent ifNil: [ ^ self ].
 	^ self isVisible
 		ifTrue: [ self ]
-		ifFalse: [ parent visibleNodeOrParent ]
+		ifFalse: [ parent visibleNodeOrParentIn: aNode ]
 ]

@@ -25,8 +25,8 @@ HExpandCollapseLinksMenuItem >> group [
 { #category : #accessing }
 HExpandCollapseLinksMenuItem >> label [
 	^ shape model isLinksExpanded
-		ifTrue: [ 'Collapse links' ] 
-		ifFalse: [ 'Expand links' ]
+		ifTrue: [ 'Collapse external links' ] 
+		ifFalse: [ 'Expand external links' ]
 ]
 
 { #category : #accessing }

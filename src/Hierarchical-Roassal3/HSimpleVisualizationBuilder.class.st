@@ -416,7 +416,6 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 		aCanvas signalUpdate.
 		 ].
 	self renderLinesIn: aCanvas.
-	aCanvas when: RSMouseDoubleClick do: [ :evt | evt canvas inspect ].
 	self layoutOn: rootShapes parent: rootNode.
 	
 ]
