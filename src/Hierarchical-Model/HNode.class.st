@@ -150,13 +150,15 @@ HNode >> dependencyTo: anHNode [
 { #category : #dependencies }
 HNode >> dependentsFromLinks [
 	| list |
-	list := (self dependencies
-		select: [ :link | 
-			link isVisible and: [ link to = self] ]
-		thenCollect: [:link | 
-			link from visibleNodeOrParent ]) asOrderedCollection.
-	(self isExpanded and: [ self isVisible ]) ifTrue: [ ^ list asSet ].
+	list :=self dependencies
+		select: [ :link | 	self isValidLink: link ]
+		thenCollect: [:link | link from visibleNodeOrParent ].
 	
+	list := list asOrderedCollection.
+	(self isExpanded 
+		and: [ self isLinksExpanded 
+			and: [ self isVisible ] ]) 
+				ifTrue: [ ^ list asSet ].
 	self children do: [ :child | list addAll: child dependentsFromLinks ].
 	
 	^ list asSet.
@@ -165,7 +167,7 @@ HNode >> dependentsFromLinks [
 { #category : #dependencies }
 HNode >> dependentsToLinks [
 	^ (self dependencies 
-		select: [ :link | link from = self]
+		select: [ :link | link from = self ]
 		thenCollect: [:link | 
 			link to visibleNodeOrParent ]) asSet.
 ]
@@ -191,6 +193,17 @@ HNode >> expandCollapse [
 { #category : #public }
 HNode >> expandLinks [
 	isLinksExpanded := true.
+]
+
+{ #category : #'accessing - computed' }
+HNode >> globalChildEquals: anHNode [
+	anHNode ifNil: [ ^ nil ].
+	rawModel = anHNode rawModel ifTrue: [ ^ self ].
+	self children do: [ :child |
+		(child globalChildEquals: anHNode) ifNotNil: [:res | ^ res ].
+		 ].
+	^ nil
+	
 ]
 
 { #category : #testing }
@@ -258,6 +271,18 @@ HNode >> isExpanded [
 ]
 
 { #category : #testing }
+HNode >> isLinksExpanded [
+	^ isLinksExpanded
+]
+
+{ #category : #testing }
+HNode >> isValidLink: anHLink [
+	| link |
+	link := anHLink.
+	^ link isVisible and: [ link to = self "and: [ link from shouldHaveLinks ]" ] 
+]
+
+{ #category : #testing }
 HNode >> isVisible [
 	parent ifNil: [ ^ true ].
 	^ parent isExpanded and: [ parent isVisible ]
@@ -320,6 +345,15 @@ HNode >> position: aPoint [
 	position := aPoint
 ]
 
+{ #category : #copying }
+HNode >> postCopy [
+	self 
+		children: (self children collect: [:child | child copy ]);
+		parent: nil;
+		announcer: nil.
+	self children do: [ :child | child parent: self ].
+]
+
 { #category : #printing }
 HNode >> printOn: stream [
 	stream << (name ifNil: [ 'nil' ])
@@ -357,9 +391,23 @@ HNode >> removeLinkTo: anHNode [
 
 ]
 
+{ #category : #testing }
+HNode >> shouldHaveLinks [
+	parent ifNil: [ ^ true ].
+	^ parent isVisible and: [ parent isLinksExpanded and: [ parent shouldHaveLinks ] ]
+]
+
 { #category : #'showing - hiding' }
 HNode >> showAllLinks [
 	self allDependencies do: [ :link | link isVisible: true ]
+]
+
+{ #category : #accessing }
+HNode >> topParent [
+	^ parent 
+		ifNil: [ self ]
+		ifNotNil: [ self parent topParent ].
+
 ]
 
 { #category : #dependencies }
