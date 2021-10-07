@@ -316,7 +316,7 @@ HSimpleVisualizationBuilder >> nodeAnnouncer [
 			color: Smalltalk ui theme caretColor);
 		@ self menuInteraction;
 		@ self highlightable;
-		@ (HNodeOnTopWhenPositionChanged new);
+		@ (RSNodeOnTopWhenPositionChanged new);
 		@ (HUpdateSelectionBox new);
 		@ (HResizeParentWhenChildMoves new nodeStyler: self nodeStyler);
 		yourself.
