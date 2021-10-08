@@ -223,6 +223,24 @@ HNode >> expandLinks [
 	isLinksExpanded := true.
 ]
 
+{ #category : #utility }
+HNode >> fixDependencies: node [
+	node dependencies: (node dependencies collect: [:link | | linkCopy |
+		linkCopy := link copy.
+		linkCopy
+			from: (node topParent globalChildEquals: link from);
+			to: (node topParent globalChildEquals: link to);
+			yourself
+		] thenReject: [:link | link from isNil or: [ link to isNil ] ]).
+	node children do: [ :child | self fixDependencies: child ].
+]
+
+{ #category : #utility }
+HNode >> fixDependents [
+	self fixDependencies: self.
+	
+]
+
 { #category : #'accessing - computed' }
 HNode >> globalChildEquals: anHNode [
 	anHNode ifNil: [ ^ nil ].
