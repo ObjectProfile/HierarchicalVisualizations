@@ -244,7 +244,11 @@ HNode >> fixDependents [
 { #category : #'accessing - computed' }
 HNode >> globalChildEquals: anHNode [
 	anHNode ifNil: [ ^ nil ].
-	rawModel = anHNode rawModel ifTrue: [ ^ self ].
+	rawModel = anHNode rawModel ifTrue: [ 
+		rawModel 
+			ifNil: [ name = anHNode name 
+				ifTrue: [ ^ self ] ]
+			ifNotNil: [ ^ self ] ].
 	self children do: [ :child |
 		(child globalChildEquals: anHNode) ifNotNil: [:res | ^ res ].
 		 ].

@@ -7,6 +7,11 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
+{ #category : #testing }
+HExpandCollapseLinksMenuItem >> canBeExecuted [
+	^ shape model children isNotEmpty
+]
+
 { #category : #accessing }
 HExpandCollapseLinksMenuItem >> execute [
 	| node |
