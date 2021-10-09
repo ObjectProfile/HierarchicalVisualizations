@@ -94,7 +94,6 @@ HSimpleVisualizationBuilder >> buildCompositeFullNodeIn: shape [
 	titleGroup := self nodeStyler labelAndIconFor: node.
 	titleBox := RSBox new
 		extent: titleGroup extent + 10;
-		model: node;
 		color: ((self colorFor: node) alpha: 0.7);
 		position: titleGroup position;
 		yourself.
