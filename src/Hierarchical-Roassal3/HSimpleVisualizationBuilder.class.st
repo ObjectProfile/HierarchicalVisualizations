@@ -372,6 +372,13 @@ HSimpleVisualizationBuilder >> rebuildShape: shape [
 
 	self renderLinesIn: canvas.
 	self fixShadowForSelectedShape: shape and: newShape.
+	
+	(canvas visibleRectangle containsRect: newShape globalEncompassingRectangle)
+		ifFalse: [ 
+			canvas camera 
+				zoomToFit: canvas extent * 0.9
+				rectangle: newShape encompassingRectangle ].
+		
 	canvas signalUpdate.
 ]
 
