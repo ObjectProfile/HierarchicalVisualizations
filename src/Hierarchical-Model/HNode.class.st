@@ -55,6 +55,17 @@ HNode >> addedIn: anHNode [
 	anHNode addChild: self.
 ]
 
+{ #category : #accessing }
+HNode >> allChildren [
+	| allChildren index |
+	index := 1.
+	allChildren := OrderedCollection withAll: self children.
+	[index <= allChildren size] whileTrue: 
+			[allChildren addAll: (allChildren at: index) children.
+			index := index + 1].
+	^allChildren
+]
+
 { #category : #dependencies }
 HNode >> allDependencies [
 	^ self dependencies, (self hasChildren 
@@ -484,4 +495,11 @@ HNode >> visibleNodeOrParentIn: aNode [
 	^ self isVisible
 		ifTrue: [ self ]
 		ifFalse: [ parent visibleNodeOrParentIn: aNode ]
+]
+
+{ #category : #accessing }
+HNode >> withAllChildren [
+	^ self allChildren
+		add: self;
+		yourself
 ]
