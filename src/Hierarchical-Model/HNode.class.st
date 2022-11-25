@@ -55,12 +55,44 @@ HNode >> addedIn: anHNode [
 	anHNode addChild: self.
 ]
 
+{ #category : #accessing }
+HNode >> allChildren [
+	| allChildren index |
+	index := 1.
+	allChildren := OrderedCollection withAll: self children.
+	[index <= allChildren size] whileTrue: 
+			[allChildren addAll: (allChildren at: index) children.
+			index := index + 1].
+	^allChildren
+]
+
 { #category : #dependencies }
 HNode >> allDependencies [
 	^ self dependencies, (self hasChildren 
 		ifTrue: [ self children flatCollect: [ :child|
 			child allDependencies ] ]
 		ifFalse: [ #() ])
+]
+
+{ #category : #'as yet unclassified' }
+HNode >> allRawModelDependenciesIn: aHNode [ 
+	| list nodesToCompare |
+	list := OrderedCollection new.
+	nodesToCompare := aHNode isExpanded
+		ifTrue: [ { aHNode }  ]
+		ifFalse: [ aHNode withAllChildren ].
+	self allRawModelDependenciesIn: nodesToCompare asSet fill: list.
+	^ list collect: [:each | each rawModel].
+]
+
+{ #category : #'as yet unclassified' }
+HNode >> allRawModelDependenciesIn: nodesToCompare fill: result [ 
+
+	| selection |
+	selection := self allDependencies select: [ :link | nodesToCompare includes: link to ].
+	result addAll: selection.
+	self isExpanded ifTrue: [ ^ self ].
+	
 ]
 
 { #category : #announcer }
@@ -145,6 +177,15 @@ HNode >> dependencyTo: anHNode [
 		yourself.
 	anHNode addLink: link.
 	self addLink: link.
+	^ link
+]
+
+{ #category : #dependencies }
+HNode >> dependencyTo: aHNode withModel: anObject [
+	"self haltIf: [ name = 'nodeClass' and: [ aHNode name = 'AIReducedGraphNode' ]]."
+	^ (self dependencyTo: aHNode)
+		rawModel: anObject;
+		yourself
 ]
 
 { #category : #'computing - dependencies' }
@@ -484,4 +525,11 @@ HNode >> visibleNodeOrParentIn: aNode [
 	^ self isVisible
 		ifTrue: [ self ]
 		ifFalse: [ parent visibleNodeOrParentIn: aNode ]
+]
+
+{ #category : #accessing }
+HNode >> withAllChildren [
+	^ self allChildren
+		add: self;
+		yourself
 ]

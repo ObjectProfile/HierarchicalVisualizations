@@ -8,6 +8,93 @@ Class {
 }
 
 { #category : #tests }
+HNodeTest >> testAddDependencyWithModel [
+	| node1 node2 link createdLink |
+	node1 := HNode new rawModel: Collection.
+	node2 := HNode new rawModel: String.
+	createdLink := node1 dependencyTo: node2 withModel: 'myModel'.
+	
+	self assert: node1 dependencies size equals: 1.
+	link := node1 dependencies first.
+	self assert: link rawModel equals: 'myModel'.
+	self assert: link equals: createdLink.
+]
+
+{ #category : #tests }
+HNodeTest >> testAllRawModelDependenciesIn [
+	| node1 node2 createdLink list |
+	node1 := HNode new rawModel: Collection.
+	node2 := HNode new rawModel: String.
+	createdLink := node1 dependencyTo: node2 withModel: 'myModel'.
+	
+	list := node1 allRawModelDependenciesIn: node2.
+	self assert: list size equals: 1.
+	self assert: list first equals: createdLink rawModel.
+]
+
+{ #category : #tests }
+HNodeTest >> testAllRawModelDependenciesIn2 [
+	| n1 n11 n2 n21 list |
+	n1 := HNode new.
+	n11 := HNode new.
+	n2 := HNode new.
+	n21 := HNode new.
+	
+	n1 add: n11.
+	n2 add: n21.
+	n1 dependencyTo: n2 withModel: 'model1'.
+	n11 dependencyTo: n21 withModel: 'model2'.
+	n1 collapse.
+	n2 collapse.
+	
+	list := n1 allRawModelDependenciesIn: n2.
+	self assert: list size equals: 2.
+	self assert: list asArray equals: { 'model1'. 'model2' }.
+]
+
+{ #category : #tests }
+HNodeTest >> testAllRawModelDependenciesIn3 [
+	| n1 n11 n2 n21 list list2 |
+	n1 := HNode new.
+	n11 := HNode new.
+	n2 := HNode new.
+	n21 := HNode new.
+	
+	n1 add: n11.
+	n2 add: n21.
+	n1 dependencyTo: n2 withModel: 'model1'.
+	n11 dependencyTo: n21 withModel: 'model2'.
+	n1 dependencyTo: n21 withModel: 'model3'.
+	n1 collapse.
+	n2 expand.
+	
+	list := n1 allRawModelDependenciesIn: n2.
+	list2 := n1 allRawModelDependenciesIn: n21.
+	self assert: list asArray equals: { 'model1' }.
+	self assert: list2 asArray equals: { 'model3'. 'model2' }.
+]
+
+{ #category : #tests }
+HNodeTest >> testAllRawModelDependenciesIn4 [
+	| n1 n11 n2 n21 list |
+	n1 := HNode new.
+	n11 := HNode new.
+	n2 := HNode new.
+	n21 := HNode new.
+	
+	n1 add: n11.
+	n2 add: n21.
+	n11 dependencyTo: n2 withModel: 'model1'.
+	n1 expand.
+	n2 collapse.
+	
+	list := n1 allRawModelDependenciesIn: n2.
+	
+	self assert: list asArray equals: { 'model1' }.
+	
+]
+
+{ #category : #tests }
 HNodeTest >> testBasic [
 	| node1 node2 subnode1 subnode2 rootNode w nodeWithoutTitle |
 	node1 := HNode new name: 'Node1'.

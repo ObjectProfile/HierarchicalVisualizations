@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'from',
 		'to',
-		'visible'
+		'visible',
+		'rawModel'
 	],
 	#category : #'Hierarchical-Model-Core'
 }
@@ -38,6 +39,16 @@ HLink >> isVisible [
 { #category : #testing }
 HLink >> isVisible: aBoolean [
 	visible := aBoolean
+]
+
+{ #category : #accessing }
+HLink >> rawModel [
+	^ rawModel
+]
+
+{ #category : #accessing }
+HLink >> rawModel: aClass [ 
+	rawModel := aClass
 ]
 
 { #category : #accessing }
