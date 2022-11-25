@@ -74,6 +74,27 @@ HNode >> allDependencies [
 		ifFalse: [ #() ])
 ]
 
+{ #category : #'as yet unclassified' }
+HNode >> allRawModelDependenciesIn: aHNode [ 
+	| list nodesToCompare |
+	list := OrderedCollection new.
+	nodesToCompare := aHNode isExpanded
+		ifTrue: [ { aHNode }  ]
+		ifFalse: [ aHNode withAllChildren ].
+	self allRawModelDependenciesIn: nodesToCompare asSet fill: list.
+	^ list collect: [:each | each rawModel].
+]
+
+{ #category : #'as yet unclassified' }
+HNode >> allRawModelDependenciesIn: nodesToCompare fill: result [ 
+
+	| selection |
+	selection := self allDependencies select: [ :link | nodesToCompare includes: link to ].
+	result addAll: selection.
+	self isExpanded ifTrue: [ ^ self ].
+	
+]
+
 { #category : #announcer }
 HNode >> announcementClasses [
 	^ #()
@@ -156,6 +177,15 @@ HNode >> dependencyTo: anHNode [
 		yourself.
 	anHNode addLink: link.
 	self addLink: link.
+	^ link
+]
+
+{ #category : #dependencies }
+HNode >> dependencyTo: aHNode withModel: anObject [
+	"self haltIf: [ name = 'nodeClass' and: [ aHNode name = 'AIReducedGraphNode' ]]."
+	^ (self dependencyTo: aHNode)
+		rawModel: anObject;
+		yourself
 ]
 
 { #category : #'computing - dependencies' }
