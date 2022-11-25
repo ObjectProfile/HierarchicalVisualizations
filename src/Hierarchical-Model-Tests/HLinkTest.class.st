@@ -8,6 +8,14 @@ Class {
 }
 
 { #category : #tests }
+HLinkTest >> testRawModel [
+	| link |
+	link := HLink new.
+	link rawModel: Collection.
+	self assert: link rawModel equals: Collection
+]
+
+{ #category : #tests }
 HLinkTest >> testVisible [
 	| node1 node2 subnode1 subnode2 rootNode |
 	node1 := HNode new name: 'Node1'.
