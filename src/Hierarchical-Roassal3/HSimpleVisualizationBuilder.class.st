@@ -297,7 +297,7 @@ HSimpleVisualizationBuilder >> linkStyler: anHLinkStyler [
 HSimpleVisualizationBuilder >> menuInteraction [
 	^ menuInteraction ifNil: [ 
 		menuInteraction := RSMenuActivable new
-			menuDo: [ :menu :aShape | HAbstractMenuItem 
+			menuDo: [ :menu :aShape | HMenuBuilder new 
 				buildIn: menu 
 				shape: aShape 
 				visualization: self ];
