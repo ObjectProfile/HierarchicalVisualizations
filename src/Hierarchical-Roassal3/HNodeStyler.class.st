@@ -5,24 +5,24 @@ Class {
 	#name : #HNodeStyler,
 	#superclass : #Object,
 	#instVars : [
-		'position',
 		'fontName',
 		'fontSize',
 		'color',
 		'text',
-		'popup'
+		'popup',
+		'location'
 	],
 	#category : #'Hierarchical-Roassal3-Configuration'
 }
 
 { #category : #public }
 HNodeStyler >> above [
-	position := #above
+	location := #above
 ]
 
 { #category : #public }
 HNodeStyler >> below [
-	position := #below
+	location := #below
 ]
 
 { #category : #accessing }
@@ -104,6 +104,12 @@ HNodeStyler >> labelFor: anHNode [
 ]
 
 { #category : #accessing }
+HNodeStyler >> location [
+
+	^ location
+]
+
+{ #category : #accessing }
 HNodeStyler >> popup [
 
 	^ popup
@@ -113,12 +119,6 @@ HNodeStyler >> popup [
 HNodeStyler >> popup: anObject [
 
 	popup := anObject
-]
-
-{ #category : #accessing }
-HNodeStyler >> position [
-
-	^ position
 ]
 
 { #category : #accessing }

@@ -257,12 +257,12 @@ HSimpleVisualizationBuilder >> highlightable [
 
 { #category : #initialization }
 HSimpleVisualizationBuilder >> initialize [
+
 	super initialize.
 	self nodeStyler: HNodeStyler new.
 	self linkStyler: HLinkStyler new.
-	self boxChildrenColorPalette: (NSScale ordinal 
-		range: Smalltalk ui theme roassalHNodeBackgroundColors).
-		
+	self boxChildrenColorPalette: (NSScale ordinal range:
+			 Smalltalk ui theme roassalHNodeBackgroundColors)
 ]
 
 { #category : #layout }
@@ -463,21 +463,15 @@ HSimpleVisualizationBuilder >> rootShapeFrom: shape [
 { #category : #hooks }
 HSimpleVisualizationBuilder >> shapeFor: node [
 	| shape |
-	shape := RSComposite new
-		model: node;
-		announcer: self nodeAnnouncer;
-		yourself.
-	(node isExpanded and: [node hasChildren]) 
-		ifTrue: [ self buildCompositeFullNodeIn: shape ]
-		ifFalse: [ self buildCompositeEmptyNodeIn: shape ].
-	
+	shape := node asShape.
+	shape announcer: self nodeAnnouncer.
 	node 
 		removeInteractionIfPresent: self class;
 		when: HNodeAddedEvent do: [ :evt | self rebuildRootShape: shape ];
 		when: HCollapseEvent do: [ :evt |	self rebuildShape: shape ];
 		when: HExpandEvent do: [ :evt | self rebuildRootShape: shape ];
 		when: HNodeChangedEvent do: [ :evt | self rebuildShape: shape ].
-	shapes add: shape.
+"	shapes add: shape."
 	^ shape 
 	
 ]

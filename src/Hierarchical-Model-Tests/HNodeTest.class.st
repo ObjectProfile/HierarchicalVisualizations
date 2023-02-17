@@ -95,6 +95,15 @@ HNodeTest >> testAllRawModelDependenciesIn4 [
 ]
 
 { #category : #tests }
+HNodeTest >> testAsShape [
+
+	| hNode |
+	hNode := HNode new.
+	self assert: (hNode asShape isKindOf: RSShape).
+	
+]
+
+{ #category : #tests }
 HNodeTest >> testBasic [
 	| node1 node2 subnode1 subnode2 rootNode w nodeWithoutTitle |
 	node1 := HNode new name: 'Node1'.
@@ -349,4 +358,18 @@ HNodeTest >> testRemoveLink02 [
 	node1 removeLinkTo: sub4.
 	self assert: sub4 dependentsFromLinks size equals: 0.
 	
+]
+
+{ #category : #tests }
+HNodeTest >> testStyle [
+
+	| hNode style |
+	hNode := HNode new.
+	style := hNode style.
+
+	self assert: style notNil.
+
+	self assert: style class equals: hNode defaultStyle class.
+
+	self assert: (style isKindOf: HStyle)
 ]
