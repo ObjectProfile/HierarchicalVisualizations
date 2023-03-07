@@ -6,7 +6,8 @@ Class {
 	#superclass : #HNodeBuilder,
 	#instVars : [
 		'packageQuery',
-		'colorPalette'
+		'colorPalette',
+		'nodeStyle'
 	],
 	#category : #'Hierarchical-Builder'
 }
@@ -27,6 +28,7 @@ HPharoNodeBuilder >> buildNodeFromClass: clazz [
 		name: clazz name;
 		rawModel: clazz;
 		iconName: #class;
+		style: nodeStyle; 
 		addAll: (clazz methods collect: [:met | self buildNodefromMethod: met ]);
 		collapse;
 		yourself
@@ -38,6 +40,7 @@ HPharoNodeBuilder >> buildNodeFromPackage: package [
 		name: package name;
 		rawModel: package;
 		iconName: #monticelloPackage;
+		style: nodeStyle;
 		addAll: (package definedClasses collect: [:cls | self buildNodeFromClass: cls ]);
 		yourself
 ]
@@ -47,6 +50,7 @@ HPharoNodeBuilder >> buildNodefromMethod: method [
 	^ HNode new
 		name: method selector;
 		rawModel: method;
+		style: nodeStyle;
 		iconName: #glamorousBrowse;
 		yourself
 	
@@ -80,6 +84,19 @@ HPharoNodeBuilder >> createDependenciesBetweenMethods [
 HPharoNodeBuilder >> initialize [
 	super initialize.
 	self colorPalette: (NSScale category10 in: [:s | s range: {Color gray}, s range ]).
+	nodeStyle := HDefaultStyle new
+]
+
+{ #category : #accessing }
+HPharoNodeBuilder >> nodeStyle [
+
+	^ nodeStyle
+]
+
+{ #category : #accessing }
+HPharoNodeBuilder >> nodeStyle: anObject [
+
+	nodeStyle := anObject
 ]
 
 { #category : #accessing }

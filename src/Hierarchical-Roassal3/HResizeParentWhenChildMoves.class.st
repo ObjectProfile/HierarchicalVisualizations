@@ -37,9 +37,12 @@ HResizeParentWhenChildMoves >> parentFor: shape [
 
 { #category : #hooks }
 HResizeParentWhenChildMoves >> prepare: shape with: parent [
-	| children title titleBox boxChildren list |
+
+	| children title titleBox boxChildren list style |
 	children := shape parent.
-	children adjustToChildren; padding: 10.
+	children
+		adjustToChildren;
+		padding: 10.
 	parent schildren do: [ :child | child model position: child position ].
 	"shape model position: shape position."
 	title := parent children first.
@@ -48,12 +51,20 @@ HResizeParentWhenChildMoves >> prepare: shape with: parent [
 	title adjustToChildren.
 	boxChildren := parent children second.
 	title width < children width
-		ifTrue: [ titleBox width: children width. title adjustToChildren ]
+		ifTrue: [ 
+			titleBox width: children width.
+			title adjustToChildren ]
 		ifFalse: [ children width: title width ].
-	list := { title. children }.
-	self nodeStyler position = #below ifTrue: [ list := { children. title } ].
+	list := { 
+		        title.
+		        children }.
+	style := shape model style.
+	style titleLocation = #below ifTrue: [ 
+		list := { 
+			        children.
+			        title } ].
 	RSVerticalLineLayout new
 		gapSize: 0;
 		on: list.
-	boxChildren fromRectangle: children encompassingRectangle.
+	boxChildren fromRectangle: children encompassingRectangle
 ]

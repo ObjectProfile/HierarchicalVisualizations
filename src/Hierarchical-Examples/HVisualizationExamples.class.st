@@ -123,30 +123,20 @@ HVisualizationExamples >> example09Collection [
 { #category : #examples }
 HVisualizationExamples >> example10RSChartLabeler [
 	<script: 'self new example10RSChartLabeler open'>
-	| b visualization |
+	| b visualization style |
 	b := HPharoNodeBuilder new.
+	style := HDefaultStyle new.
+	b nodeStyle: style.
 	b packageQuery: 'Roassal3-Chart*'.
 	b build.
 	
 	visualization := HSimpleVisualizationBuilder new.
-	visualization rootNode: b rootNode.
-	visualization nodeStyler: (HNodeStyler new 
-		popup: (RSPopup new
+	visualization popup:(RSPopup new
 			in: [:p | p shapeBuilder labelBuilder labelShape 
 				fontSize: 20;
 				color: Color black. ];
-			yourself);
-		text: [ :node | 
-			(node asString splitOn: '-') last. ];
-		fontSize: [:node |
-			10 + (5 * node level) ];
-		fontName: 'Arial';
-		color: [ :node |
-			(node asString endsWith: 'Plot')
-				ifTrue: [ Smalltalk ui theme backgroundColor ]
-				ifFalse: [ Smalltalk ui theme textColor ] ];
-		below;
-		yourself).
+			yourself).
+	visualization rootNode: b rootNode.
 	^ visualization
 	
 ]
@@ -187,4 +177,41 @@ HVisualizationExamples >> example12HierarchicalWithDifferentLines [
 	v build.
 	^ v canvas
 
+]
+
+{ #category : #examples }
+HVisualizationExamples >> example13Styles [
+
+	<script: 'self new example13Styles open'>
+	| node1 node2 subnode1 subnode2 rootNode subnode3 subnode4 |
+	node1 := HNode new name: 'Node1'.
+	subnode3 := HNode new name: 'Sub1-1'.
+	subnode4 := HNode new name: 'Sub1-2'.
+
+	node1 addAll: { 
+			subnode3.
+			subnode4 }.
+
+	node2 := HNode new
+		         name: 'Node2';
+		         collapse;
+		         style:( HBorderAndTitleStyle new borderWidth: 5; yourself);
+		         yourself.
+	subnode1 := HNode new name: 'Sub2-1'.
+	subnode2 := HNode new name: 'Sub2-2'.
+	node2 addAll: { 
+			subnode1.
+			subnode2 }.
+
+	node1 children , node2 children do: [ :child | 
+		child color: Color blue translucent ].
+	rootNode := HNode new name: 'Root'.
+	rootNode addAll: { 
+			node1.
+			node2 }.
+	subnode3 dependenciesToNodes: { 
+			subnode1.
+			subnode2 }.
+
+	^ rootNode
 ]

@@ -25,19 +25,6 @@ HDefaultStyle >> baseLabel: anObject [
 ]
 
 { #category : #hooks }
-HDefaultStyle >> borderFor: node [
-	^ node hasChildren
-		ifTrue: [ RSBorder new 
-			width: 2; 
-			capSquare;
-			joinMiter;
-			color: Smalltalk ui theme textColor;
-			dashArray: #(5 10);
-			yourself  ]
-		ifFalse: [ nil ]
-]
-
-{ #category : #hooks }
 HDefaultStyle >> bottomCornerRadius [
 	^ bottomCornerRadius ifNil: [ 
 		bottomCornerRadius := RSCornerRadius new 
@@ -149,12 +136,6 @@ HDefaultStyle >> buildCompositeFullNodeIn: shape [
 ]
 
 { #category : #hooks }
-HDefaultStyle >> colorFor: node [
-
-	^ Color colorFrom: (node color ifNil: [ #gray ])
-]
-
-{ #category : #hooks }
 HDefaultStyle >> cornerRadius [
 
 	^ 7
@@ -233,20 +214,6 @@ HDefaultStyle >> relayout: aGroupOfShapes parent: anHNode [
 	anHNode layout on: aGroupOfShapes.
 	
 	
-]
-
-{ #category : #hooks }
-HDefaultStyle >> shapeFor: aHNode [
-
-	| shape |
-	shape := RSComposite new
-		         model: aHNode;
-		         yourself.
-	(aHNode isExpanded and: [ aHNode hasChildren ])
-		ifTrue: [ self buildCompositeFullNodeIn: shape ]
-		ifFalse: [ self buildCompositeEmptyNodeIn: shape ].
-
-	^ shape
 ]
 
 { #category : #hooks }
