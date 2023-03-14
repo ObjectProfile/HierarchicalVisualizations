@@ -194,7 +194,6 @@ HVisualizationExamples >> example13Styles [
 
 	node2 := HNode new
 		         name: 'Node2';
-		         collapse;
 		         style:( HBorderAndTitleStyle new borderWidth: 5; yourself);
 		         yourself.
 	subnode1 := HNode new name: 'Sub2-1'.

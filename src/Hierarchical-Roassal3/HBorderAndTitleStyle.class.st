@@ -48,9 +48,7 @@ HBorderAndTitleStyle >> buildCompositeEmptyNodeIn: shape [
 
 	| node box rect |
 	node := shape model.
-	shape add: (RSLabel new
-			 text: node name;
-			 color: Smalltalk ui theme textColor yourself).
+	shape add: (self labelFor: node).
 	rect := shape children encompassingRectangle.
 	box := RSBox new
 		       extent: rect extent + 10 + (self borderWidth / 2);
@@ -71,56 +69,28 @@ HBorderAndTitleStyle >> buildCompositeEmptyNodeIn: shape [
 { #category : #hooks }
 HBorderAndTitleStyle >> buildCompositeFullNodeIn: shape [
 
-	| childrenShapes node titleGroup title titleBox children boxChildren titleRadius boxChildrenRadius list |
+	| childrenShapes node title children boxChildren |
 	node := shape model.
-	titleGroup := self labelAndIconFor: node.
-	titleBox := RSBox new
-		            extent: titleGroup extent + 10;
-		            color: ((self colorFor: node) alpha: 0.7);
-		            position: titleGroup position;
-		            yourself.
-	title := RSComposite new
-		         add: titleBox;
-		         addAll: titleGroup;
-		         adjustToChildren;
-		         yourself.
-	shape propertyAt: #background put: titleBox.
+	title := self labelFor: node.
+	
 	childrenShapes := node children collect: #asShape as: RSGroup.
 	self layoutOn: childrenShapes parent: node.
-
 	shape schildren: childrenShapes.
-	childrenShapes do: [ :child | child sparent: shape ].
 	children := childrenShapes asShape padding: 10.
 	childrenShapes do: [ :child | child model position: child position ].
-	title width < children width
-		ifTrue: [ 
-			titleBox width: children width.
-			title adjustToChildren ]
-		ifFalse: [ children width: title width ].
+	
+	title width > children width
+		ifTrue: [ children width: title width ].
 	boxChildren := self boxChildrenFor: node.
-	titleRadius := self topCornerRadius.
-	boxChildrenRadius := self bottomCornerRadius.
-	list := { 
-		        title.
-		        children }.
-
-	self titleLocation = #below ifTrue: [ 
-		titleRadius := self bottomCornerRadius.
-		boxChildrenRadius := self topCornerRadius.
-		list := { 
-			        children.
-			        title } ].
-	RSVerticalLineLayout new
-		gapSize: 0;
-		on: list.
-	titleBox cornerRadius: titleRadius.
-	boxChildren
-		cornerRadius: boxChildrenRadius;
-		fromRectangle: children encompassingRectangle.
-
+	self titleLocation move: title on: children.
+	
+	shape propertyAt: #background put: boxChildren.
+	shape border: (self boxBorderFor: node).
+	boxChildren fromRectangle: ({title. children} asGroup encompassingRectangle).
+	
 	shape
-		add: title;
 		add: boxChildren;
+		add: title;
 		add: children.
 	shape adjustToChildren
 ]
@@ -131,4 +101,20 @@ HBorderAndTitleStyle >> initialize [
 	super initialize.
 	borderWidth := 1.
 	borderDashArray := {  }
+]
+
+{ #category : #hooks }
+HBorderAndTitleStyle >> updateShape: shape with: parent [
+	| children title boxChildren |
+	children := shape parent.
+	children adjustToChildren;
+		padding: 10.
+	title := parent children second.
+	parent schildren do: [ :child | child model position: child position ].
+	children width < title width
+		ifTrue: [ children width: title width ].
+	self titleLocation move: title on: children.
+	boxChildren := parent propertyAt: #background.
+	boxChildren fromRectangle: ({title. children} asGroup encompassingRectangle).
+	
 ]

@@ -2,57 +2,18 @@ Class {
 	#name : #HDefaultStyle,
 	#superclass : #HStyle,
 	#instVars : [
-		'baseLabel',
 		'fullCornerRadius',
-		'boxChildrenColorPalette',
 		'topCornerRadius',
-		'bottomCornerRadius',
-		'titleLocation'
+		'bottomCornerRadius'
 	],
 	#category : #'Hierarchical-Roassal3'
 }
-
-{ #category : #accessing }
-HDefaultStyle >> baseLabel [
-
-	^ baseLabel
-]
-
-{ #category : #accessing }
-HDefaultStyle >> baseLabel: anObject [
-
-	baseLabel := anObject
-]
 
 { #category : #hooks }
 HDefaultStyle >> bottomCornerRadius [
 	^ bottomCornerRadius ifNil: [ 
 		bottomCornerRadius := RSCornerRadius new 
 			bottom: self cornerRadius ]
-]
-
-{ #category : #hooks }
-HDefaultStyle >> boxChildrenColorFor: anHNode [
-	^ boxChildrenColorPalette scale: anHNode level
-]
-
-{ #category : #accessing }
-HDefaultStyle >> boxChildrenColorPalette [
-
-	^ boxChildrenColorPalette
-]
-
-{ #category : #accessing }
-HDefaultStyle >> boxChildrenColorPalette: anObject [
-
-	boxChildrenColorPalette := anObject
-]
-
-{ #category : #hooks }
-HDefaultStyle >> boxChildrenFor: anHNode [
-	^ RSBox new
-		color: (self boxChildrenColorFor: anHNode);
-		yourself.
 ]
 
 { #category : #hooks }
@@ -161,14 +122,7 @@ HDefaultStyle >> iconFor: anHNode [
 HDefaultStyle >> initialize [
 
 	super initialize.
-	baseLabel := RSLabel new.
-	self titleLocationAbove.
-	baseLabel
-		fontSize: 12;
-		color: Smalltalk ui theme textColor;
-		fontName: 'Source Sans Pro'.
-	self boxChildrenColorPalette: (NSScale ordinal range:
-			 Smalltalk ui theme roassalHNodeBackgroundColors)
+	self titleLocationAbove
 ]
 
 { #category : #hooks }
@@ -181,57 +135,6 @@ HDefaultStyle >> labelAndIconFor: anHNode [
 	
 	RSHorizontalLineLayout new alignMiddle; on: group.
 	^ group.
-]
-
-{ #category : #hooks }
-HDefaultStyle >> labelFor: anHNode [
-
-	^ baseLabel copy
-		  text: (self textFor: anHNode);
-		  yourself
-]
-
-{ #category : #hooks }
-HDefaultStyle >> layoutOn: aGroupOfShapes parent: anHNode [
-	aGroupOfShapes ifEmpty: [ ^ self ].
-	
-	aGroupOfShapes first model position ifNotNil: [ 
-		aGroupOfShapes do: [ :child | child position: (child model position ifNil: [ 0@0 ]) ].
-		^ self.
-		 ].
-	self relayout: aGroupOfShapes parent: anHNode.
-	
-	
-]
-
-{ #category : #hooks }
-HDefaultStyle >> relayout: aGroupOfShapes parent: anHNode [
-	anHNode layout ifNil: [ 
-		RSFlowLayout new
-			gapSize: 10;
-			on: aGroupOfShapes. 
-		^ self ].
-	anHNode layout on: aGroupOfShapes.
-	
-	
-]
-
-{ #category : #hooks }
-HDefaultStyle >> textFor: aHNode [
-
-	^ aHNode name
-]
-
-{ #category : #hooks }
-HDefaultStyle >> titleLocation [
-
-	^ titleLocation
-]
-
-{ #category : #accessing }
-HDefaultStyle >> titleLocation: anObject [
-
-	titleLocation := anObject
 ]
 
 { #category : #initialization }
@@ -251,4 +154,38 @@ HDefaultStyle >> topCornerRadius [
 	^ topCornerRadius ifNil: [ 
 		topCornerRadius := RSCornerRadius new 
 			top: self cornerRadius ]
+]
+
+{ #category : #hooks }
+HDefaultStyle >> updateShape: shape with: parent [
+	| children title titleBox boxChildren list style |
+	children := shape parent.
+	children
+		adjustToChildren;
+		padding: 10.
+	parent schildren do: [ :child | child model position: child position ].
+	
+	title := parent children first.
+	titleBox := title children first.
+	titleBox extent: title children allButFirst extent + 10.
+	title adjustToChildren.
+	boxChildren := parent children second.
+	"boxChildren := parent propertyAt: #background."
+	title width < children width
+		ifTrue: [ 
+			titleBox width: children width.
+			title adjustToChildren ]
+		ifFalse: [ children width: title width ].
+	list := { 
+		        title.
+		        children }.
+	style := shape model style.
+	style titleLocation = #below ifTrue: [ 
+		list := { 
+			        children.
+			        title } ].
+	RSVerticalLineLayout new
+		gapSize: 0;
+		on: list.
+	boxChildren fromRectangle: children encompassingRectangle
 ]
