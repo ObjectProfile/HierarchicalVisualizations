@@ -15,6 +15,21 @@ HMenuBuilderTest >> setUp [
 ]
 
 { #category : #tests }
+HMenuBuilderTest >> testInspectRawModel [
+	| node rootNode item shape |
+	node := HNode new name: 'Node1' ; rawModel: #anObject.
+
+	rootNode := HNode new name: 'Root'.
+	rootNode add: 	node.
+
+	shape := RSComposite model: node.
+	item := HInspectorMenuItem new.
+	item shape: shape.
+	
+self assert: item target equals: #anObject
+]
+
+{ #category : #tests }
 HMenuBuilderTest >> testMenuForCanvas [
 
 	| items |
