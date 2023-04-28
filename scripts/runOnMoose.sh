@@ -1,6 +1,6 @@
-curl -L https://get.pharo.org/64/vm90 | bash
-wget https://github.com/moosetechnology/Moose/releases/download/continuous/Moose9-development.zip
-unzip Moose9-development.zip
+curl -L https://get.pharo.org/64/vm100 | bash
+wget https://github.com/moosetechnology/Moose/releases/download/v10.x.x/Moose10-stable-Pharo64-10.zip
+unzip Moose10-stable-Pharo64-10.zip
 
 ./pharo --headless Moose9-development.image ./scripts/runTests.st
 
