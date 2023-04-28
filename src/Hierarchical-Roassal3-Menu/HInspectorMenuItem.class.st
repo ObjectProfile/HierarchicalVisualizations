@@ -35,6 +35,6 @@ HInspectorMenuItem >> selector [
 { #category : #accessing }
 HInspectorMenuItem >> target [
 	^ shape isShape
-		ifTrue: [ shape model ]
+		ifTrue: [ shape model rawModel ]
 		ifFalse: [ visualization rootNode ]
 ]
