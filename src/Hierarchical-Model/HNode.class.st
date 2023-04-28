@@ -18,7 +18,8 @@ Class {
 		'iconName',
 		'position',
 		'layout',
-		'color'
+		'color',
+		'style'
 	],
 	#category : #'Hierarchical-Model-Core'
 }
@@ -74,7 +75,7 @@ HNode >> allDependencies [
 		ifFalse: [ #() ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'computing - dependencies' }
 HNode >> allRawModelDependenciesIn: aHNode [ 
 	| list nodesToCompare |
 	list := OrderedCollection new.
@@ -85,7 +86,7 @@ HNode >> allRawModelDependenciesIn: aHNode [
 	^ list collect: [:each | each rawModel].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'computing - dependencies' }
 HNode >> allRawModelDependenciesIn: nodesToCompare fill: result [ 
 
 	| selection |
@@ -103,6 +104,12 @@ HNode >> announcementClasses [
 { #category : #announcer }
 HNode >> announcer: anAnnouncer [
 	announcer := anAnnouncer
+]
+
+{ #category : #converting }
+HNode >> asShape [
+
+	^ self style shapeFor: self
 ]
 
 { #category : #accessing }
@@ -148,6 +155,12 @@ HNode >> color: aColor [
 	self announce: (HNodeChangedEvent new
 		node: self;
 		yourself).
+]
+
+{ #category : #accessing }
+HNode >> defaultStyle [
+
+	^ HDefaultStyle new
 ]
 
 { #category : #dependencies }
@@ -501,6 +514,18 @@ HNode >> shouldDisplayLink: anHLink in: aNode [
 { #category : #'showing - hiding' }
 HNode >> showAllLinks [
 	self allDependencies do: [ :link | link isVisible: true ]
+]
+
+{ #category : #accessing }
+HNode >> style [
+
+	^ style ifNil: [ style := self defaultStyle ]
+]
+
+{ #category : #accessing }
+HNode >> style: anObject [
+
+	style := anObject
 ]
 
 { #category : #accessing }

@@ -16,10 +16,30 @@ Class {
 		'fullCornerRadius',
 		'baseNode',
 		'linkStyler',
-		'nodeStyler'
+		'popup'
 	],
 	#category : #'Hierarchical-Roassal3-Visualization'
 }
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> addInteractions: aGroupOfShapes [
+
+	aGroupOfShapes do: [ :cs | self addInteractionsToShape: cs ]
+]
+
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> addInteractionsToShape: aShape [
+
+	| node |
+	aShape announcer: self nodeAnnouncer.
+	node := aShape model.
+	node
+		removeInteractionIfPresent: self class;
+		when: HNodeAddedEvent do: [ :evt | self rebuildRootShape: aShape ];
+		when: HCollapseEvent do: [ :evt | self rebuildShape: aShape ];
+		when: HExpandEvent do: [ :evt | self rebuildRootShape: aShape ];
+		when: HNodeChangedEvent do: [ :evt | self rebuildShape: aShape ]
+]
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> baseNode [
@@ -158,6 +178,14 @@ HSimpleVisualizationBuilder >> childrenFor: node [
 	^ node children collect: [ :child | self shapeFor: child ] as: RSGroup
 ]
 
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> childrenShapes: aCanvas [
+
+	^ rootNode children
+		  collect: [ :child | (self shapeFor: child) sparent: aCanvas ]
+		  as: RSGroup
+]
+
 { #category : #'public - hooks' }
 HSimpleVisualizationBuilder >> colorFor: node [
 	^ Color colorFrom: (node color ifNil: [ #gray ])
@@ -257,12 +285,12 @@ HSimpleVisualizationBuilder >> highlightable [
 
 { #category : #initialization }
 HSimpleVisualizationBuilder >> initialize [
+
 	super initialize.
-	self nodeStyler: HNodeStyler new.
 	self linkStyler: HLinkStyler new.
-	self boxChildrenColorPalette: (NSScale ordinal 
-		range: Smalltalk ui theme roassalHNodeBackgroundColors).
-		
+	self boxChildrenColorPalette: (NSScale ordinal range:
+			 Smalltalk ui theme roassalHNodeBackgroundColors).
+	self popup: RSPopup new
 ]
 
 { #category : #layout }
@@ -310,27 +338,29 @@ HSimpleVisualizationBuilder >> nodeAnnouncer [
 	"plug new events here"
 	baseNode ifNotNil: [ ^ baseNode announcer ].
 	baseNode := RSComposite new
-		@ self nodeStyler popup;
+		@ self popup;
 		@ (HGhostDraggable new 
 			color: Smalltalk ui theme caretColor);
 		@ self menuInteraction;
 		@ self highlightable;
 		@ (RSNodeOnTopWhenPositionChanged new);
 		@ (HUpdateSelectionBox new);
-		@ (HResizeParentWhenChildMoves new nodeStyler: self nodeStyler);
+		@ (HResizeParentWhenChildMoves new );
 		yourself.
 	^ baseNode announcer
 	
 ]
 
-{ #category : #accessing }
-HSimpleVisualizationBuilder >> nodeStyler [
-	^ nodeStyler
+{ #category : #hooks }
+HSimpleVisualizationBuilder >> popup [
+
+	^ popup
 ]
 
 { #category : #accessing }
-HSimpleVisualizationBuilder >> nodeStyler: anHLabeler [
-	nodeStyler := anHLabeler
+HSimpleVisualizationBuilder >> popup: anObject [
+
+	popup := anObject
 ]
 
 { #category : #hooks }
@@ -351,7 +381,8 @@ HSimpleVisualizationBuilder >> rebuildRootShape: shape [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> rebuildShape: shape [
-	| canvas newShape node parent children |
+
+	| canvas newShape node parent children allChildrenShapes |
 	node := shape model.
 	canvas := shape canvas.
 	canvas ifNil: [ ^ self ].
@@ -361,7 +392,7 @@ HSimpleVisualizationBuilder >> rebuildShape: shape [
 	newShape position: shape position.
 	parent := shape parent.
 	parent add: newShape.
-	
+
 	"shape sparent schildren add: newShape."
 	children := shape sparent schildren.
 	children
@@ -369,17 +400,19 @@ HSimpleVisualizationBuilder >> rebuildShape: shape [
 		add: newShape.
 	newShape sparent: shape sparent.
 	shape remove.
-
+	allChildrenShapes := newShape withAllSChildren.
+	shapes addAll: allChildrenShapes.
+	self addInteractions: allChildrenShapes.
 	self renderLinesIn: canvas.
 	self fixShadowForSelectedShape: shape and: newShape.
-	
-	(canvas visibleRectangle containsRect: newShape globalEncompassingRectangle)
-		ifFalse: [ 
-			canvas camera 
-				zoomToFit: canvas extent * 0.9
-				rectangle: newShape encompassingRectangle ].
-		
-	canvas signalUpdate.
+
+	(canvas visibleRectangle containsRect:
+		 newShape globalEncompassingRectangle) ifFalse: [ 
+		canvas camera
+			zoomToFit: canvas extent * 0.9
+			rectangle: newShape encompassingRectangle ].
+
+	canvas signalUpdate
 ]
 
 { #category : #layout }
@@ -405,25 +438,25 @@ HSimpleVisualizationBuilder >> removeShapeWithAllChildren: shape [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> renderIn: aCanvas [
+
 	| rootShapes |
 	aCanvas color: Smalltalk ui theme backgroundColor.
-	shapes := RSGroup new.
-	rootShapes := rootNode children 
-		collect: [:child | (self shapeFor: child) sparent: aCanvas ]
-		as: RSGroup.
+	
+	rootShapes := self childrenShapes: aCanvas.
+	shapes := rootShapes flatCollect: [ :s | s withAllSChildren ].
+	self addInteractions: shapes.
 	aCanvas schildren: rootShapes.
 	aCanvas addAll: rootShapes.
 	aCanvas @ self menuInteraction.
-	rootNode when: HNodeAddedEvent do: [ :evt | | newShape |
+	rootNode when: HNodeAddedEvent do: [ :evt | 
+		| newShape |
 		newShape := (self shapeFor: evt newChild) sparent: aCanvas.
 		newShape position: aCanvas camera position.
 		rootShapes add: newShape.
 		aCanvas add: newShape.
-		aCanvas signalUpdate.
-		 ].
+		aCanvas signalUpdate ].
 	self renderLinesIn: aCanvas.
-	self layoutOn: rootShapes parent: rootNode.
-	
+	self layoutOn: rootShapes parent: rootNode
 ]
 
 { #category : #hooks }
@@ -462,24 +495,8 @@ HSimpleVisualizationBuilder >> rootShapeFrom: shape [
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> shapeFor: node [
-	| shape |
-	shape := RSComposite new
-		model: node;
-		announcer: self nodeAnnouncer;
-		yourself.
-	(node isExpanded and: [node hasChildren]) 
-		ifTrue: [ self buildCompositeFullNodeIn: shape ]
-		ifFalse: [ self buildCompositeEmptyNodeIn: shape ].
-	
-	node 
-		removeInteractionIfPresent: self class;
-		when: HNodeAddedEvent do: [ :evt | self rebuildRootShape: shape ];
-		when: HCollapseEvent do: [ :evt |	self rebuildShape: shape ];
-		when: HExpandEvent do: [ :evt | self rebuildRootShape: shape ];
-		when: HNodeChangedEvent do: [ :evt | self rebuildShape: shape ].
-	shapes add: shape.
-	^ shape 
-	
+
+	^ node asShape
 ]
 
 { #category : #'accessing - attributes' }
