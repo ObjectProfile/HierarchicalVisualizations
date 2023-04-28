@@ -1,4 +1,4 @@
-| env cout repoPath unitTests path stream |
+| env cout repoPath unitTests path stream res |
 "We load the application software analyzer"
 
 env := Smalltalk os environment.
@@ -9,7 +9,12 @@ repoPath := 'gitlocal://', (env at: 'GITHUB_WORKSPACE').
 "repoPath := 'https://github.com/ObjectProfile/HierarchicalVisualizations'."
 cout << 'Loading: '; << repoPath; crlf.
 
-[ Metacello new
+[
+Metacello new
+    baseline: 'Roassal3';
+    repository: 'github://ObjectProfile/Roassal3:v1';
+    load: 'Core'.
+Metacello new
     baseline: 'HierarchicalVisualizations';
     repository: repoPath;
     load. ] on: MCMergeOrLoadWarning do: [ :warning | warning load ].
