@@ -12,7 +12,7 @@ cout << 'Loading: '; << repoPath; crlf.
 [
 Metacello new
     baseline: 'Roassal3';
-    repository: 'github://ObjectProfile/Roassal3:v1';
+    repository: 'github://ObjectProfile/Roassal3:v1.0';
     load: 'Core'.
 Metacello new
     baseline: 'HierarchicalVisualizations';
