@@ -2,7 +2,7 @@ curl -L https://get.pharo.org/64/vm100 | bash
 wget https://github.com/moosetechnology/Moose/releases/download/v10.x.x/Moose10-stable-Pharo64-10.zip
 unzip Moose10-stable-Pharo64-10.zip
 
-./pharo --headless Moose9-development.image ./scripts/runTests.st
+./pharo --headless Moose10-stable-Pharo64-10.image ./scripts/runTests.st
 
 FILE=/tmp/result.txt
 if [ ! -f "$FILE" ]; then
