@@ -33,6 +33,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Runs a single command using the runners shell
-      - name: Run unit tests
-        run: bash ./scripts/runTests.sh
+      - name: Run Pharo Tests
+        id: tests
+        uses: akevalion/PharoTestsAction@v1
+        with:
+          baseline: 'HierarchicalVisualizations'
+          group: 'default'
+          tests: 'Hierarchical'
