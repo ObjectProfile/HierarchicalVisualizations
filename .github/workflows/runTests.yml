@@ -37,6 +37,7 @@ jobs:
         id: tests
         uses: akevalion/PharoTestsAction@v1
         with:
+          removes-repo: 'Roassal, Numeric'
           baseline: 'HierarchicalVisualizations'
           group: 'default'
           tests: 'Hierarchical'
