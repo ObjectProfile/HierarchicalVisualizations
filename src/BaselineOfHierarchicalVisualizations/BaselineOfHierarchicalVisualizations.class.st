@@ -13,23 +13,22 @@ BaselineOfHierarchicalVisualizations >> baseline: spec [
 	<baseline>
 	spec for: #common do: [ | hasCanvas | "Packages"
 		hasCanvas := Smalltalk globals includesKey: #RSCanvas.
+		hasCanvas ifFalse: [ 
+			spec
+				baseline: 'Roassal3'
+				with: [ spec repository: 'github://ObjectProfile/Roassal3/src' ]
+		].
 		spec
 			package: 'Hierarchical-Model-Events';
 			package: 'Hierarchical-Model';
 			package: 'Hierarchical-Model-Tests';
 			package: 'Hierarchical-Builder';
-			package: 'Hierarchical-Roassal3';
+			package: 'Hierarchical-Roassal3' with: [
+				hasCanvas ifFalse: [ spec requires: #('Roassal3') ]];
 			package: 'Hierarchical-Roassal3-Menu';
 			package: 'Hierarchical-Examples';
 			package: 'Hierarchical-Roassal3-Tests'.
-		hasCanvas ifFalse: [ 
-			spec
-				baseline: 'Roassal3'
-				with: [ spec repository: 'github://ObjectProfile/Roassal3/src' ].
-			spec
-				package: 'Hierarchical-Model'
-				with: [ spec requires: 'Roassal3' ] ].
-
+		
 		"Groups"
 		spec
 			group: 'Core'
