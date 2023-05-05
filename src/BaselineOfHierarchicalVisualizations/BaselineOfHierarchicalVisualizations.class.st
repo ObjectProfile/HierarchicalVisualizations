@@ -11,7 +11,8 @@ Class {
 BaselineOfHierarchicalVisualizations >> baseline: spec [
 
 	<baseline>
-	spec for: #common do: [ "Packages"
+	spec for: #common do: [ | hasCanvas | "Packages"
+		hasCanvas := Smalltalk globals includesKey: #RSCanvas.
 		spec
 			package: 'Hierarchical-Model-Events';
 			package: 'Hierarchical-Model';
@@ -21,8 +22,7 @@ BaselineOfHierarchicalVisualizations >> baseline: spec [
 			package: 'Hierarchical-Roassal3-Menu';
 			package: 'Hierarchical-Examples';
 			package: 'Hierarchical-Roassal3-Tests'.
-
-		spec for: #( #'pharo8.x' #'pharo9.x' ) do: [ 
+		hasCanvas ifFalse: [ 
 			spec
 				baseline: 'Roassal3'
 				with: [ spec repository: 'github://ObjectProfile/Roassal3/src' ].
