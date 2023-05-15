@@ -18,7 +18,7 @@ HNewContainerMenuItem >> execute [
 	name := self class requestName.
 	name ifNil: [ ^ self ].
 	root := visualization rootNode.
-	root add: (HNode named: name; yourself).
+	root add: (HNode named: name)
 ]
 
 { #category : #accessing }
