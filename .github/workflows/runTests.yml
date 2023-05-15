@@ -41,3 +41,4 @@ jobs:
           baseline: 'HierarchicalVisualizations'
           group: 'default'
           tests: 'Hierarchical'
+          pharo: 'Pharo11'
