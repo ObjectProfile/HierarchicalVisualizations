@@ -164,7 +164,7 @@ HSimpleVisualizationBuilder >> canvasController: canvas [
 			canvas newAnimation
 				duration: 500 milliSeconds;
 				onStepDo: [ canvas signalUpdate ];
-				when: RSAnimationEndEvent do: [ i configuration noZoomToFitOnExtendChanged ].
+				when: RSAnimationEndEvent do: [ i zoomToFitInteraction noZoomToFitOnExtendChanged ].
 			(i interactions at: RSDraggableCanvasInteraction) left.
 			i configuration
 				"useBasicZoom;"
