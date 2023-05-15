@@ -7,7 +7,7 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
-{ #category : #adding }
+{ #category : #execution }
 HAddLinkMenuItem >> execute [
 	| canvas line  pointer |
 	canvas := visualization canvas.
@@ -28,9 +28,10 @@ HAddLinkMenuItem >> execute [
 			pointer remove. 
 			visualization baseNode removeInteractionIfPresent: self class.
 			canvas removeInteractionIfPresent: self class.
+			
 			canvas
 				propertyAt: visualization highlightable propertyKey
-				ifPresent: [:shapes | 
+				ifPresent: [:shapes |
 					shape model dependencyTo: (self modelFor: shapes last).
 					visualization rebuildLines: shape.
 					].

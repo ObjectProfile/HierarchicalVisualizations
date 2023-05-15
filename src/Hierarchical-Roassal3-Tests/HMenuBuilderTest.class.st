@@ -19,7 +19,7 @@ HMenuBuilderTest >> testInspectRawModel [
 	| node rootNode item shape |
 	node := HNode new name: 'Node1' ; rawModel: #anObject.
 
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode add: 	node.
 
 	shape := RSComposite model: node.

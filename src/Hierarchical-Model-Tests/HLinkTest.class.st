@@ -18,12 +18,12 @@ HLinkTest >> testRawModel [
 { #category : #tests }
 HLinkTest >> testVisible [
 	| node1 node2 subnode1 subnode2 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
 	node2 addAll: {subnode1. subnode2}.
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 	node1 dependenciesToNodes: { subnode1. subnode2 }.
 	

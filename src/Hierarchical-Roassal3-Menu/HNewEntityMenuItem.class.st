@@ -10,10 +10,10 @@ Class {
 { #category : #execution }
 HNewEntityMenuItem >> execute [
 	| name node |
-	name := UIManager default request: 'Enter a name' initialAnswer: ''.
+	name := HNewContainerMenuItem requestName.
 	name ifNil: [ ^ self ].
 	node := shape model.
-	node add: (HNode new name: name; yourself).
+	node add: (HNode named: name; yourself).
 ]
 
 { #category : #accessing }

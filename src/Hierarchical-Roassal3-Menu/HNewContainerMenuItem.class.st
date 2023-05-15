@@ -7,13 +7,18 @@ Class {
 	#category : #'Hierarchical-Roassal3-Menu'
 }
 
+{ #category : #public }
+HNewContainerMenuItem class >> requestName [
+	^ UIManager default request: 'Enter a name' initialAnswer: ''
+]
+
 { #category : #execution }
 HNewContainerMenuItem >> execute [
 	| name root |
-	name := UIManager default request: 'Enter a name' initialAnswer: ''.
+	name := self class requestName.
 	name ifNil: [ ^ self ].
 	root := visualization rootNode.
-	root add: (HNode new name: name; yourself).
+	root add: (HNode named: name; yourself).
 ]
 
 { #category : #accessing }

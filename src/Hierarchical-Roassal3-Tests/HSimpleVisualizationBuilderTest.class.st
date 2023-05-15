@@ -8,21 +8,44 @@ Class {
 }
 
 { #category : #tests }
+HSimpleVisualizationBuilderTest >> testAddingEntity [
+	| root visualization newNode1 newNode2 shapeNode1 shapeNode2 |
+	root := HNode named: 'Visualization'.
+	visualization := HSimpleVisualizationBuilder new
+		rootNode: root;
+		build;
+		yourself.
+	newNode1 := HNode named: 'New'.
+	newNode2 := HNode named: 'Old'.
+	root add: newNode1.
+	root add: newNode2.
+	
+	shapeNode1 := visualization canvas shapeFromModel: newNode1.
+	shapeNode2 := visualization canvas shapeFromModel: newNode2.
+	self assert: shapeNode1 model equals: newNode1.
+	self assert: shapeNode2 model equals: newNode2.
+	newNode1 dependencyTo: newNode2.
+	visualization rebuildLines: shapeNode1.
+	self assert: visualization canvas lines notEmpty.
+	
+]
+
+{ #category : #tests }
 HSimpleVisualizationBuilderTest >> testColorPalette [
 	| root node1 node2 subnode1 subnode2 subnode3 subnode4 gnode1 gnode2 gnode3 gnode4 |
-	root := HNode new name: 'Root'.
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
+	root := HNode named: 'Root'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
 
-	subnode1 := HNode new name: 'SubNode1'.
-	subnode2 := HNode new name: 'SubNode2'.
-	subnode3 := HNode new name: 'SubNode3'.
-	subnode4 := HNode new name: 'SubNode4'.
+	subnode1 := HNode named: 'SubNode1'.
+	subnode2 := HNode named: 'SubNode2'.
+	subnode3 := HNode named: 'SubNode3'.
+	subnode4 := HNode named: 'SubNode4'.
 
-	gnode1 := HNode new name: 'GrandNode1'.
-	gnode2 := HNode new name: 'GrandNode2'.
-	gnode3 := HNode new name: 'GrandNode3'.
-	gnode4 := HNode new name: 'GrandNode4'.
+	gnode1 := HNode named: 'GrandNode1'.
+	gnode2 := HNode named: 'GrandNode2'.
+	gnode3 := HNode named: 'GrandNode3'.
+	gnode4 := HNode named: 'GrandNode4'.
 	root addAll: { node1. node2 }.
 
 	node1 addAll: { subnode1. subnode2 }.
@@ -45,9 +68,9 @@ HSimpleVisualizationBuilderTest >> testColorPalette [
 { #category : #tests }
 HSimpleVisualizationBuilderTest >> testMoveOneChildInParent [
 	| root node1  subnode1 visualization shapeNode1 shapeSubnode1 |
-	root := HNode new name: 'Visualization'.
-	node1 := HNode new name: 'Node1'.
-	subnode1 := HNode new name: 'SubNode1'.
+	root := HNode named: 'Visualization'.
+	node1 := HNode named: 'Node1'.
+	subnode1 := HNode named: 'SubNode1'.
 	root addAll: { node1. }.
 	node1 addAll: { subnode1.}.
 	
@@ -70,12 +93,12 @@ HSimpleVisualizationBuilderTest >> testMoveOneChildInParent [
 HSimpleVisualizationBuilderTest >> testNodeWithoutTitle [
 
 	| node1 node2 subnode1 subnode2 subnode3 subnode4 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub1'.
-	subnode2 := HNode new name: 'Sub2'.
-	subnode3 := HNode new name: 'Sub3'.
-	subnode4 := HNode new name: 'Sub4'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub1'.
+	subnode2 := HNode named: 'Sub2'.
+	subnode3 := HNode named: 'Sub3'.
+	subnode4 := HNode named: 'Sub4'.
 
 	node1 addAll: { 
 			subnode1.
@@ -84,7 +107,7 @@ HSimpleVisualizationBuilderTest >> testNodeWithoutTitle [
 			subnode3.
 			subnode4 }.
 
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: { 
 			node1.
 			node2 }.
@@ -101,10 +124,10 @@ HSimpleVisualizationBuilderTest >> testNodeWithoutTitle [
 HSimpleVisualizationBuilderTest >> testTestMoveNode [
 	| root node1 node2 subnode1 visualization shapeNode1 |
 	"This test is for class HNodeOnTopWhenPositionChanged"
-	root := HNode new name: 'Visualization'.
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'node2'.
-	subnode1 := HNode new name: 'SubNode1'.
+	root := HNode named: 'Visualization'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'node2'.
+	subnode1 := HNode named: 'SubNode1'.
 	root addAll: { node1. node2 }.
 	node1 addAll: { subnode1.}.
 	

@@ -106,12 +106,12 @@ HNodeTest >> testAsShape [
 { #category : #tests }
 HNodeTest >> testBasic [
 	| node1 node2 subnode1 subnode2 rootNode w nodeWithoutTitle |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
 	node2 addAll: {subnode1. subnode2}.
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 	node1 dependenciesToNodes: { subnode1. subnode2 }.
 	nodeWithoutTitle := HNode new.
@@ -125,12 +125,12 @@ HNodeTest >> testBasic [
 { #category : #tests }
 HNodeTest >> testCollapseLinks [
 	| node1 node2 subnode1 subnode2 subnode3 subnode4 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
-	subnode3 := HNode new name: 'Sub2-3'.
-	subnode4 := HNode new name: 'Sub2-4'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
+	subnode3 := HNode named: 'Sub2-3'.
+	subnode4 := HNode named: 'Sub2-4'.
 	node1 addAll: { subnode1. subnode2 }.
 	node2 addAll: { subnode3. subnode4 }.
 	rootNode := HNode new name: 'Root'.
@@ -163,12 +163,12 @@ HNodeTest >> testCollapseLinks [
 { #category : #tests }
 HNodeTest >> testCollapseNodes [
 	| node1 node2 subnode1 subnode2 subnode3 subnode4 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
-	subnode3 := HNode new name: 'Sub2-3'.
-	subnode4 := HNode new name: 'Sub2-4'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
+	subnode3 := HNode named: 'Sub2-3'.
+	subnode4 := HNode named: 'Sub2-4'.
 	node1 addAll: { subnode1. subnode2 }.
 	node2 addAll: { subnode3. subnode4 }.
 	rootNode := HNode new name: 'Root'.
@@ -199,23 +199,23 @@ HNodeTest >> testCollapseNodes [
 { #category : #tests }
 HNodeTest >> testCollapseNodes3Levels [
 	| node1 node2 subnode1 subnode2 subnode3 subnode4 gnode1 gnode2 gnode3 gnode4 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
-	subnode3 := HNode new name: 'Sub2-3'.
-	subnode4 := HNode new name: 'Sub2-4'.
-	gnode1 := HNode new name: 'Sub3-1'.
-	gnode2 := HNode new name: 'Sub3-2'.
-	gnode3 := HNode new name: 'Sub3-3'.
-	gnode4 := HNode new name: 'Sub3-4'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
+	subnode3 := HNode named: 'Sub2-3'.
+	subnode4 := HNode named: 'Sub2-4'.
+	gnode1 := HNode named: 'Sub3-1'.
+	gnode2 := HNode named: 'Sub3-2'.
+	gnode3 := HNode named: 'Sub3-3'.
+	gnode4 := HNode named: 'Sub3-4'.
 	
 	subnode1 addAll: { gnode1. gnode2 }.
 	subnode4 addAll: { gnode3. gnode4 }.
 	
 	node1 addAll: { subnode1. subnode2 }.
 	node2 addAll: { subnode3. subnode4 }.
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 	
 	gnode1 dependenciesToNodes: { gnode3. gnode4 }.
@@ -232,12 +232,12 @@ HNodeTest >> testCollapseNodes3Levels [
 { #category : #tests }
 HNodeTest >> testDependencies [
 	| node1 node2 subnode1 subnode2 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
 	node2 addAll: {subnode1. subnode2}.
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 	
 	node1 dependenciesToNodes: { subnode1. subnode2 }.
@@ -262,12 +262,12 @@ HNodeTest >> testDependencies [
 { #category : #tests }
 HNodeTest >> testDependencyTo [
 	| node1 node2 subnode1 subnode2 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
 	node2 addAll: {subnode1. subnode2}.
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 
 	subnode1 dependencyTo: node1.
@@ -280,12 +280,12 @@ HNodeTest >> testDependencyTo [
 { #category : #tests }
 HNodeTest >> testExpandChildren [
 	| node1 node2 subnode1 subnode2 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
 	node2 addAll: {subnode1. subnode2}.
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 	rootNode collapseChildren.
 	self deny: subnode1 isVisible.
@@ -298,12 +298,12 @@ HNodeTest >> testExpandChildren [
 { #category : #tests }
 HNodeTest >> testLevel [
 	| node1 node2 subnode1 subnode2 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
 	node2 addAll: {subnode1. subnode2}.
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 
 	self assert: rootNode level equals: 0.
@@ -314,17 +314,17 @@ HNodeTest >> testLevel [
 { #category : #tests }
 HNodeTest >> testRemoveLink01 [
 	| node1 node2 sub1 sub2 sub3 sub4 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	sub1 := HNode new name: 'Sub1'.
-	sub2 := HNode new name: 'Sub2'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	sub1 := HNode named: 'Sub1'.
+	sub2 := HNode named: 'Sub2'.
 	node1 addAll: {sub1. sub2}.
 	
-	sub3 := HNode new name: 'Sub3'.
-	sub4 := HNode new name: 'Sub4'.
+	sub3 := HNode named: 'Sub3'.
+	sub4 := HNode named: 'Sub4'.
 	node2 addAll: {sub3. sub4}.
 	
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 
 	sub1 dependenciesToNodes: { sub3. sub4 }.
@@ -338,17 +338,17 @@ HNodeTest >> testRemoveLink01 [
 { #category : #tests }
 HNodeTest >> testRemoveLink02 [
 	| node1 node2 sub1 sub2 sub3 sub4 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	sub1 := HNode new name: 'Sub1'.
-	sub2 := HNode new name: 'Sub2'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	sub1 := HNode named: 'Sub1'.
+	sub2 := HNode named: 'Sub2'.
 	node1 addAll: {sub1. sub2}.
 	
-	sub3 := HNode new name: 'Sub3'.
-	sub4 := HNode new name: 'Sub4'.
+	sub3 := HNode named: 'Sub3'.
+	sub4 := HNode named: 'Sub4'.
 	node2 addAll: {sub3. sub4}.
 	
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 
 	sub1 dependenciesToNodes: { sub3. sub4 }.

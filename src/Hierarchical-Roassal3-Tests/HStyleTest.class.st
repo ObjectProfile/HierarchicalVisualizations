@@ -15,12 +15,11 @@ HStyleTest class >> testParameters [
 		addOptions: HStyle allSubclasses
 ]
 
-{ #category : #initialization }
+{ #category : #running }
 HStyleTest >> setUp [
 
 	super setUp.
-	rootNode := HNode new.
-	rootNode name: 'ROOT'
+	rootNode := HNode named: 'ROOT'
 ]
 
 { #category : #accessing }
@@ -41,9 +40,7 @@ HStyleTest >> testShapeForWithChildren [
 	| style |
 	style := styleClass new.
 	1 to: 10 do: [ :i | 
-		rootNode add: (HNode new
-				 name: 'number ' , i asString;
-				 yourself) ].
+		rootNode add: (HNode named: 'number ' , i asString) ].
 	self assert: ((style shapeFor: rootNode) isKindOf: RSShape)
 ]
 

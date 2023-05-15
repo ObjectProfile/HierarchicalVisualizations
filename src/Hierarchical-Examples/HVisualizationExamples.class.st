@@ -19,12 +19,12 @@ HVisualizationExamples >> example01Empty [
 HVisualizationExamples >> example02Simple [
 	<script: 'self new example02Simple open'>
 	| node1 node2 subnode1 subnode2 rootNode |
-	node1 := HNode new name: 'Node1'.
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
+	node1 := HNode named: 'Node1'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
 	node2 addAll: {subnode1. subnode2}.
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: {node1. node2}.
 	node1 dependenciesToNodes: { subnode1. subnode2 }.
 
@@ -36,19 +36,19 @@ HVisualizationExamples >> example02Simple [
 HVisualizationExamples >> example03Simple2 [
 	<script: 'self new example03Simple2 open'>
 	| node1 node2 subnode1 subnode2 rootNode subnode3 subnode4 |
-	node1 := HNode new name: 'Node1'.
-	subnode3 := HNode new name: 'Sub1-1'.
-	subnode4 := HNode new name: 'Sub1-2'.
+	node1 := HNode named: 'Node1'.
+	subnode3 := HNode named: 'Sub1-1'.
+	subnode4 := HNode named: 'Sub1-2'.
 	
 	node1 addAll: { subnode3 . subnode4 }.
 
-	node2 := HNode new name: 'Node2'.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
+	node2 := HNode named: 'Node2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
 	node2 addAll: {subnode1. subnode2}.
 	
 	node1 children, node2 children do: [ :child | child color: Color blue translucent ].
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: { node1. node2 }.
 	subnode3 dependenciesToNodes: { subnode1. subnode2 }.
 
@@ -184,9 +184,9 @@ HVisualizationExamples >> example13Styles [
 
 	<script: 'self new example13Styles open'>
 	| node1 node2 subnode1 subnode2 rootNode subnode3 subnode4 |
-	node1 := HNode new name: 'Node1'.
-	subnode3 := HNode new name: 'Sub1-1'.
-	subnode4 := HNode new name: 'Sub1-2'.
+	node1 := HNode named: 'Node1'.
+	subnode3 := HNode named: 'Sub1-1'.
+	subnode4 := HNode named: 'Sub1-2'.
 
 	node1 addAll: { 
 			subnode3.
@@ -196,15 +196,15 @@ HVisualizationExamples >> example13Styles [
 		         name: 'Node2';
 		         style:( HBorderAndTitleStyle new borderWidth: 5; yourself);
 		         yourself.
-	subnode1 := HNode new name: 'Sub2-1'.
-	subnode2 := HNode new name: 'Sub2-2'.
+	subnode1 := HNode named: 'Sub2-1'.
+	subnode2 := HNode named: 'Sub2-2'.
 	node2 addAll: { 
 			subnode1.
 			subnode2 }.
 
 	node1 children , node2 children do: [ :child | 
 		child color: Color blue translucent ].
-	rootNode := HNode new name: 'Root'.
+	rootNode := HNode named: 'Root'.
 	rootNode addAll: { 
 			node1.
 			node2 }.

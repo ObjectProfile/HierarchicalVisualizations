@@ -11,8 +11,7 @@ Class {
 HOpenGroupMenuItem >> execute [
 	| listCopy newNode |
 	listCopy := visualization canvas selectedShapes collect: [:node | node model copy ].
-	newNode := HNode new.
-	newNode name: 'Group'.
+	newNode := HNode named: 'Group'.
 	newNode children: listCopy.
 	listCopy do: [ :node | node parent: newNode ].
 	newNode fixDependents.

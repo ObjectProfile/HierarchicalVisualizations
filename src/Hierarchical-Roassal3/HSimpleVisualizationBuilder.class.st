@@ -42,6 +42,19 @@ HSimpleVisualizationBuilder >> addInteractionsToShape: aShape [
 ]
 
 { #category : #hooks }
+HSimpleVisualizationBuilder >> addNewNode: evt [
+	| newShape canvas |
+	canvas := self container.
+	newShape := (self shapeFor: evt newChild) sparent: canvas.
+	newShape position: canvas visibleRectangle floatCenter.
+	self addInteractionsToShape: newShape.
+	
+	shapes add: newShape.
+	canvas add: newShape.
+	canvas signalUpdate
+]
+
+{ #category : #hooks }
 HSimpleVisualizationBuilder >> baseNode [
 	^ baseNode
 ]
@@ -221,8 +234,8 @@ HSimpleVisualizationBuilder >> createBoxSelectionFor: shape [
 HSimpleVisualizationBuilder >> defaultContainer [
 	| canvas |
 	canvas := RSCanvas new.
-	canvas @ (self elasticBoxFor: canvas).
 	canvas @ (self canvasController: canvas).
+	canvas @ (self elasticBoxFor: canvas).
 	^ canvas
 ]
 
@@ -448,13 +461,7 @@ HSimpleVisualizationBuilder >> renderIn: aCanvas [
 	aCanvas schildren: rootShapes.
 	aCanvas addAll: rootShapes.
 	aCanvas @ self menuInteraction.
-	rootNode when: HNodeAddedEvent do: [ :evt | 
-		| newShape |
-		newShape := (self shapeFor: evt newChild) sparent: aCanvas.
-		newShape position: aCanvas camera position.
-		rootShapes add: newShape.
-		aCanvas add: newShape.
-		aCanvas signalUpdate ].
+	rootNode when: HNodeAddedEvent send: #addNewNode: to: self.
 	self renderLinesIn: aCanvas.
 	self layoutOn: rootShapes parent: rootNode
 ]

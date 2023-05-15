@@ -24,6 +24,13 @@ Class {
 	#category : #'Hierarchical-Model-Core'
 }
 
+{ #category : #'instance creation' }
+HNode class >> named: aString [
+	^ self new
+		name: aString;
+		yourself
+]
+
 { #category : #adding }
 HNode >> add: anHNode [
 	anHNode addedIn: self.
