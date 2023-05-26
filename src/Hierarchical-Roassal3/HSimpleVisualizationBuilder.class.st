@@ -336,14 +336,23 @@ HSimpleVisualizationBuilder >> linkStyler: anHLinkStyler [
 
 { #category : #'accessing - attributes' }
 HSimpleVisualizationBuilder >> menuInteraction [
+
 	^ menuInteraction ifNil: [ 
-		menuInteraction := RSMenuActivable new
-			menuDo: [ :menu :aShape | HMenuBuilder new 
-				buildIn: menu 
-				shape: aShape 
-				visualization: self ];
-			yourself 
-	]
+		  menuInteraction := RSMenuActivable new
+			                     menuDo: [ :menu :aShape | 
+				                     HMenuBuilder new
+					                     menuItemStrategy: self menuItemStrategy;
+					                     buildIn: menu
+					                     shape: aShape
+					                     visualization: self;
+					                     yourself ];
+			                     yourself ]
+]
+
+{ #category : #'accessing - attributes' }
+HSimpleVisualizationBuilder >> menuItemStrategy [
+
+	^ HDefaultMenuItemStrategy new
 ]
 
 { #category : #hooks }
