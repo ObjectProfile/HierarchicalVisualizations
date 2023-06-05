@@ -72,22 +72,24 @@ HBorderAndTitleStyle >> buildCompositeFullNodeIn: shape [
 	| childrenShapes node title children boxChildren |
 	node := shape model.
 	title := self labelFor: node.
-	
+
 	childrenShapes := node children collect: #asShape as: RSGroup.
 	self layoutOn: childrenShapes parent: node.
 	shape schildren: childrenShapes.
 	children := childrenShapes asShape padding: 10.
 	childrenShapes do: [ :child | child model position: child position ].
-	
-	title width > children width
-		ifTrue: [ children width: title width ].
+
+	title width > children width ifTrue: [ children width: title width ].
 	boxChildren := self boxChildrenFor: node.
+	boxChildren color: (self colorFor: node).
 	self titleLocation move: title on: children.
-	
+
 	shape propertyAt: #background put: boxChildren.
 	shape border: (self boxBorderFor: node).
-	boxChildren fromRectangle: ({title. children} asGroup encompassingRectangle).
-	
+	boxChildren fromRectangle: { 
+			title.
+			children } asGroup encompassingRectangle.
+
 	shape
 		add: boxChildren;
 		add: title;
