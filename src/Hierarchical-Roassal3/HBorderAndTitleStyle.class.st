@@ -62,8 +62,7 @@ HBorderAndTitleStyle >> buildCompositeEmptyNodeIn: shape [
 	shape
 		propertyAt: #background put: box;
 		adjustToChildren;
-		padding: 5 + (self borderWidth / 2);
-		border: (self borderFor: node)
+		padding: 5 + (self borderWidth / 2)
 ]
 
 { #category : #hooks }
