@@ -16,7 +16,10 @@ BaselineOfHierarchicalVisualizations >> baseline: spec [
 		hasCanvas ifFalse: [ 
 			spec
 				baseline: 'Roassal3'
-				with: [ spec repository: 'github://ObjectProfile/Roassal3/src' ]
+				with: [ spec repository: 'github://ObjectProfile/Roassal3/src' ].
+			spec
+				baseline: 'Roassal3Exporters'
+				with: [ spec repository: 'github://ObjectProfile/Roassal3Exporters' ].
 		].
 		spec
 			package: 'Hierarchical-Model-Events';
