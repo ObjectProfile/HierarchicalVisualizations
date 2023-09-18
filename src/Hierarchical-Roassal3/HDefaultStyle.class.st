@@ -23,7 +23,6 @@ HDefaultStyle >> buildCompositeEmptyNodeIn: shape [
 	shape addAll: (self labelAndIconFor: node).
 	rect := shape children encompassingRectangle.
 	box := RSBox new 
-		model: node;
 		position: rect floatCenter;
 		extent: rect extent + 10;
 		cornerRadius: self fullCornerRadius;
