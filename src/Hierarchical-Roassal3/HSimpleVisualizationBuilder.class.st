@@ -35,10 +35,18 @@ HSimpleVisualizationBuilder >> addInteractionsToShape: aShape [
 	node := aShape model.
 	node
 		removeInteractionIfPresent: self class;
-		when: HNodeAddedEvent do: [ :evt | self rebuildRootShape: aShape ];
-		when: HCollapseEvent do: [ :evt | self rebuildShape: aShape ];
-		when: HExpandEvent do: [ :evt | self rebuildRootShape: aShape ];
-		when: HNodeChangedEvent do: [ :evt | self rebuildShape: aShape ]
+		when: HNodeAddedEvent
+		do: [ :evt | self rebuildRootShape: aShape ]
+		for: self;
+		when: HCollapseEvent
+		do: [ :evt | self rebuildShape: aShape ]
+		for: self;
+		when: HExpandEvent
+		do: [ :evt | self rebuildRootShape: aShape ]
+		for: self;
+		when: HNodeChangedEvent
+		do: [ :evt | self rebuildShape: aShape ]
+		for: self
 ]
 
 { #category : #hooks }
@@ -171,19 +179,22 @@ HSimpleVisualizationBuilder >> buildCompositeFullNodeIn: shape [
 
 { #category : #'accessing - defaults' }
 HSimpleVisualizationBuilder >> canvasController: canvas [
-	^ RSCanvasController new 
-		noLegend;
-		in: [:i | 
-			canvas newAnimation
-				duration: 500 milliSeconds;
-				onStepDo: [ canvas signalUpdate ];
-				when: RSAnimationEndEvent do: [ i zoomToFitInteraction noZoomToFitOnExtendChanged ].
-			(i interactions at: RSDraggableCanvasInteraction) left.
-			i configuration
-				"useBasicZoom;"
-				maxScale: 3;
-				minScale: 0.5];
-		yourself
+
+	^ RSCanvasController new
+		  noLegend;
+		  in: [ :i |
+			  canvas newAnimation
+				  duration: 500 milliSeconds;
+				  onStepDo: [ canvas signalUpdate ];
+				  when: RSAnimationEndEvent
+				  do: [ i zoomToFitInteraction noZoomToFitOnExtendChanged ]
+				  for: self.
+			  (i interactions at: RSDraggableCanvasInteraction) left.
+			  i configuration
+				  maxScale: 3;
+				  minScale: 0.5
+			  "useBasicZoom;" ];
+		  yourself
 ]
 
 { #category : #'public - hooks' }
@@ -241,18 +252,29 @@ HSimpleVisualizationBuilder >> defaultContainer [
 
 { #category : #'accessing - defaults' }
 HSimpleVisualizationBuilder >> elasticBoxFor: aRSCanvas [
+
 	| elastic selectionHigh |
 	elastic := RSElasticBoxInteraction new.
 	elastic targetShapes: aRSCanvas nodes.
 	selectionHigh := RSHighlightable new
-		when: RSHighlightEvent do: [:evt | self createBoxSelectionFor: evt shape ];
-		when: RSUnHighlightEvent do: [:evt | evt shape removeSelectionBox ].
-	elastic 
-		when: RSSelectionStartEvent do: [ :evt | selectionHigh unhighlightRecordedShapes: evt canvas ];
-		when: RSSelectionChangedEvent do: [:evt | selectionHigh doHighlightShapes: evt selectedShapes ];
-		when: RSSelectionEndEvent do: [:evt | evt canvas selectedShapes: evt selectedShapes ].
-		
-	^ elastic.
+		                 when: RSHighlightEvent
+		                 do: [ :evt | self createBoxSelectionFor: evt shape ]
+		                 for: self;
+		                 when: RSUnHighlightEvent
+		                 do: [ :evt | evt shape removeSelectionBox ]
+		                 for: self.
+	elastic
+		when: RSSelectionStartEvent
+		do: [ :evt | selectionHigh unhighlightRecordedShapes: evt canvas ]
+		for: self;
+		when: RSSelectionChangedEvent
+		do: [ :evt | selectionHigh doHighlightShapes: evt selectedShapes ]
+		for: self;
+		when: RSSelectionEndEvent
+		do: [ :evt | evt canvas selectedShapes: evt selectedShapes ]
+		for: self.
+
+	^ elastic
 ]
 
 { #category : #hooks }
@@ -276,24 +298,31 @@ HSimpleVisualizationBuilder >> fullCornerRadius [
 
 { #category : #'accessing - attributes' }
 HSimpleVisualizationBuilder >> highlightable [
-	^ highlightable ifNil: [ 
-		highlightable := RSHighlightable new
-			highlightShapes: [ :shape | 
-				| list |
-				list := shape connectedLines copy.
-				list add: (shape propertyAt: #background).
-				list 
-				 ];
-			when: RSHighlightEvent do: [ :evt |
-				| color |
-				color := evt shape isNode
-					 ifTrue: [ evt shape color muchDarker ]
-					 ifFalse: [ Color red ].
-				highlightable record: evt shape selector: #color value: color ];
-			when: RSUnHighlightEvent do: [ :evt | 
-				highlightable restore: evt shape selector: #color ];
-			yourself.
-		 ].
+
+	^ highlightable ifNil: [
+		  highlightable := RSHighlightable new
+			                   highlightShapes: [ :shape |
+				                   | list |
+				                   list := shape connectedLines copy.
+				                   list add: (shape propertyAt: #background).
+				                   list ];
+			                   when: RSHighlightEvent do: [ :evt |
+				                   | color |
+				                   color := evt shape isNode
+					                            ifTrue: [ evt shape color muchDarker ]
+					                            ifFalse: [ Color red ].
+				                   highlightable
+					                   record: evt shape
+					                   selector: #color
+					                   value: color ]
+			                   for: self;
+			                   when: RSUnHighlightEvent
+			                   do: [ :evt |
+				                   highlightable
+					                   restore: evt shape
+					                   selector: #color ]
+			                   for: self;
+			                   yourself ]
 ]
 
 { #category : #initialization }
