@@ -9,7 +9,7 @@ Class {
 
 { #category : #execution }
 HExpandCanvasChildrenMenuItem >> execute [
-	visualization rootNode expandChildren
+	[visualization rootNode expandChildren] timeProfile
 ]
 
 { #category : #accessing }

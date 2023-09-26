@@ -61,6 +61,7 @@ HDefaultStyle >> buildCompositeFullNodeIn: shape [
 	shape schildren: childrenShapes.
 	childrenShapes do: [ :child | child sparent: shape ].
 	children := childrenShapes asShape padding: 10.
+	children useRTree.
 	childrenShapes do: [ :child | child model position: child position ].
 	title width < children width
 		ifTrue: [ 

@@ -278,6 +278,13 @@ HSimpleVisualizationBuilder >> elasticBoxFor: aRSCanvas [
 ]
 
 { #category : #hooks }
+HSimpleVisualizationBuilder >> expandChildren [
+
+	self container shapes do: #remove.
+	self renderIn: self container
+]
+
+{ #category : #hooks }
 HSimpleVisualizationBuilder >> fixShadowForSelectedShape: shape and: newShape [
 	| canvas selectedShapes border |
 	border := shape selectionBox.
@@ -487,35 +494,44 @@ HSimpleVisualizationBuilder >> removeShapeWithAllChildren: shape [
 	
 ]
 
-{ #category : #hooks }
+{ #category : #rendering }
 HSimpleVisualizationBuilder >> renderIn: aCanvas [
 
 	| rootShapes |
 	aCanvas color: Smalltalk ui theme backgroundColor.
-	
+
 	rootShapes := self childrenShapes: aCanvas.
 	shapes := rootShapes flatCollect: [ :s | s withAllSChildren ].
 	self addInteractions: shapes.
 	aCanvas schildren: rootShapes.
 	aCanvas addAll: rootShapes.
-	aCanvas @ self menuInteraction.
-	rootNode when: HNodeAddedEvent send: #addNewNode: to: self.
+
+	aCanvas useRTree.
+	(aCanvas hasInteraction: RSMenuActivable) ifFalse: [
+		aCanvas @ self menuInteraction ].
+	(aCanvas hasInteraction: self) ifFalse: [  
+	rootNode
+		when: HNodeAddedEvent send: #addNewNode: to: self;
+		when: HExpandChildrenEvent
+		do: [ :evt | self expandChildren ]
+		for: self] .
 	self renderLinesIn: aCanvas.
 	self layoutOn: rootShapes parent: rootNode
 ]
 
 { #category : #hooks }
 HSimpleVisualizationBuilder >> renderLinesIn: aCanvas [
+
 	| announcer high |
 	self lineBuilder
 		canvas: aCanvas;
 		shapes: shapes;
-		connectFromAll: #dependentsFromLinks.
+		connectFromAll: [ :n | n dependentsFromLinks ].
 	announcer := Announcer new.
 	high := RSHighlightable red.
 	high onShape: announcer.
 	self menuInteraction onShape: announcer.
-	aCanvas lines do: [ :line| line announcer: announcer ].
+	aCanvas lines do: [ :line | line announcer: announcer ]
 ]
 
 { #category : #accessing }

@@ -269,7 +269,8 @@ HNode >> expand [
 
 { #category : #public }
 HNode >> expandChildren [
-	children do: [ :child | child expand ].
+	children do: [ :child | child isExpanded: true ].
+	self announce: HExpandChildrenEvent new
 ]
 
 { #category : #public }
@@ -379,6 +380,12 @@ HNode >> initialize [
 { #category : #testing }
 HNode >> isExpanded [
 	^ isExpanded
+]
+
+{ #category : #testing }
+HNode >> isExpanded: aBoolean [ 
+
+	isExpanded := aBoolean
 ]
 
 { #category : #testing }
