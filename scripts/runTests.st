@@ -1,19 +1,22 @@
 | env cout repoPath unitTests path stream res |
 "We load the application software analyzer"
 
+
 env := Smalltalk os environment.
 
 cout := Stdio stdout.
+
 cout << '>>> Clonning from: '.
-repoPath := 'gitlocal://', (env at: 'GITHUB_WORKSPACE').
-"repoPath := 'https://github.com/ObjectProfile/HierarchicalVisualizations'."
-cout << 'Loading: '; << repoPath; crlf.
+
+#(Roassal3 Numeric) do: [:string |
+  regExp := '*', string ,'*'.
+  packages := RPackageOrganizer default packages
+	  select: [ :each | regExp match: each name ].
+  packages do: [ :each | each removeFromSystem ].
+].
+cout << 'Loading: HierarchicalVisualizations' crlf.
 
 [
-Metacello new
-    baseline: 'Roassal3';
-    repository: 'github://ObjectProfile/Roassal3';
-    load: 'Core'.
 Metacello new
     baseline: 'HierarchicalVisualizations';
     repository: repoPath;
@@ -21,8 +24,7 @@ Metacello new
 
 "We identify the unit tests contained in the loaded application"
 unitTests := (TestCase withAllSubclasses 
-	select: [ :cls |
-		cls package packageName beginsWith: 'Hierarchical' ])
+	select: [ :cls | cls package name beginsWith: 'Hierarchical' ])
 	sorted: [ :c1 :c2 | c1 name < c2 name ].
 
 "We create a file that will contain the result of the test execution"
