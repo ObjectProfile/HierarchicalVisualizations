@@ -7,17 +7,17 @@ cout := Stdio stdout.
 repoPath := 'gitlocal://', (env at: 'GITHUB_WORKSPACE').
 cout << '>>> Clonning from: '; << repoPath; crlf.
 
-cout << 'Loading: HierarchicalVisualizations' crlf.
+cout << 'Loading: HierarchicalVisualizations'; crlf.
 
 [
 Metacello new
 	 baseline: 'NumericScales';
-	 repository: 'github://pharo-graphics/NumericScales/src';
+	 repository: 'github://pharo-graphics/NumericScales:v1.02';
 	 load.
 
 Metacello new
     baseline: 'Roassal';
-    repository: 'github://pharo-graphics/Roassal';
+    repository: 'github://pharo-graphics/Roassal:v1.04b';
     load.
 
 Metacello new
