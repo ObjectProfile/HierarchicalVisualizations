@@ -1,26 +1,30 @@
 | env cout repoPath unitTests path stream res |
 "We load the application software analyzer"
 
-
 env := Smalltalk os environment.
 
 cout := Stdio stdout.
+repoPath := 'gitlocal://', (env at: 'GITHUB_WORKSPACE').
+cout << '>>> Clonning from: '; << repoPath; crlf.
 
-cout << '>>> Clonning from: '.
-
-#(Roassal3 Numeric) do: [:string |
-  regExp := '*', string ,'*'.
-  packages := RPackageOrganizer default packages
-	  select: [ :each | regExp match: each name ].
-  packages do: [ :each | each removeFromSystem ].
-].
 cout << 'Loading: HierarchicalVisualizations' crlf.
 
 [
 Metacello new
+	 baseline: 'NumericScales';
+	 repository: 'github://pharo-graphics/NumericScales/src';
+	 load.
+
+Metacello new
+    baseline: 'Roassal';
+    repository: 'github://pharo-graphics/Roassal';
+    load.
+
+Metacello new
     baseline: 'HierarchicalVisualizations';
     repository: repoPath;
-    load. ] on: MCMergeOrLoadWarning do: [ :warning | warning load ].
+    load
+] on: MCMergeOrLoadWarning do: [ :warning | warning load ].
 
 "We identify the unit tests contained in the loaded application"
 unitTests := (TestCase withAllSubclasses 
